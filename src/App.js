@@ -1,24 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Box, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <ChakraProvider>
+        <Box bg="teal.400" minHeight="100vh">
+          <Flex as="nav" bg="teal.500" color="white" p={4}>
+            <Box>
+              <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "gray.200"}}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chess-king" width="30" height="30" 
+                  viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" 
+                  stroke-linejoin="round">
+                    
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M8 16l-1.447 .724a1 1 0 0 0 -.553 .894v2.382h12v-2.382a1 1 0 0 0 -.553 -.894l-1.447 -.724h-8z" />
+                  <path d="M8.5 16a3.5 3.5 0 1 1 3.163 -5h.674a3.5 3.5 0 1 1 3.163 5z" />
+                  <path d="M9 6h6" />
+                  <path d="M12 3v8" />
+                </svg>
+              </Button>
+            </Box>
+            <Box p="2" pl="4">
+              <Link as={RouterLink} to="/">Home</Link>
+            </Box>
+            <Box p="2" pl="4">
+              <Link as={RouterLink} to="/about">About</Link>
+            </Box>
+            <Box p="2" pl="4">
+              <Link as={RouterLink} to="/contact">Contact</Link>
+            </Box>
+            <Spacer />
+            <Box>
+              <Button colorScheme="white" variant="outline" _hover={{ bg: "gray.200", color: "white" }}>
+                Login
+              </Button>
+            </Box>
+          </Flex>
+        </Box>
+      </ChakraProvider>
+    </Router>
   );
 }
 
