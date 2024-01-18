@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
+import { Box, Center, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 
 function App() {
   return (
     <Router>
       <ChakraProvider>
+        {/*Navbar*/}
         <Box bg="teal.400" minHeight="100vh">
           <Flex as="nav" bg="teal.500" color="white" p={4}>
             <Box>
@@ -22,14 +23,14 @@ function App() {
                 </svg>
               </Button>
             </Box>
-            <Box p="2" pl="4">
-              <Link as={RouterLink} to="/" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>Home</Link>
+            <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+              <Link as={RouterLink} to="/" sx={{_hover: {textDecoration: "none"}}}>Home</Link>
             </Box>
-            <Box p="2" pl="4">
-              <Link as={RouterLink} to="/about" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>About</Link>
+            <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+              <Link as={RouterLink} to="/about" sx={{_hover: {textDecoration: "none"}}}>About</Link>
             </Box>
-            <Box p="2" pl="4">
-              <Link as={RouterLink} to="/contact" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>Contact</Link>
+            <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+              <Link as={RouterLink} to="/contact" sx={{_hover: {textDecoration: "none"}}}>Contact</Link>
             </Box>
             <Spacer />
             <Box pr="5">
@@ -38,6 +39,18 @@ function App() {
               </Button>
             </Box>
           </Flex>
+          {/*Play Actions*/}
+          <AbsoluteCenter>
+            <Flex direction="column">
+              <Button as={RouterLink} to="/play" mb="2">
+                Play
+              </Button>
+              <Button as={RouterLink} to="/puzzles">
+                Puzzles
+              </Button>
+            </Flex>
+          </AbsoluteCenter>
+
         </Box>
       </ChakraProvider>
     </Router>
