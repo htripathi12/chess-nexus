@@ -9,7 +9,7 @@ function App() {
         <Box bg="teal.400" minHeight="100vh">
           <Flex as="nav" bg="teal.500" color="white" p={4}>
             <Box>
-              <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "gray.200"}}>
+              <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "gray.700"}}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chess-king" width="30" height="30" 
                   viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" 
                   stroke-linejoin="round">
@@ -23,17 +23,17 @@ function App() {
               </Button>
             </Box>
             <Box p="2" pl="4">
-              <Link as={RouterLink} to="/">Home</Link>
+              <Link as={RouterLink} to="/" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>Home</Link>
             </Box>
             <Box p="2" pl="4">
-              <Link as={RouterLink} to="/about">About</Link>
+              <Link as={RouterLink} to="/about" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>About</Link>
             </Box>
             <Box p="2" pl="4">
-              <Link as={RouterLink} to="/contact">Contact</Link>
+              <Link as={RouterLink} to="/contact" _hover={{ textDecoration: "underline", textDecorationColor: "gray.700" }}>Contact</Link>
             </Box>
             <Spacer />
-            <Box>
-              <Button colorScheme="white" variant="outline" _hover={{ bg: "gray.200", color: "white" }}>
+            <Box pr="5">
+              <Button colorScheme="white" variant="outline" _hover={{ bg: "gray.700", color: "white" }}>
                 Login
               </Button>
             </Box>
