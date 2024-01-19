@@ -17,7 +17,7 @@ function RoutesAndNavbar() {
         <Flex as="nav" bg="teal.500" color="white" p={4}>
         {/*Navbar*/}
           <Box>
-            <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "gray.700"}}>
+            <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "teal.700"}}>
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chess-king" width="30" height="30" 
                 viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" 
                 stroke-linejoin="round">
@@ -30,17 +30,17 @@ function RoutesAndNavbar() {
               </svg>
             </Button>
           </Box>
-          <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
             <Link as={RouterLink} to="/" sx={{_hover: {textDecoration: "none"}}}>Home</Link>
           </Box>
-          <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
             <Link as={RouterLink} to="/about" sx={{_hover: {textDecoration: "none"}}}>About</Link>
           </Box>
-          <Box p="2" ml="3" _hover={{bg: "gray.700", borderRadius: "lg"}}>
+          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
             <Link as={RouterLink} to="/contact" sx={{_hover: {textDecoration: "none"}}}>Contact</Link>
           </Box>
           <Spacer />
-          <Button colorScheme="white" variant="outline" _hover={{ bg: "gray.700", color: "white" }}>
+          <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
             <Link as={RouterLink} to="/login" sx={{_hover: {textDecoration: "none"}}}>Login</Link>
           </Button>
         </Flex>
