@@ -1,6 +1,9 @@
 import React from 'react';
-import { Box, Center, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
+import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+
+import Play from './play';
 
 function App() {
   return (
@@ -40,14 +43,8 @@ function App() {
             </Box>
           </Flex>
           {/*Container for the rest of the page*/}
-          <Flex>
-            <Box border="1px" borderColor="gray.200" borderRadius="md">
-              <Flex alignItems="flex-end" justifyContent="center" h="100%">
-                hello
-              </Flex>
-            </Box>
-            {/*Play Actions*/}
-            <AbsoluteCenter  border="1px" borderColor="gray.200" borderRadius="md">
+          <Container h="100vh" maxW="100%" border="1px solid green">
+            <Center>
               <Flex direction="column">
                 <Button as={RouterLink} to="/play" mb="2">
                   Play
@@ -59,8 +56,11 @@ function App() {
                   Learn
                 </Button>
               </Flex>
-            </AbsoluteCenter>
-          </Flex>
+            </Center>
+            <Routes>
+              <Route path="/play" element={<Play />} />
+            </Routes>
+          </Container>
         </Box>
       </ChakraProvider>
     </Router>
