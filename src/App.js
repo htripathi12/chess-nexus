@@ -3,7 +3,7 @@ import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Cha
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 
-import Play from './play';
+import Play from './Play';
 
 function App() {
   return (
@@ -44,19 +44,23 @@ function App() {
           </Flex>
           {/*Container for the rest of the page*/}
           <Container h="100vh" maxW="100%" border="1px solid green">
-            <Center>
-              <Flex direction="column">
-                <Button as={RouterLink} to="/play" mb="2">
-                  Play
-                </Button>
-                <Button as={RouterLink} to="/puzzles" mb="2">
-                  Puzzles
-                </Button>
-                <Button as={RouterLink} to="/learn">
-                  Learn
-                </Button>
-              </Flex>
-            </Center>
+            <Routes>
+              <Route path="/" element={
+                <Center>
+                  <Flex direction="column">
+                    <Button as={RouterLink} to="/play" mb="2">
+                      Play
+                    </Button>
+                    <Button as={RouterLink} to="/puzzles" mb="2">
+                      Puzzles
+                    </Button>
+                    <Button as={RouterLink} to="/learn">
+                      Learn
+                    </Button>
+                  </Flex>
+                </Center>
+                }/>
+            </Routes>
             <Routes>
               <Route path="/play" element={<Play />} />
             </Routes>
