@@ -61,9 +61,6 @@ function App() {
                 </Center>
                 }/>
             </Routes>
-            <Routes>
-              <Route path="/play" element={<Play />} />
-            </Routes>
           </Container>
         </Box>
       </ChakraProvider>
