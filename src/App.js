@@ -6,8 +6,8 @@ function App() {
   return (
     <Router>
       <ChakraProvider>
-        {/*Navbar*/}
         <Box bg="teal.400" minHeight="100vh">
+          {/*Navbar*/}
           <Flex as="nav" bg="teal.500" color="white" p={4}>
             <Box>
               <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "gray.700"}}>
@@ -35,22 +35,32 @@ function App() {
             <Spacer />
             <Box pr="5">
               <Button colorScheme="white" variant="outline" _hover={{ bg: "gray.700", color: "white" }}>
-                Login
+                <Link as={RouterLink} to="/login" sx={{_hover: {textDecoration: "none"}}}>Login</Link>
               </Button>
             </Box>
           </Flex>
-          {/*Play Actions*/}
-          <AbsoluteCenter>
-            <Flex direction="column">
-              <Button as={RouterLink} to="/play" mb="2">
-                Play
-              </Button>
-              <Button as={RouterLink} to="/puzzles">
-                Puzzles
-              </Button>
-            </Flex>
-          </AbsoluteCenter>
-
+          {/*Container for the rest of the page*/}
+          <Flex>
+            <Box border="1px" borderColor="gray.200" borderRadius="md">
+              <Flex alignItems="flex-end" justifyContent="center" h="100%">
+                hello
+              </Flex>
+            </Box>
+            {/*Play Actions*/}
+            <AbsoluteCenter  border="1px" borderColor="gray.200" borderRadius="md">
+              <Flex direction="column">
+                <Button as={RouterLink} to="/play" mb="2">
+                  Play
+                </Button>
+                <Button as={RouterLink} to="/puzzles" mb="2">
+                  Puzzles
+                </Button>
+                <Button as={RouterLink} to="/learn">
+                  Learn
+                </Button>
+              </Flex>
+            </AbsoluteCenter>
+          </Flex>
         </Box>
       </ChakraProvider>
     </Router>
