@@ -1,15 +1,20 @@
 import React from 'react';
 import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
+import { BrowserRouter as Router, Link as RouterLink, useLocation } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 
 import Play from './Play';
+import Puzzles from './Puzzles';
+import Learn from './Learn';
+import Login from './Login';
 
-function App() {
+function RoutesAndNavbar() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <ChakraProvider>
-        <Box bg="teal.400" minHeight="100vh">
+    <>
+      {location.pathname !== '/login' && (
+        <Flex as="nav" bg="teal.500" color="white" p={4}>
           {/*Navbar*/}
           <Flex as="nav" bg="teal.500" color="white" p={4}>
             <Box>
@@ -42,26 +47,41 @@ function App() {
               </Button>
             </Box>
           </Flex>
-          {/*Container for the rest of the page*/}
-          <Container h="100vh" maxW="100%" border="1px solid green">
-            <Routes>
-              <Route path="/" element={
-                <Center>
-                  <Flex direction="column">
-                    <Button as={RouterLink} to="/play" mb="2">
-                      Play
-                    </Button>
-                    <Button as={RouterLink} to="/puzzles" mb="2">
-                      Puzzles
-                    </Button>
-                    <Button as={RouterLink} to="/learn">
-                      Learn
-                    </Button>
-                  </Flex>
-                </Center>
-                }/>
-            </Routes>
-          </Container>
+        </Flex>
+      )}
+      <Container h="100vh" maxW="100%" border="1px solid green">
+        <Routes>
+          <Route path="/" element={
+            <Center>
+              <Flex direction="column">
+                <Button as={RouterLink} to="/play" mb="2">
+                  Play
+                </Button>
+                <Button as={RouterLink} to="/puzzles" mb="2">
+                  Puzzles
+                </Button>
+                <Button as={RouterLink} to="/learn">
+                  Learn
+                </Button>
+              </Flex>
+            </Center>
+          }/>
+          <Route path="/play" element={<Play />} />
+          <Route path="/puzzles" element={<Puzzles />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Container>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <ChakraProvider>
+        <Box bg="teal.400" minHeight="100vh">
+          <RoutesAndNavbar />
         </Box>
       </ChakraProvider>
     </Router>
