@@ -15,28 +15,25 @@ function Play() {
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-        let move = chess.current.move({
+        // create a new chess game
+        let game = new Chess();
+
+        // try to make the move
+        let move = game.move({
             from: sourceSquare,
             to: targetSquare,
-            promotion: 'q'
+            promotion: 'q' // always promote to a queen for simplicity
         });
 
-        if (move === null) {
-            alert("Invalid move");
-            return;
-        }
+        // illegal move
+        if (move === null) return;
 
-        setSquareStyles({
-            [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, // Closer to white teal color for source square
-            [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } // Closer to white teal color for target square
-        });
-
-        setFen(chess.current.fen());
+        // if the move is legal, update the position
+        setFen(game.fen());
     };
 
     return (
-        <div id="board1" style={{width: '400px'}}>
-            <AbsoluteCenter>
+        <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
             <Chessboard 
                 position={fen}
                 onDrop={onDrop}
@@ -50,7 +47,6 @@ function Play() {
                     boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
                 }}
             />
-            </AbsoluteCenter>
         </div>
     );
 }
