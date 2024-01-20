@@ -27,8 +27,8 @@ function Play() {
         }
 
         setSquareStyles({
-            [sourceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' },
-            [targetSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+            [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, // Closer to white teal color for source square
+            [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } // Closer to white teal color for target square
         });
 
         setFen(chess.current.fen());
@@ -36,12 +36,21 @@ function Play() {
 
     return (
         <div id="board1" style={{width: '400px'}}>
+            <AbsoluteCenter>
             <Chessboard 
                 position={fen}
                 onDrop={onDrop}
                 draggable={true}
                 squareStyles={squareStyles}
+                darkSquareStyle={{ backgroundColor: '#008080' }} // Teal color for dark squares
+                lightSquareStyle={{ backgroundColor: '#20B2AA' }} // Lighter teal color for light squares
+                boardStyle={{
+                    border: '2px solid #008080', // Teal border
+                    borderRadius: '5px',
+                    boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+                }}
             />
+            </AbsoluteCenter>
         </div>
     );
 }
