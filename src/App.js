@@ -3,7 +3,7 @@ import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Cha
 import { BrowserRouter as Router, Link as RouterLink, useLocation } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 
-import Play from './server/Play';
+import Play from './Play';
 import Puzzles from './Puzzles';
 import Learn from './Learn';
 import Login from './Login';

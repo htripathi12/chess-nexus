@@ -9,27 +9,31 @@ function Play() {
     const chess = useRef(new Chess());
     const [fen, setFen] = useState('start');
     const [squareStyles, setSquareStyles] = useState({});
+    const stockfish = useRef(new Stockfish());
 
-    useEffect(() => {
+
+   useEffect(() => {
         setFen(chess.current.fen());
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-        // create a new chess game
-        let game = new Chess();
-
-        // try to make the move
-        let move = game.move({
+        let move = chess.current.move({
             from: sourceSquare,
             to: targetSquare,
-            promotion: 'q' // always promote to a queen for simplicity
+            promotion: 'q'
         });
 
-        // illegal move
-        if (move === null) return;
+        if (move === null) {
+            alert("Invalid move");
+            return;
+        }
 
-        // if the move is legal, update the position
-        setFen(game.fen());
+        setSquareStyles({
+            [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, // Closer to white teal color for source square
+            [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } // Closer to white teal color for target square
+        });
+
+        setFen(chess.current.fen());
     };
 
     return (
@@ -48,6 +52,7 @@ function Play() {
                 }}
             />
         </div>
+
     );
 }
 
