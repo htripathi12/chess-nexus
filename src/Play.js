@@ -14,14 +14,16 @@ function Play() {
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-        console.log(sourceSquare, targetSquare);
+        console.log("Move: ", sourceSquare, targetSquare);
         let legalMoves = chess.current.moves({ square: sourceSquare });   
         let move = chess.current.move({ from: sourceSquare, to: targetSquare });
-        console.log(legalMoves, move);
-        if (legalMoves.includes(move.to)) {
-            chess.current.move(move);
-        }     
-        
+
+        console.log("Legal Moves: ", legalMoves, move);
+
+        if (move === null) {
+            alert("Invalid move");
+            return;
+        }
 
         setSquareStyles({
             [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, 
