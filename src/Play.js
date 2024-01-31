@@ -21,7 +21,7 @@ function Play() {
         console.log("Legal Moves: ", legalMoves, move);
 
         if (move === null) {
-            alert("Invalid move");
+            //alert("Invalid move");
             return;
         }
 
