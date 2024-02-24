@@ -14,23 +14,22 @@ function Play() {
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-        console.log("Move: ", sourceSquare, targetSquare);
-        let legalMoves = chess.current.moves({ square: sourceSquare });   
-        let move = chess.current.move({ from: sourceSquare, to: targetSquare });
+        // Log FEN in variable
+        const fen = chess.current.fen();
+        try {
+            // Try to make the move
+            let move = chess.current.move({ from: sourceSquare, to: targetSquare });
 
-        console.log("Legal Moves: ", legalMoves, move);
+            setSquareStyles({
+                [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, 
+                [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } 
+            });
 
-        if (move === null) {
-            //alert("Invalid move");
-            return;
+            setFen(chess.current.fen());
+        } catch (error) {
+            // The move was illegal
+            chess.current.fen(fen);
         }
-
-        setSquareStyles({
-            [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, 
-            [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } 
-        });
-
-        setFen(chess.current.fen());
     };
 
     return (
