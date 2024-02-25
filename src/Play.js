@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider, FormControl, FormLabel, 
+    Input, Stack, Text, Tabs, Table, Tbody, Td, Tr, Th, Thead, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
 import Chessboard from 'chessboardjsx';
 import { Chess } from 'chess.js';
@@ -7,10 +9,13 @@ function Play() {
     const chess = useRef(new Chess());
     const [fen, setFen] = useState('start');
     const [squareStyles, setSquareStyles] = useState({});    
+    const [history, setHistory] = useState([]);
+
 
 
    useEffect(() => {
         setFen(chess.current.fen());
+        setHistory(chess.current.history());
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
@@ -27,7 +32,6 @@ function Play() {
 
             setFen(chess.current.fen());
         } catch (error) {
-            // The move was illegal
             chess.current.fen(fen);
         }
     };
@@ -47,8 +51,30 @@ function Play() {
                     boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
                 }}
             />
+            {/* <div style = {{flexDirection: 'column', paddingLeft: '20px'}}>
+                <Table>
+                    <Thead>
+                        <Tr>
+                            <Th>White</Th>
+                            <Th>Black</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {history.map((move, i) => (
+                            <Tr key={i}>
+                                <Td>{move}</Td>
+                                <Td>{move}</Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+                <Button style={{ marginTop: '30px' }} onClick={() => {
+                    chess.current.undo();
+                    setFen(chess.current.fen());
+                    setHistory(chess.current.history());
+                }}>Previous Move</Button>
+            </div> */}
         </div>
-
     );
 }
 
