@@ -38,7 +38,7 @@ function Play() {
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-            <Box maxH="600px" overflowY="auto">
+            <Box>
                 <Table maxW="200px">
                     <Thead>
                         <Tr>
@@ -46,15 +46,19 @@ function Play() {
                             <Th>Black</Th>
                         </Tr>
                     </Thead>
-                    <Tbody>
-                        {history.map((move, i) => (
-                            <Tr key={i}>
-                                <Td isTruncated>{move}</Td>
-                                <Td isTruncated>{move}</Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
                 </Table>
+                <Box maxH="600px" overflowY="auto">
+                    <Table maxW="200px">
+                        <Tbody>
+                            {history.map((move, i) => (
+                                <Tr key={i}>
+                                    <Td isTruncated>{move}</Td>
+                                    <Td isTruncated>{move}</Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </Box>
             </Box>
             <Chessboard 
                 position={fen}
