@@ -39,11 +39,11 @@ function Play() {
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-            <Box>
+            <Box paddingRight="20px">
                 <Table maxW="200px">
                     <Thead>
                         <Tr>
-                            <Th>White</Th>
+                            <Th borderRight="1px solid white">White</Th>
                             <Th>Black</Th>
                         </Tr>
                     </Thead>
