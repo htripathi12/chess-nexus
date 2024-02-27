@@ -38,6 +38,24 @@ function Play() {
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            <Box maxH="600px" overflowY="auto">
+                <Table maxW="200px">
+                    <Thead>
+                        <Tr>
+                            <Th>White</Th>
+                            <Th>Black</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {history.map((move, i) => (
+                            <Tr key={i}>
+                                <Td isTruncated>{move}</Td>
+                                <Td isTruncated>{move}</Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </Box>
             <Chessboard 
                 position={fen}
                 onDrop={onDrop}
@@ -51,29 +69,13 @@ function Play() {
                     boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
                 }}
             />
-            {/* <div style = {{flexDirection: 'column', paddingLeft: '20px'}}>
-                <Table>
-                    <Thead>
-                        <Tr>
-                            <Th>White</Th>
-                            <Th>Black</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {history.map((move, i) => (
-                            <Tr key={i}>
-                                <Td>{move}</Td>
-                                <Td>{move}</Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+            <div style = {{flexDirection: 'column', paddingLeft: '20px'}}>
                 <Button style={{ marginTop: '30px' }} onClick={() => {
                     chess.current.undo();
                     setFen(chess.current.fen());
                     setHistory(chess.current.history());
                 }}>Previous Move</Button>
-            </div> */}
+            </div>
         </div>
     );
 }
