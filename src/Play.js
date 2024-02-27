@@ -31,6 +31,7 @@ function Play() {
             });
 
             setFen(chess.current.fen());
+            setHistory(chess.current.history());
         } catch (error) {
             chess.current.fen(fen);
         }
@@ -50,10 +51,17 @@ function Play() {
                 <Box maxH="600px" overflowY="auto">
                     <Table maxW="200px">
                         <Tbody>
-                            {history.map((move, i) => (
+                            {history.reduce((acc, move, i) => {
+                                if (i % 2 === 0) {
+                                    acc.push([move]);
+                                } else {
+                                    acc[acc.length - 1].push(move);
+                                }
+                                return acc;
+                            }, []).map((pair, i) => (
                                 <Tr key={i}>
-                                    <Td isTruncated>{move}</Td>
-                                    <Td isTruncated>{move}</Td>
+                                    <Td isTruncated>{pair[0]}</Td>
+                                    <Td isTruncated>{pair[1]}</Td>
                                 </Tr>
                             ))}
                         </Tbody>
