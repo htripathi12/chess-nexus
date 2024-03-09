@@ -39,6 +39,36 @@ function Play() {
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            {/* this needs to be redone/scrapped */}
+            <Box paddingRight="20px">
+                <Table maxW="200px">
+                    <Thead>
+                        <Tr>
+                            <Th borderRight="1px solid white">White</Th>
+                            <Th>Black</Th>
+                        </Tr>
+                    </Thead>
+                </Table>
+                <Box maxH="600px" overflowY="auto">
+                    <Table maxW="200px">
+                        <Tbody>
+                            {history.reduce((acc, move, i) => {
+                                if (i % 2 === 0) {
+                                    acc.push([move]);
+                                } else {
+                                    acc[acc.length - 1].push(move);
+                                }
+                                return acc;
+                            }, []).map((pair, i) => (
+                                <Tr key={i}>
+                                    <Td isTruncated>{pair[0]}</Td>
+                                    <Td isTruncated>{pair[1]}</Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </Box>
+            </Box>
             <Chessboard 
                 position={fen}
                 onDrop={onDrop}
