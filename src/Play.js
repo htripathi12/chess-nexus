@@ -39,6 +39,7 @@ function Play() {
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            {/* this needs to be redone/scrapped */}
             <Box paddingRight="20px">
                 <Table maxW="200px">
                     <Thead>
