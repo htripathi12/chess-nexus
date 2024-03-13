@@ -23,7 +23,7 @@ function Login() {
             <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}><Text ml={2}>Back</Text></Link>
         </Button>
         <AbsoluteCenter>
-            <Container bg='teal.600' borderRadius="30" w='500px' h='400px' color="white" p={5} shadow="2xl" border="2px" borderColor="gray.400">            
+            <Container bg='teal.600' borderRadius="30" w='500px' h='500px' color="white" p={5} shadow="2xl" border="2px" borderColor="gray.400">            
                 <Tabs isFitted variant="soft-rounded">
                     <TabList mb="1em" border="1px" borderRadius="21px">
                         <Tab color="white" _hover={{ color: "white", bg: "teal.800"}} _active={{ transform: "translateX(10px)", 
@@ -46,6 +46,20 @@ function Login() {
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Login
                                     </Button>
+                                    <Flex align="center" my="4">
+                                        <Box flex="1" height="1px" bg="white" />
+                                        <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Login</Text>
+                                        <Box flex="1" height="1px" bg="white" />
+                                    </Flex>
+
+                                    <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
+                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                            <Image src="/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
+                                        </Button>
+                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                            <Image src="lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
+                                        </Button>
+                                    </Box>
                                 </Stack>
                             </form>
                         </TabPanel>
@@ -63,6 +77,12 @@ function Login() {
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Sign Up
                                     </Button>
+                                    <Flex align="center" my="4">
+                                        <Box flex="1" height="1px" bg="white" />
+                                        <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Signup</Text>
+                                        <Box flex="1" height="1px" bg="white" />
+                                    </Flex>
+
                                     <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
                                         <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
                                             <Image src="/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />

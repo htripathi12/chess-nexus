@@ -1,0 +1,18 @@
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #000; /* Change the color according to your preference */
+  }
+  
+  .divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: red; /* This is the color of the lines, change it if your background is white */
+  }
+  
+  .divider-text {
+    padding: 0 20px;
+    color: #fff; /* This is the color of the text, change it if your background is white */
+  }
+  
