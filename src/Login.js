@@ -1,7 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider, FormControl, FormLabel, 
+import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { px } from "framer-motion";
+import OAuth2Callback from './auth.js';
+
 
 function Login() {
     return (
@@ -60,6 +63,14 @@ function Login() {
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Sign Up
                                     </Button>
+                                    <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
+                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                            <Image src="/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
+                                        </Button>
+                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                            <Image src="lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
+                                        </Button>
+                                    </Box>
                                 </Stack>
                             </form>
                         </TabPanel>
