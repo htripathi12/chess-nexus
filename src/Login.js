@@ -97,7 +97,8 @@ function Login() {
                     </TabPanels>
                 </Tabs>
             </Container>
-        </AbsoluteCenter></>
+        </AbsoluteCenter>
+        </>
     );
 }
 
