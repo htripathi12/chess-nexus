@@ -36,7 +36,6 @@ function Play() {
             chess.current.fen(fen);
         }
     };
-
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
             <Chessboard 
