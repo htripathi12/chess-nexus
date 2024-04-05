@@ -50,14 +50,7 @@ function Play() {
             setSelectedSquare(null);
         } else {
             setSelectedSquare(square);
-    
-            const moves = chess.current.moves({ square, verbose: true });
-    
-            const newSquareStyles = {};
-            for (const move of moves) {
-                
-            }
-            setSquareStyles(newSquareStyles);
+            setSquareStyles({ [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } });
         }
     };
 
