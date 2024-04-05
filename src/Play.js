@@ -10,19 +10,16 @@ function Play() {
     const [fen, setFen] = useState('start');
     const [squareStyles, setSquareStyles] = useState({});    
     const [history, setHistory] = useState([]);
+    const [selectedSquare, setSelectedSquare] = useState(null);
 
-
-// comment
-   useEffect(() => {
+    useEffect(() => {
         setFen(chess.current.fen());
         setHistory(chess.current.history());
     }, [chess]);
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-        // Log FEN in variable
         const fen = chess.current.fen();
         try {
-            // Try to make the move
             let move = chess.current.move({ from: sourceSquare, to: targetSquare });
 
             setSquareStyles({
@@ -36,10 +33,39 @@ function Play() {
             chess.current.fen(fen);
         }
     };
+
+    const onSquareClick = (square) => {
+        if (selectedSquare) {
+            try {
+                chess.current.move({ from: selectedSquare, to: square });
+                setFen(chess.current.fen());
+                setHistory(chess.current.history());
+                setSquareStyles({
+                    [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
+                    [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            setSelectedSquare(null);
+        } else {
+            setSelectedSquare(square);
+    
+            const moves = chess.current.moves({ square, verbose: true });
+    
+            const newSquareStyles = {};
+            for (const move of moves) {
+                
+            }
+            setSquareStyles(newSquareStyles);
+        }
+    };
+
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
             <Chessboard 
                 position={fen}
+                onSquareClick={onSquareClick}
                 onDrop={onDrop}
                 draggable={true}
                 squareStyles={squareStyles}
