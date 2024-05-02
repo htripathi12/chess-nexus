@@ -20,7 +20,11 @@ function Play() {
     const onDrop = ({ sourceSquare, targetSquare }) => {
         const fen = chess.current.fen();
         try {
-            let move = chess.current.move({ from: sourceSquare, to: targetSquare });
+            let move = chess.current.move({
+                from: sourceSquare,
+                to: targetSquare,
+                promotion: 'q'
+            });
 
             setSquareStyles({
                 [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, 
@@ -34,31 +38,48 @@ function Play() {
         }
     };
 
-    const onSquareClick = (square) => {
-        if (selectedSquare) {
-            try {
-                chess.current.move({ from: selectedSquare, to: square });
-                setFen(chess.current.fen());
-                setHistory(chess.current.history());
-                setSquareStyles({
-                    [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
-                    [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
-                });
-            } catch (error) {
-                console.log(error);
-            }
-            setSelectedSquare(null);
-        } else {
-            setSelectedSquare(square);
-            setSquareStyles({ [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } });
-        }
-    };
+    // TODO: Implement onSquareClick
+    // const onSquareClick = (square) => {
+    //     if (selectedSquare) {
+    //         try {
+    //             chess.current.move({ from: selectedSquare, to: square });
+    //             setFen(chess.current.fen());
+    //             setHistory(chess.current.history());
+    //             setSquareStyles({
+    //                 [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
+    //                 [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
+    //             });
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //         setSelectedSquare(null);
+    //     } else {
+    //         setSelectedSquare(square);
+    
+    //         const moves = chess.current.moves({ square, verbose: true });
+    
+    //         const newSquareStyles = {};
+    //         for (const move of moves) {
+    //             newSquareStyles[move.to] = { 
+    //                 backgroundColor: 'rgb(150, 225, 225)',
+    //                 borderRadius: '50%',
+    //                 width: '20px',
+    //                 height: '20px',
+    //                 top: '50%',
+    //                 left: '50%',
+    //                 marginTop: '25px',
+    //                 boxShadow: '0px 0px 10px 1px rgba(0, 0, 0, 0.5)', // increased shadow
+    //             };
+    //         }
+    //         setSquareStyles(newSquareStyles);
+    //     }
+    // };
 
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
             <Chessboard 
                 position={fen}
-                onSquareClick={onSquareClick}
+                //onSquareClick={onSquareClick}
                 onDrop={onDrop}
                 draggable={true}
                 squareStyles={squareStyles}
