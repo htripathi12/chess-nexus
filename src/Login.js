@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
@@ -64,7 +64,7 @@ function Login() {
                             </form>
                         </TabPanel>
                         <TabPanel>
-                            <form>
+                            <form action="backend/signup.php" method="post">
                                 <Stack spacing={3}>
                                     <FormControl id="email">
                                         <FormLabel>Email address</FormLabel>

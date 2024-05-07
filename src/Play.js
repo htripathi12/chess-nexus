@@ -8,7 +8,8 @@ import { Chess } from 'chess.js';
 function Play() {
     const chess = useRef(new Chess());
     const [fen, setFen] = useState('start');
-    const [squareStyles, setSquareStyles] = useState({});    
+    const [squareStyles, setSquareStyles] = useState({});
+    const [winLoss, winLossState] = useState('');
     const [history, setHistory] = useState([]);
     const [selectedSquare, setSelectedSquare] = useState(null);
 
@@ -26,6 +27,7 @@ function Play() {
                 promotion: 'q'
             });
 
+
             setSquareStyles({
                 [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }, 
                 [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } 
@@ -33,7 +35,23 @@ function Play() {
 
             setFen(chess.current.fen());
             setHistory(chess.current.history());
-        } catch (error) {
+
+            if (chess.current.isGameOver()) {
+                if (chess.current.isCheckmate()) {
+                    winLossState('Checkmate');
+                } else if (chess.current.isDraw()) {
+                    winLossState('Draw');
+                } else if (chess.current.isStalemate()) {
+                    winLossState('Stalemate');
+                } else if (chess.current.isThreefoldRepetition()) {
+                    winLossState('Threefold Repetition');
+                } else if (chess.current.isInsufficientMaterial()) {
+                    winLossState('Insufficient Material');
+                }
+                return;
+            }
+        }
+        catch (error) {
             chess.current.fen(fen);
         }
     };
@@ -98,6 +116,7 @@ function Play() {
                     setHistory(chess.current.history());
                 }}>Previous Move</Button>
             </div>
+            {winLoss && <div>{winLoss}</div>}
         </div>
     );
 }
