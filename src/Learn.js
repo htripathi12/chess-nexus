@@ -1,8 +1,36 @@
 import React from 'react';
+import StudyBlock from './StudyBlock';
+
+import CaroKann from './Caro-Kann.png';
+import ModernDefense from './ModernDefense.png';
+import SicilianDefense from './SicilianDefense.png';
 
 function Learn() {
     return (
-        <div>Hola</div>
+        <>
+        <div style={{display: 'flex', flexDirection: 'row', marginTop: '25px', justifyContent: 'space-evenly'}}>            
+            <StudyBlock to="/caro-kann" imageUrl={CaroKann} title="Caro-Kann Defense">
+                Dive into the intriguing world of the Caro-Kann Defense, where Black meets 1. e4 with the confident
+                stride of 1...c6. This defense boasts a robust structure that allows for swift piece development, all
+                while laying the groundwork for a resilient defense. With careful play, the Caro-Kann promises a
+                fortress-like defense fit for any strategic mastermind.
+            </StudyBlock>
+            
+            <StudyBlock to="/modern-defense" imageUrl={ModernDefense} title="Modern Defense">
+                Explore the Modern Defense (1...g6), where Black delays central pawn advances for flexible piece 
+                deployment. The fianchettoed bishop on g7 pressures the long diagonal, creating asymmetry and 
+                counterattacking opportunities. Despite sacrificing immediate central control, the Modern Defense's 
+                strategic flexibility makes it a captivating choice for disrupting traditional chess paradigms.
+            </StudyBlock>
+
+            <StudyBlock to="/sicilian-defense" imageUrl={SicilianDefense} title="Sicilian Defense">
+                Discover the Sicilian Defense, where Black's counterattacking move 1...c5 targets White's central pawn 
+                structure. With its rich history and numerous variations, the Sicilian offers a wide range of strategic 
+                possibilities. Despite conceding the center early on, the Sicilian Defense rewards boldness and 
+                resourcefulness, leading to thrilling battles for the center.
+            </StudyBlock>
+        </div>
+        </>
     );
 }
 export default Learn;
