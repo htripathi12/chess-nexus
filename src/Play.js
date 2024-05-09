@@ -108,7 +108,6 @@ function Play() {
                     borderRadius: '5px',
                     boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
                 }}
-                orientation='black'
             />
             <div style = {{flexDirection: 'column', paddingLeft: '20px'}}>
                 <Button style={{ marginTop: '30px' }} onClick={() => {
