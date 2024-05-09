@@ -9,7 +9,7 @@ function StudyBlock(props) {
     return (
         <RouterLink to={props.to}>
         <Card maxW='sm' backgroundColor='teal.700' boxShadow='xl'>
-            <CardBody textColor="lightgrey">
+            <CardBody textColor="whitesmoke">
                 <Image
                     src={props.imageUrl}
                     borderRadius='lg'

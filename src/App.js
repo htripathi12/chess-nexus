@@ -5,8 +5,8 @@ import { Route, Routes } from 'react-router-dom';
 
 import Play from './Play';
 import Puzzles from './Puzzles';
-import Learn from './Learn';
-import Login from './Login';
+import Learn from './Learn/Learn';
+import Login from './Login/Login';
 
 function RoutesAndNavbar() {
   const location = useLocation();
@@ -29,9 +29,6 @@ function RoutesAndNavbar() {
                 <path d="M12 3v8" />
               </svg>
             </Button>
-          </Box>
-          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
-            <Link as={RouterLink} to="/" sx={{_hover: {textDecoration: "none"}}}>Home</Link>
           </Box>
           <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
             <Link as={RouterLink} to="/about" sx={{_hover: {textDecoration: "none"}}}>About</Link>
