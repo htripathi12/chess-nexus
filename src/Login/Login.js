@@ -2,11 +2,19 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { px } from "framer-motion";
 import OAuth2Callback from './auth.js';
 
 
 function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(`Email: ${email}`);
+        console.log(`Password: ${password}`);
+    }
+
     return (
         <>
         <Button marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
@@ -35,11 +43,11 @@ function Login() {
                         <TabPanel>
                             <form>
                                 <Stack spacing={3}>
-                                    <FormControl id="email">
+                                    <FormControl id="loginEmail">
                                         <FormLabel>Email address</FormLabel>
                                         <Input type="email" />
                                     </FormControl>
-                                    <FormControl id="password">
+                                    <FormControl id="loginPassword">
                                         <FormLabel>Password</FormLabel>
                                         <Input type="password" />
                                     </FormControl>
@@ -64,19 +72,19 @@ function Login() {
                             </form>
                         </TabPanel>
                         <TabPanel>
-                            <form action="backend/signup.php" method="post">
+                            <form onSubmit={handleSubmit}>
                                 <Stack spacing={3}>
-                                    <FormControl id="email">
-                                        <FormLabel>Email address</FormLabel>
-                                        <Input type="email" />
-                                    </FormControl>
-                                    <FormControl id="password">
-                                        <FormLabel>Password</FormLabel>
-                                        <Input type="password" />
-                                    </FormControl>
-                                    <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
-                                        Sign Up
-                                    </Button>
+                                <FormControl id="signupEmail">
+                        <FormLabel>Email address</FormLabel>
+                        <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                    </FormControl>
+                    <FormControl id="signupPassword">
+                        <FormLabel>Password</FormLabel>
+                        <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                    </FormControl>
+                    <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
+                        Sign Up
+                    </Button>
                                     <Flex align="center" my="4">
                                         <Box flex="1" height="1px" bg="white" />
                                         <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Signup</Text>
