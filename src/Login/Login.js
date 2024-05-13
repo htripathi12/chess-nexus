@@ -74,17 +74,17 @@ function Login() {
                         <TabPanel>
                             <form onSubmit={handleSubmit}>
                                 <Stack spacing={3}>
-                                <FormControl id="signupEmail">
-                                    <FormLabel>Email address</FormLabel>
-                                    <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-                                </FormControl>
-                                <FormControl id="signupPassword">
-                                    <FormLabel>Password</FormLabel>
-                                    <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                                </FormControl>
-                                <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
-                                    Sign Up
-                                </Button>
+                                    <FormControl id="signupEmail">
+                                        <FormLabel>Email address</FormLabel>
+                                        <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                                    </FormControl>
+                                    <FormControl id="signupPassword">
+                                        <FormLabel>Password</FormLabel>
+                                        <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                                    </FormControl>
+                                    <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
+                                        Sign Up
+                                    </Button>
                                     <Flex align="center" my="4">
                                         <Box flex="1" height="1px" bg="white" />
                                         <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Signup</Text>
