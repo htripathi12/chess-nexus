@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import OAuth2Callback from './auth.js';
-
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -11,21 +11,27 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(`Email: ${email}`);
-        console.log(`Password: ${password}`);
+        Axios.post('http://localhost:3001/login', {
+            email: email,
+            password: password
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error('There was an error!', error);
+        });
     }
 
     return (
         <>
         <Button marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
             <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-left-filled" 
-                    width="27" height="27" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" 
-                    stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-left-filled" 
+                    width="27" height="27" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" 
+                    strokeLinecap="round" strokeLinejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 
                         0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0
-                        0 0 -3.414 -1.414z" stroke-width="0" fill="currentColor" />
+                        0 0 -3.414 -1.414z" strokeWidth="0" fill="currentColor" />
                 </svg>
             </Link>
             <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}><Text ml={2}>Back</Text></Link>
@@ -41,15 +47,15 @@ function Login() {
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <Stack spacing={3}>
                                     <FormControl id="loginEmail">
                                         <FormLabel>Email address</FormLabel>
-                                        <Input type="email" />
+                                        <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
                                     </FormControl>
                                     <FormControl id="loginPassword">
                                         <FormLabel>Password</FormLabel>
-                                        <Input type="password" />
+                                        <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
                                     </FormControl>
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Login
@@ -109,6 +115,5 @@ function Login() {
         </>
     );
 }
-
 
 export default Login;
