@@ -10,7 +10,8 @@ const db = mysql.createConnection({
     user: 'root',
     host: 'localhost',
     password: 'yashT2002!!',
-    database: 'ChessDB'
+    database: 'ChessDB',
+    port: '3306'
 });
 
 app.post('/login', (req, res) => {
