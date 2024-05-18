@@ -12,6 +12,7 @@ function Login() {
     const [password, setPassword] = useState('');
 
     const handleSignup = (e) => {
+        e.preventDefault();
         bcrypt.hash(password, saltRounds, function(err, hash) {
             Axios.post('http://localhost:3000/login', {
                 email: email,
@@ -25,7 +26,22 @@ function Login() {
     }
 
     const handleLogin = (e) => {
-        console.log("bruh");
+        e.preventDefault();
+    
+        const credentials = {
+            email: email,
+            password: password,
+        };
+    
+        axios.post('http://localhost:3000/login', credentials)
+            .then(response => {
+                console.log(response.data);
+                // handle successful login here, e.g. by setting state and redirecting
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                // handle error here, e.g. by showing an error message
+            });
     }
 
     return (
