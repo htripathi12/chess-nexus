@@ -6,42 +6,23 @@ import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Ima
 import OAuth2Callback from './auth.js';
 
 function Login() {
-    var bcrypt = require('bcryptjs');
-    const saltRounds = 10;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSignup = (e) => {
         e.preventDefault();
-        bcrypt.hash(password, saltRounds, function(err, hash) {
-            Axios.post('http://localhost:3000/login', {
-                email: email,
-                password: hash
-            }).then((response) => {
-                console.log(response);
-            }).catch((error) => {
-                console.error('There was an error!', error);
-            });
+        Axios.post('http://localhost:3000/login', {
+            email: email,
+            password: password
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error('There was an error!', error);
         });
     }
 
     const handleLogin = (e) => {
-        e.preventDefault();
-    
-        const credentials = {
-            email: email,
-            password: password,
-        };
-    
-        axios.post('http://localhost:3000/login', credentials)
-            .then(response => {
-                console.log(response.data);
-                // handle successful login here, e.g. by setting state and redirecting
-            })
-            .catch(error => {
-                console.error('Error during login:', error);
-                // handle error here, e.g. by showing an error message
-            });
+        console.log("bruh");
     }
 
     return (
