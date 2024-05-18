@@ -6,19 +6,26 @@ import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Ima
 import OAuth2Callback from './auth.js';
 
 function Login() {
+    var bcrypt = require('bcryptjs');
+    const saltRounds = 10;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        Axios.post('http://localhost:3000/login', {
-            email: email,
-            password: password
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.error('There was an error!', error);
+    const handleSignup = (e) => {
+        bcrypt.hash(password, saltRounds, function(err, hash) {
+            Axios.post('http://localhost:3000/login', {
+                email: email,
+                password: hash
+            }).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.error('There was an error!', error);
+            });
         });
+    }
+
+    const handleLogin = (e) => {
+        console.log("bruh");
     }
 
     return (
@@ -47,7 +54,7 @@ function Login() {
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleLogin}>
                                 <Stack spacing={3}>
                                     <FormControl id="loginEmail">
                                         <FormLabel>Email address</FormLabel>
@@ -78,7 +85,7 @@ function Login() {
                             </form>
                         </TabPanel>
                         <TabPanel>
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSignup}>
                                 <Stack spacing={3}>
                                     <FormControl id="signupEmail">
                                         <FormLabel>Email address</FormLabel>
