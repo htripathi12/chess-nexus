@@ -8,15 +8,18 @@ import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Cha
 function StudyBlock(props) {
     return (
         <RouterLink to={props.to}>
-        <Card maxW='sm' backgroundColor='teal.700' boxShadow='xl'>
+        <Card maxW='xs' backgroundColor='teal.700' boxShadow='xl'
+            _hover={{ transform: 'scale(1.03)', boxShadow: '0 0 .75rem #1a202c' }}
+            transition='transform 0.2s, boxShadow 0.2s'
+        >
             <CardBody textColor="whitesmoke">
                 <Image
                     src={props.imageUrl}
                     borderRadius='lg'
                 />
                 <Stack mt='6' spacing='3'>
-                    <Heading size='md'>{props.title}</Heading>
-                    <Text fontSize={15}>
+                    <Heading size='sm'>{props.title}</Heading>
+                    <Text fontSize='sm'>
                         {props.children}
                     </Text>
                 </Stack>
