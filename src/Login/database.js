@@ -29,22 +29,44 @@ app.listen(3000, () => {
 });
 
 app.post('/login', (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, regState } = req.body;
 
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-        if (err) {
-            console.error('Error hashing password:', err);
-            return res.status(500).send('Error processing request');
-        }
+    console.log(`Received login/signup request with email: ${email} and state: ${regState}`);
 
-        console.log('Generated hash:', hash);
-
-        db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (err, result) => {
+    if (regState === 'signup') {
+        bcrypt.hash(password, saltRounds, (err, hash) => {
             if (err) {
-                console.log(err);
-                return res.status(500).send('Error inserting values');
+                console.error('Error hashing password:', err);
+                return res.status(500).send('Error processing request');
             }
-            res.send('Values Inserted');
+            db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (err, result) => {
+                if (err) {
+                    console.error('Error inserting user:', err);
+                    return res.status(500).send('Error inserting values');
+                }
+                res.send('Values Inserted');
+            });
         });
-    });
+    } else if (regState === 'login') {
+        db.query('SELECT password FROM users WHERE email = ?', [email], (err, result) => {
+            if (err) {
+                console.error('Error querying the database:', err);
+                return res.status(500).send('Error processing request');
+            }
+
+            if (result.length > 0) {
+                bcrypt.compare(password, result[0].password, (err, isMatch) => {
+                    if (err) {
+                        console.error('Error comparing passwords:', err);
+                        return res.status(500).send('Error processing request');
+                    }
+                    isMatch ? res.send('Login successful') : res.status(401).send('Invalid password');
+                });
+            } else {
+                res.status(404).send('User not found');
+            }
+        });
+    } else {
+        res.status(400).send('Invalid registration state');
+    }
 });

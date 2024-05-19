@@ -13,7 +13,8 @@ function Login() {
         e.preventDefault();
         Axios.post('http://localhost:3000/login', {
             email: email,
-            password: password
+            password: password,
+            regState: 'signup'
         }).then((response) => {
             console.log(response);
         }).catch((error) => {
@@ -22,7 +23,15 @@ function Login() {
     }
 
     const handleLogin = (e) => {
-        console.log("bruh");
+        Axios.post('http://localhost:3000/login', {
+            email: email,
+            password: password,
+            regState: 'login'
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error('There was an error!', error);
+        });
     }
 
     return (
