@@ -72,7 +72,11 @@ function Play() {
 
     const onSquareClick = (square) => {
     if (selectedSquare) {
-        try {
+        const legalMove = chess.current
+            .moves({ square: selectedSquare, verbose: true })
+            .some(move => move.to === square);
+
+        if (legalMove) {
             chess.current.move({ from: selectedSquare, to: square });
             setFen(chess.current.fen());
             setHistory(chess.current.history());
@@ -80,10 +84,19 @@ function Play() {
                 [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
                 [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
             });
-        } catch (error) {
-            console.log(error);
+            setSelectedSquare(null);
+        } else {
+            setSelectedSquare(square);
+            const moves = chess.current.moves({ square, verbose: true });
+
+            const newSquareStyles = {};
+            for (const move of moves) {
+                newSquareStyles[move.to] = { 
+                    backgroundImage: 'radial-gradient(circle at center, rgba(255, 255, 0, 1) 12.5%, rgba(255, 255, 0, 0) 45%)'            
+                };
+            }
+            setSquareStyles(newSquareStyles);
         }
-        setSelectedSquare(null);
     } else {
         setSelectedSquare(square);
 
