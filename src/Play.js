@@ -33,6 +33,19 @@ function Play() {
                 [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' } 
             });
 
+            if (chess.current.isCheck()) {
+                const squares = 'abcdefgh'.split('').flatMap(d => Array.from({ length: 8 }, (_, i) => d + (i + 1)));
+                const turn = chess.current.turn();
+                console.log(turn);
+
+                squares.forEach(square => {
+                    const piece = chess.current.get(square);
+                    if (piece.type === 'k' && piece.color === turn) {
+                        console.log(`Square ${square} has a ${piece.color} ${piece.type}`);
+                    }
+                });
+            }
+
             setFen(chess.current.fen());
             setHistory(chess.current.history());
 
