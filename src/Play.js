@@ -144,7 +144,7 @@ function Play() {
         setSquareStyles(newSquareStyles);
     };
     
-
+    // TODO: implement onSquareRightClick to draw arrows
     return (
         <div id="board1" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
             <Chessboard 
@@ -160,6 +160,7 @@ function Play() {
                     borderRadius: '5px',
                     boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
                 }} 
+                transitionDuration={500}
             />
             <div style = {{flexDirection: 'column', paddingLeft: '20px'}}>
                 <Button style={{ marginTop: '30px' }} onClick={() => {
