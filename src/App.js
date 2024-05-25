@@ -37,9 +37,11 @@ function RoutesAndNavbar() {
             <Link as={RouterLink} to="/contact" sx={{_hover: {textDecoration: "none"}}}>Contact</Link>
           </Box>
           <Spacer />
-          <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
-            <Link as={RouterLink} to="/login" sx={{_hover: {textDecoration: "none"}}}>Login</Link>
-          </Button>
+          <Link as={RouterLink} to="/login" _hover={{ textDecoration: "none" }}>
+            <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
+                Login
+            </Button>
+          </Link>
         </Flex>
       )}
       <Container h="100vh" maxW="100%" border="1px solid green">

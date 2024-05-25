@@ -36,8 +36,8 @@ function Login() {
 
     return (
         <>
-        <Button marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
-            <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
+        <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
+            <Button marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-left-filled" 
                     width="27" height="27" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" 
                     strokeLinecap="round" strokeLinejoin="round">
@@ -46,9 +46,9 @@ function Login() {
                         0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0
                         0 0 -3.414 -1.414z" strokeWidth="0" fill="currentColor" />
                 </svg>
-            </Link>
-            <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}><Text ml={2}>Back</Text></Link>
-        </Button>
+                <Text ml={2}>Back</Text>
+            </Button>
+        </Link>
         <AbsoluteCenter>
             <Container bg='teal.600' borderRadius="30" w='500px' h='500px' color="white" p={5} shadow="2xl" border="2px" borderColor="gray.400">            
                 <Tabs isFitted variant="soft-rounded">
