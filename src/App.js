@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Link as RouterLink, useLocation } from 'react-
 import { Route, Routes } from 'react-router-dom';
 
 import Play from './Play';
-import Puzzles from './Puzzles';
+import Puzzles from './Puzzles/Puzzles';
 import Learn from './Learn/Learn';
 import Login from './Login/Login';
 
