@@ -1,33 +1,27 @@
 import random
 
-with open('src/Puzzles/lichess_top_100K_puzzles.pgn') as pgn_file:
-    lines = pgn_file.readlines()
+with open('src/Puzzles/formatted_pgn_output.txt') as txt_file:
+    lines = txt_file.readlines()
 
 # Group the lines into puzzles
-puzzles = [lines[i:i+12] for i in range(0, len(lines), 15)]
+puzzles = []
+puzzle = {}
+for line in lines:
+    stripped_line = line.strip()
+    if stripped_line:  # Check if line is not empty
+        if stripped_line.startswith('FEN'):
+            puzzle['FEN'] = stripped_line.split(':')[1].strip()
+        elif stripped_line.startswith('WhiteElo'):
+            puzzle['WhiteElo'] = stripped_line.split(':')[1].strip()
+        elif stripped_line[0].isdigit():  # Check if the line starts with a number
+            puzzle['Move sequence'] = stripped_line
+            puzzles.append(puzzle)
+            puzzle = {}
 
-# Select a puzzle at random
-random_puzzle_index = random.randint(0, len(puzzles) - 1)
-random_puzzle = puzzles[random_puzzle_index]
+# Select a random puzzle
+random_puzzle = random.choice(puzzles)
 
-# Initialize variables
-ELO = None
-fen = None
-move_sequence = None
-
-# Extract WhiteElo, FEN, and move sequence
-for line_number, line in enumerate(random_puzzle, start=1):
-    if "WhiteElo" in line:
-        ELO = line.strip().split('"')[1]
-        print(f"WhiteElo on line {random_puzzle_index * 15 + line_number}: {ELO}")
-    elif "FEN" in line:
-        fen = line.strip().split('"')[1]
-        print(f"FEN on line {random_puzzle_index * 15 + line_number}: {fen}")
-    elif line.strip().startswith('1.'):
-        move_sequence = line.strip()
-        print(f"Move sequence on line {random_puzzle_index * 15 + line_number}: {move_sequence}")
-
-# Print the variables
-print("WhiteElo:", ELO)
-print("FEN:", fen)
-print("Move sequence:", move_sequence)
+# Print the details of the random puzzle
+print("FEN:", random_puzzle['FEN'])
+print("WhiteElo:", random_puzzle['WhiteElo'])
+print("Move sequence:", random_puzzle['Move sequence'])

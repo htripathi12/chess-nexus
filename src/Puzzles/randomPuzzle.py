@@ -1,33 +1,37 @@
 import random
 
-with open('src/Puzzles/lichess_top_100K_puzzles.pgn') as pgn_file:
-    lines = pgn_file.readlines()
+def load_and_select_puzzle(filename):
+    with open(filename) as txt_file:
+        lines = txt_file.readlines()
 
-# Group the lines into puzzles
-puzzles = [lines[i:i+12] for i in range(0, len(lines), 15)]
+    # Group the lines into puzzles
+    puzzles = []
+    puzzle = {}
 
-# Select a puzzle at random
-random_puzzle_index = random.randint(0, len(puzzles) - 1)
-random_puzzle = puzzles[random_puzzle_index]
+    for line in lines:
+        if 'FEN:' in line:
+            if puzzle:
+                # Append the previous puzzle if there's one being built
+                puzzles.append(puzzle)
+                puzzle = {}
+            puzzle['FEN'] = line.split(':')[1].strip()
+        elif 'WhiteElo:' in line:
+            puzzle['WhiteElo'] = line.split(':')[1].strip()
+        elif line.startswith('Move Sequence:'):  # Assuming your format includes 'Move Sequence:'
+            puzzle['Move Sequence'] = line.split(':', 1)[1].strip()
 
-# Initialize variables
-ELO = None
-fen = None
-move_sequence = None
+    # Append the last puzzle if it's not empty
+    if puzzle:
+        puzzles.append(puzzle)
 
-# Extract WhiteElo, FEN, and move sequence
-for line_number, line in enumerate(random_puzzle, start=1):
-    if "WhiteElo" in line:
-        ELO = line.strip().split('"')[1]
-        print(f"WhiteElo on line {random_puzzle_index * 15 + line_number}: {ELO}")
-    elif "FEN" in line:
-        fen = line.strip().split('"')[1]
-        print(f"FEN on line {random_puzzle_index * 15 + line_number}: {fen}")
-    elif line.strip().startswith('1.'):
-        move_sequence = line.strip()
-        print(f"Move sequence on line {random_puzzle_index * 15 + line_number}: {move_sequence}")
+    # Select a random puzzle
+    random_puzzle = random.choice(puzzles)
 
-# Print the variables
-print("WhiteElo:", ELO)
-print("FEN:", fen)
-print("Move sequence:", move_sequence)
+    # Print the details of the random puzzle
+    print("FEN:", random_puzzle['FEN'])
+    print("WhiteElo:", random_puzzle['WhiteElo'])
+    print("Move Sequence:", random_puzzle['Move Sequence'])
+
+# Usage
+filename = 'src/Puzzles/formatted_pgn_output.txt'
+load_and_select_puzzle(filename)
