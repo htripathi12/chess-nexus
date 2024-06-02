@@ -1,7 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
-    Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 
@@ -12,24 +9,13 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-function Play() {
+const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
     const chess = useRef(new Chess());
-    const [fen, setFen] = useState(chess.current.fen());
     const [squareStyles, setSquareStyles] = useState({});
-    const [winLoss, setWinLoss] = useState('');
     const [selectedSquare, setSelectedSquare] = useState(null);
 
     useEffect(() => {
         setFen(chess.current.fen());
-    }, []);
-
-    useEffect(() => {
-        // Disable scrolling when the component is mounted
-        document.body.style.overflow = 'hidden';
-        return () => {
-            // Enable scrolling when the component is unmounted
-            document.body.style.overflow = 'auto';
-        };
     }, []);
 
     // Function to handle piece drop
@@ -146,49 +132,33 @@ function Play() {
         }
     };
 
-    return (
-    <div>
-        <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
-            <Button marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-left-filled" 
-                    width="27" height="27" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" 
-                    strokeLinecap="round" strokeLinejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 
-                        0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0
-                        0 0 -3.414 -1.414z" strokeWidth="0" fill="currentColor" />
-                </svg>
-                <Text ml={2}>Back</Text>
-            </Button>
-        </Link>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '30px'}}>
-            <div>
-                <Chessboard
-                    position={fen}
-                    onSquareClick={onSquareClick}
-                    onPieceDrop={onDrop}
-                    customSquareStyles={squareStyles}
-                    boardOrientation="white"
-                    boardWidth={550}
-                    customDarkSquareStyle={{ backgroundColor: '#008080' }}
-                    customLightSquareStyle={{ backgroundColor: '#20B2AA' }}
-                    customBoardStyle={{
-                        border: '2px solid #008080',
-                        borderRadius: '5px',
-                        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
-                    }}
-                    animationDuration={0}
-                />
-                <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={() => {
-                    chess.current.undo();
-                    setFen(chess.current.fen());
-                    setSquareStyles({});
-                }}>Previous Move</Button>
-            </div>
-        </div>
-        {winLoss && <div>{winLoss}</div>}
-    </div>
-    );
-}
+    // Expose undoMove function to parent component
+    useImperativeHandle(ref, () => ({
+        undoMove: () => {
+            chess.current.undo();
+            setFen(chess.current.fen());
+            setSquareStyles({});
+        }
+    }));
 
-export default Play;
+    return (
+        <Chessboard
+            position={fen}
+            onSquareClick={onSquareClick}
+            onPieceDrop={onDrop}
+            customSquareStyles={squareStyles}
+            boardOrientation="white"
+            boardWidth={550}
+            customDarkSquareStyle={{ backgroundColor: '#008080' }}
+            customLightSquareStyle={{ backgroundColor: '#20B2AA' }}
+            customBoardStyle={{
+                border: '2px solid #008080',
+                borderRadius: '5px',
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
+            }}
+            animationDuration={250}
+        />
+    );
+});
+
+export default CustomBoard;
