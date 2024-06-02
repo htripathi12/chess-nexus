@@ -13,10 +13,11 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
     const chess = useRef(new Chess());
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
+    const [animationDuration, setAnimationDuration] = useState(250);
 
     useEffect(() => {
         setFen(chess.current.fen());
-    }, []);
+    }, [setFen]);
 
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
@@ -54,6 +55,7 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
 
     // Function to handle square click
     const onSquareClick = (square) => {
+        setAnimationDuration(250); // Enable animation for click moves
         if (selectedSquare) {
             const legalMove = chess.current
                 .moves({ square: selectedSquare, verbose: true })
@@ -156,7 +158,8 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
                 borderRadius: '5px',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
             }}
-            animationDuration={250}
+            animationDuration={animationDuration}
+            onPieceDragEnd={() => setAnimationDuration(0)} // Disable animation for the next move
         />
     );
 });

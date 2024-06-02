@@ -15,8 +15,8 @@ function Puzzles() {
     }, []);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <div style={{ margin: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', paddingBottom: '50px' }}>
+            <div style={{ margin: 'auto'}}>
                 <CustomBoard
                     ref={customBoardRef}
                     fen={fen}
