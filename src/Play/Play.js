@@ -6,6 +6,7 @@ import CustomBoard from '../CustomBoard';
 function Play() {
     const [fen, setFen] = useState('');
     const [winLoss, setWinLoss] = useState('');
+    const [history, setHistory] = useState([]);
     const customBoardRef = useRef(null);
 
     useEffect(() => {
@@ -16,6 +17,24 @@ function Play() {
             document.body.style.overflow = 'auto';
         };
     }, []);
+
+    useEffect(() => {
+        if (fen && history[history.length - 1] !== fen) {
+            setHistory((prevHistory) => [...prevHistory, fen]);
+        }
+    }, [fen]);
+
+    const handleUndo = () => {
+        setHistory((prevHistory) => {
+            if (prevHistory.length > 1) {
+                const newHistory = prevHistory.slice(0, -1);
+                const previousFen = newHistory[newHistory.length - 1];
+                setFen(previousFen);
+                return newHistory;
+            }
+            return prevHistory;
+        });
+    };
 
     return (
         <div>
@@ -40,9 +59,9 @@ function Play() {
                         setFen={setFen}
                         setWinLoss={setWinLoss}
                     />
-                    <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={() => {
-                        customBoardRef.current.undoMove();
-                    }}>Previous Move</Button>
+                    <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={handleUndo}>
+                        Previous Move
+                    </Button>
                 </div>
             </div>
             {winLoss && <div>{winLoss}</div>}
