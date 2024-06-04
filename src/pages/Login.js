@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Container, AbsoluteCenter, Flex, Link, Button, Image, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import OAuth2Callback from './auth.js';
+import OAuth2Callback from '../auth.js';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -81,10 +81,10 @@ function Login() {
 
                                     <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
                                         <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
+                                            {/* <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" /> */}
                                         </Button>
                                         <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
+                                            {/* <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/> */}
                                         </Button>
                                     </Box>
                                 </Stack>
@@ -112,10 +112,10 @@ function Login() {
 
                                     <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
                                         <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
+                                            <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
                                         </Button>
                                         <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
+                                            <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
                                         </Button>
                                     </Box>
                                 </Stack>

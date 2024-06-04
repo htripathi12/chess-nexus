@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import CustomBoard from '../CustomBoard';
+import CustomBoard from '../components/CustomBoard';
 
 function Puzzles() {
     const [fen, setFen] = useState('');

@@ -1,12 +1,13 @@
 import React from 'react';
-import StudyBlock from './StudyBlock';
+import StudyBlock from '../components/StudyBlock.js';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
     Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
-import CaroKann from './Caro-Kann.png';
-import ModernDefense from './ModernDefense.png';
-import SicilianDefense from './SicilianDefense.png';
+import CaroKann from '../assets/Caro-Kann.png';
+import ModernDefense from '../assets/ModernDefense.png';
+import SicilianDefense from '../assets/SicilianDefense.png';
+
 
 function Learn() {
     return (

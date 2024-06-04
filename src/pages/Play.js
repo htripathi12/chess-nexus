@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, Button, Text } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import CustomBoard from '../CustomBoard';
+import CustomBoard from '../components/CustomBoard.js';
 
 function Play() {
     const [fen, setFen] = useState('');
