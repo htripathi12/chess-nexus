@@ -40,12 +40,15 @@ router.post('/login', (req, res) => {
                 res.send('Values Inserted');
             });
         });
-    } else if (regState === 'login') {
+    } 
+    else if (regState === 'login') {
         db.query('SELECT password FROM users WHERE email = ?', [email], (err, result) => {
             if (err) {
                 console.error('Error querying the database:', err);
                 return res.status(500).send('Error processing request');
             }
+
+            console.log("Result: ", result);
 
             if (result.length > 0) {
                 bcrypt.compare(password, result[0].password, (err, isMatch) => {
@@ -54,12 +57,14 @@ router.post('/login', (req, res) => {
                         return res.status(500).send('Error processing request');
                     }
                     isMatch ? res.send('Login successful') : res.status(401).send('Invalid password');
+                    console.log('Login: ', isMatch);
                 });
             } else {
                 res.status(404).send('User not found');
             }
         });
-    } else {
+    } 
+    else {
         res.status(400).send('Invalid registration state');
     }
 });
