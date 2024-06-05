@@ -1,12 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
-const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+const router = express.Router();
 
 const db = mysql.createConnection({
     user: 'root',
@@ -24,11 +21,7 @@ db.connect((err) => {
     console.log('Connected to the database successfully');
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
-
-app.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
     const { email, password, regState } = req.body;
 
     console.log(`Received login/signup request with email: ${email} and state: ${regState}`);
@@ -70,3 +63,5 @@ app.post('/login', (req, res) => {
         res.status(400).send('Invalid registration state');
     }
 });
+
+module.exports = router;

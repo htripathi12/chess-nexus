@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Container, AbsoluteCenter, Flex, Link, Button, Image, FormControl, FormLabel, 
         Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import OAuth2Callback from '../auth.js';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -80,10 +79,10 @@ function Login() {
                                     </Flex>
 
                                     <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
-                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
                                             {/* <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" /> */}
                                         </Button>
-                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
+                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
                                             {/* <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/> */}
                                         </Button>
                                     </Box>
@@ -111,11 +110,11 @@ function Login() {
                                     </Flex>
 
                                     <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
-                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" />
+                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
+                                            {/* <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" /> */}
                                         </Button>
-                                        <Button onClick={OAuth2Callback} bg="transparent" _hover={{ bg: "transparent" }}>
-                                            <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/>
+                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
+                                            {/* <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/> */}
                                         </Button>
                                     </Box>
                                 </Stack>
