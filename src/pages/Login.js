@@ -10,10 +10,9 @@ function Login() {
 
     const handleSignup = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:3000/login', {
+        Axios.post('http://localhost:3000/signup', {
             email: email,
             password: password,
-            regState: 'signup'
         }).then((response) => {
             console.log(response);
         }).catch((error) => {
@@ -52,9 +51,9 @@ function Login() {
             <Container bg='teal.600' borderRadius="30" w='500px' h='500px' color="white" p={5} shadow="2xl" border="2px" borderColor="gray.400">            
                 <Tabs isFitted variant="soft-rounded">
                     <TabList mb="1em" border="1px" borderRadius="21px">
-                        <Tab color="white" _hover={{ color: "white", bg: "teal.800"}} _active={{ transform: "translateX(10px)", 
+                        <Tab as={RouterLink} to='/login' color="white" _hover={{ color: "white", bg: "teal.800"}} _active={{ transform: "translateX(10px)", 
                             transition: "transform 0.2s" }}>Login</Tab>
-                        <Tab color="white" _hover={{ color: "white", bg: "teal.800"}} _active={{ transform: "translateX(10px)", 
+                        <Tab as={RouterLink} to='/signup' color="white" _hover={{ color: "white", bg: "teal.800"}} _active={{ transform: "translateX(10px)", 
                             transition: "transform 0.2s" }}>Sign Up</Tab>
                     </TabList>
                     <TabPanels>
@@ -72,20 +71,6 @@ function Login() {
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Login
                                     </Button>
-                                    <Flex align="center" my="4">
-                                        <Box flex="1" height="1px" bg="white" />
-                                        <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Login</Text>
-                                        <Box flex="1" height="1px" bg="white" />
-                                    </Flex>
-
-                                    <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
-                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
-                                            {/* <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" /> */}
-                                        </Button>
-                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
-                                            {/* <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/> */}
-                                        </Button>
-                                    </Box>
                                 </Stack>
                             </form>
                         </TabPanel>
@@ -103,20 +88,6 @@ function Login() {
                                     <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
                                         Sign Up
                                     </Button>
-                                    <Flex align="center" my="4">
-                                        <Box flex="1" height="1px" bg="white" />
-                                        <Text mx="2" color="white" fontSize="sm" fontWeight="700">Provider Signup</Text>
-                                        <Box flex="1" height="1px" bg="white" />
-                                    </Flex>
-
-                                    <Box display="flex" justifyContent="space-evenly" paddingTop="10px">
-                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
-                                            {/* <Image src="/assets/chesscom.png" alt="chess.com" width="100px" borderRadius="5px" /> */}
-                                        </Button>
-                                        <Button bg="transparent" _hover={{ bg: "transparent" }}>
-                                            {/* <Image src="/assets/lichess.png" alt="lichess.org" width="135px" borderRadius="5px"/> */}
-                                        </Button>
-                                    </Box>
                                 </Stack>
                             </form>
                         </TabPanel>

@@ -13,7 +13,7 @@ function RoutesAndNavbar() {
 
   return (
     <>
-      {location.pathname !== '/login' && (
+      {(location.pathname !== '/login' || location.pathname !== '/signup') && (
         <Flex as="nav" bg="teal.500" color="white" p={4}>
         {/*Navbar*/}
           <Box>
@@ -65,6 +65,7 @@ function RoutesAndNavbar() {
           <Route path="/puzzles" element={<Puzzles />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Login />} />
         </Routes>
       </Container>
     </>
