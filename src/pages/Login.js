@@ -21,6 +21,7 @@ function Login() {
     }
 
     const handleLogin = (e) => {
+        e.preventDefault();
         Axios.post('http://localhost:3000/login', {
             email: email,
             password: password,

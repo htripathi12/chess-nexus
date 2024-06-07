@@ -24,7 +24,7 @@ db.connect((err) => {
 router.post('/signup', (req, res) => {
     const { email, password } = req.body;
 
-    console.log(`Received login/signup request with email: ${email}`);
+    console.log(`Received signup request with email: ${email}`);
     bcrypt.hash(password, saltRounds, (err, hash) => {
         if (err) {
             console.error('Error hashing password:', err);
@@ -43,8 +43,21 @@ router.post('/signup', (req, res) => {
 router.post("/login", (req, res) => {
     const { email, password } = req.body;
 
-    console.log(`Received login/signup request with email: ${email}`);
-    return res.send('Received login/signup request');
+    // Find a user with the provided email
+    db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+        if (err) {
+            console.error('Error querying database:', err);
+            return res.status(500).send('Error querying database');
+        }
+
+        if (results.length > 0) {
+            console.log("Hello world");
+        } else {
+            console.log(`No user found with email: ${email}`);
+        }
+
+        return res.send('Received login request');
+    });
 });
 
 module.exports = router;
