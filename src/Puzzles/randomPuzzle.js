@@ -1,13 +1,11 @@
 const fs = require('fs');
-
-let FEN = '';
-let WhiteElo = '';
-let MoveSequence = '';
+const express = require('express');
+const router = express.Router();
 
 function loadAndSelectPuzzle(filename, callback) {
     fs.readFile(filename, 'utf8', (err, data) => {
         if (err) {
-            console.error(err);
+            console.error(`Error reading file: ${err}`);
             return;
         }
 
@@ -39,14 +37,16 @@ function loadAndSelectPuzzle(filename, callback) {
     });
 }
 
-// Usage
-const filename = 'src/Puzzles/formatted_pgn_output.txt';
-loadAndSelectPuzzle(filename, (randomPuzzle) => {
-    FEN = randomPuzzle['FEN'];
-    WhiteElo = randomPuzzle['WhiteElo'];
-    MoveSequence = randomPuzzle['Move Sequence'];
+router.get('/', (req, res) => { // Change the route to '/'
+    const filename = 'src/Puzzles/formatted_pgn_output.txt';
+    console.log('GET /puzzles');
+    loadAndSelectPuzzle(filename, (randomPuzzle) => {
+        // Extract the FEN and move sequence from the random puzzle
+        const { FEN, 'Move Sequence': moveSequence } = randomPuzzle;
 
-    console.log(`FEN: ${FEN}`);
-    console.log(`White Elo: ${WhiteElo}`);
-    console.log(`Move Sequence: ${MoveSequence}`);
+        // Send the FEN and move sequence as a JSON response
+        res.json({ FEN, moveSequence });
+    });
 });
+
+module.exports = router;
