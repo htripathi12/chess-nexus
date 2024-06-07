@@ -22,9 +22,9 @@ db.connect((err) => {
 });
 
 router.post('/signup', (req, res) => {
-    const { email, password, regState } = req.body;
+    const { email, password } = req.body;
 
-    console.log(`Received login/signup request with email: ${email} and state: ${regState}`);
+    console.log(`Received login/signup request with email: ${email}`);
     bcrypt.hash(password, saltRounds, (err, hash) => {
         if (err) {
             console.error('Error hashing password:', err);
@@ -35,9 +35,16 @@ router.post('/signup', (req, res) => {
                 console.error('Error inserting user:', err);
                 return res.status(500).send('Error inserting values');
             }
-            res.send('Values Inserted');
+            return res.send('Values Inserted');
         });
     });
+});
+
+router.post("/login", (req, res) => {
+    const { email, password } = req.body;
+
+    console.log(`Received login/signup request with email: ${email}`);
+    return res.send('Received login/signup request');
 });
 
 module.exports = router;
