@@ -19,6 +19,10 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
         setFen(chess.current.fen());
     }, [setFen]);
 
+    useEffect(() => {
+        chess.current.load(fen);
+    }, [fen]);
+
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
         const fen = chess.current.fen();
