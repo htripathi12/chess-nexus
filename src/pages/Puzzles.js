@@ -20,14 +20,17 @@ function Puzzles() {
         };
     }, []);
 
-    const getNextPuzzle = () => {
-        Axios.get('http://localhost:3000/puzzles')
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error('There was an error!', error);
-            });
+    const getNextPuzzle = async (retryCount = 3) => {
+        try {
+            const response = await Axios.get('http://localhost:3000/puzzles');
+            console.log(response);
+        } catch (error) {
+            console.error('There was an error!', error);
+            if (retryCount > 0) {
+                console.log(`Retrying... (${retryCount} attempts left)`);
+                setTimeout(() => getNextPuzzle(retryCount - 1), 2000); // retry after 2 seconds
+            }
+        }
     };
 
     return (
