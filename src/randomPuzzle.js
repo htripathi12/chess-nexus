@@ -10,7 +10,7 @@ let numFENs = 0;
 fs.createReadStream('src/lichess_db_puzzle.csv')
     .pipe(csv())
     .on('data', (data) => {
-        if (fens.length < 200) {
+        if (fens.length < 50) {
             fens.push(data.FEN);
         }
     })
