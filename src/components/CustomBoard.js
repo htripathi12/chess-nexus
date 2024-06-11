@@ -9,7 +9,7 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
+const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) => {
     const chess = useRef(new Chess());
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
@@ -20,6 +20,11 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
             chess.current.load(fen);
             setSquareStyles({});
             setSelectedSquare(null);
+
+            // Check if the king is in check after loading the new position
+            if (chess.current.isCheck()) {
+                highlightKingInCheck();
+            }
         }
     }, [fen]);
 
@@ -153,11 +158,13 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
 
     return (
         <Chessboard
-            position={fen} // Use the fen prop directly
+            position={fen}
+            orientation={orientation} // Use the orientation prop
             onSquareClick={onSquareClick}
             onPieceDrop={onDrop}
+            areArrowsAllowed={true}
             customSquareStyles={squareStyles}
-            boardOrientation="white"
+            boardOrientation={orientation} // Apply the orientation prop
             boardWidth={550}
             customDarkSquareStyle={{ backgroundColor: '#008080' }}
             customLightSquareStyle={{ backgroundColor: '#20B2AA' }}

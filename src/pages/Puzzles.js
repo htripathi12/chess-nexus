@@ -5,6 +5,7 @@ import { Button } from '@chakra-ui/react';
 
 function Puzzles() {
     const [fen, setFen] = useState('');
+    const [orientation, setOrientation] = useState('white');
     const [winLoss, setWinLoss] = useState('');
     const customBoardRef = useRef(null);
 
@@ -15,14 +16,11 @@ function Puzzles() {
         };
     }, []);
 
-    useEffect(() => {
-        console.log('FEN updated:', fen);
-    }, [fen]);
-
     const getNextPuzzle = async () => {
         try {
             const response = await Axios.get('http://localhost:3000/puzzles');
             setFen(response.data.fen);
+            setOrientation(response.data.orientation); // Set the orientation from the response data
         } catch (error) {
             console.error('There was an error!', error);
         }
@@ -34,6 +32,7 @@ function Puzzles() {
                 <CustomBoard
                     ref={customBoardRef}
                     fen={fen}
+                    orientation={orientation} // Pass the orientation prop
                     setFen={setFen}
                     setWinLoss={setWinLoss}
                 />
