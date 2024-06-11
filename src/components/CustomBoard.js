@@ -16,12 +16,16 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
     const [animationDuration, setAnimationDuration] = useState(250);
 
     useEffect(() => {
-        setFen(chess.current.fen());
-    }, [setFen]);
+        if (fen && fen !== chess.current.fen()) {
+            chess.current.load(fen);
+            setSquareStyles({});
+            setSelectedSquare(null);
+        }
+    }, [fen]);
 
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
-        const fen = chess.current.fen();
+        const previousFen = chess.current.fen();
         try {
             let move = chess.current.move({
                 from: sourceSquare,
@@ -29,7 +33,11 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
                 promotion: 'q' // Automatically promote to queen
             });
 
-            if (move === null) return; // Invalid move
+            if (move === null) {
+                // Invalid move, revert to previous state
+                chess.current.load(previousFen);
+                return;
+            }
 
             // Highlight the move squares
             setSquareStyles({
@@ -49,7 +57,7 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
                 handleGameOver();
             }
         } catch (error) {
-            chess.current.load(fen); // Revert to previous state on error
+            chess.current.load(previousFen); // Revert to previous state on error
         }
     };
 
@@ -145,7 +153,7 @@ const CustomBoard = forwardRef(({ fen, setFen, setWinLoss }, ref) => {
 
     return (
         <Chessboard
-            position={fen}
+            position={fen} // Use the fen prop directly
             onSquareClick={onSquareClick}
             onPieceDrop={onDrop}
             customSquareStyles={squareStyles}
