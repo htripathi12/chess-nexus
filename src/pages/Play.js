@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard.js';
 
 function Play() {
-    const [fen, setFen] = useState('');
+    const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
     const customBoardRef = useRef(null);

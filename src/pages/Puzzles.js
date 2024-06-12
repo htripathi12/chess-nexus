@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { Button } from '@chakra-ui/react';
 
 function Puzzles() {
-    const [fen, setFen] = useState('');
+    const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
     const [winLoss, setWinLoss] = useState('');
     const customBoardRef = useRef(null);
