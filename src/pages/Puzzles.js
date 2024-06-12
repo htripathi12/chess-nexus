@@ -20,7 +20,9 @@ function Puzzles() {
         try {
             const response = await Axios.get('http://localhost:3000/puzzles');
             setFen(response.data.fen);
-            setOrientation(response.data.orientation); // Set the orientation from the response data
+            const activePlayer = response.data.fen.split(' ')[1];
+            setOrientation(activePlayer === 'w' ? 'white' : 'black');
+            console.log(response.data.moves);
         } catch (error) {
             console.error('There was an error!', error);
         }
