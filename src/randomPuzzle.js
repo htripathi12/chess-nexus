@@ -1,32 +1,11 @@
 const fs = require('fs');
-const readline = require('readline');
 const express = require('express');
 const csv = require('csv-parser');
 const router = express.Router();
 
-let totalLines = 0;
-let isIndexReady = false;
-
-// Determine the total number of lines when the server starts
-const rl = readline.createInterface({
-    input: fs.createReadStream('src/lichess_db_puzzle.csv'),
-    crlfDelay: Infinity
-});
-
-rl.on('line', (line) => {
-    totalLines++;
-});
-
-rl.on('close', () => {
-    isIndexReady = true;
-    console.log('CSV file successfully processed, total lines:', totalLines);
-});
+const totalLines = 3954054;
 
 router.get('/', (req, res) => {
-    if (!isIndexReady) {
-        return res.status(500).send({ error: 'Indexing in progress, please try again later' });
-    }
-
     if (totalLines === 0) {
         return res.status(500).send({ error: 'No FENs loaded' });
     }
@@ -39,11 +18,11 @@ router.get('/', (req, res) => {
         currentLine++;
         if (currentLine === randomLine) {
             stream.destroy(); // Stop reading the file
-            const { FEN, Moves } = data;
+            const { FEN, Moves, GameUrl } = data;
 
             // Validate that FEN and Moves exist
             if (FEN && Moves) {
-                res.send({ fen: FEN, moves: Moves });
+                res.send({ fen: FEN, moves: Moves, URL: GameUrl });
             } else {
                 res.status(500).send({ error: 'Invalid puzzle format' });
             }

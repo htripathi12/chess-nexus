@@ -21,8 +21,8 @@ function Puzzles() {
             const response = await Axios.get('http://localhost:3000/puzzles');
             setFen(response.data.fen);
             const activePlayer = response.data.fen.split(' ')[1];
-            setOrientation(activePlayer === 'w' ? 'white' : 'black');
-            console.log(response.data.moves);
+            setOrientation(activePlayer === 'w' ? 'black' : 'white');
+            console.log(response.data);
         } catch (error) {
             console.error('There was an error!', error);
         }

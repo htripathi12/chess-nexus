@@ -173,6 +173,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
                 borderRadius: '5px',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
             }}
+            showPromotionDialog={true}
             animationDuration={animationDuration}
             onPieceDragEnd={() => setAnimationDuration(0)} // Disable animation for the next move
         />
