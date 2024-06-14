@@ -8,6 +8,7 @@ function Puzzles() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
     const [moves, setMoves] = useState([]);
+    const [moveIndex, setMoveIndex] = useState(0);
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
 
@@ -22,8 +23,9 @@ function Puzzles() {
         try {
             const response = await Axios.get('http://localhost:3000/puzzles');
             const newFen = response.data.fen;
-            setMoves(response.data.moves.split(' '));
-            const firstMove = response.data.moves.split(' ')[0];
+            const moveList = response.data.moves.split(' ');
+            setMoves(moveList);
+            setMoveIndex(0);
 
             chess.current.load(newFen);
 
@@ -34,7 +36,7 @@ function Puzzles() {
 
             // Make the first move in UCI format after a 1 second delay
             setTimeout(() => {
-                chess.current.move(firstMove);
+                chess.current.move(moveList[0]);
 
                 const updatedFen = chess.current.fen();
                 setFen(updatedFen);
@@ -47,7 +49,16 @@ function Puzzles() {
     };
 
     const logMove = (sourceSquare, targetSquare) => {
-        console.log(`Piece moved from ${sourceSquare} to ${targetSquare}`);
+        const userMove = sourceSquare + targetSquare;
+        const expectedMove = moves[moveIndex];
+
+        if (userMove === expectedMove) {
+            console.log('Correct');
+        } else {
+            console.log('Incorrect');
+        }
+
+        setMoveIndex(moveIndex => moveIndex + 1);
     };
 
     return (
