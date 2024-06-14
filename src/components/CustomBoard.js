@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Chessboard } from 'react-chessboard';
-import { Chess } from 'chess.js';
 
-// Function to determine the color of a square
+
 function getSquareColor(square) {
     const letter = square.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
     const number = parseInt(square[1], 10);
@@ -20,14 +19,12 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
             setSquareStyles({});
             setSelectedSquare(null);
 
-            // Check if the king is in check after loading the new position
             if (chessInstance.isCheck()) {
                 highlightKingInCheck();
             }
         }
     }, [fen, chessInstance]);
 
-    // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
         const previousFen = chessInstance.fen();
 
@@ -35,47 +32,41 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
             let move = chessInstance.move({
                 from: sourceSquare,
                 to: targetSquare,
-                promotion: 'q' // always promote to queen
+                promotion: 'q'
             });
 
             if (move === null) {
-                // Invalid move, revert to previous state
                 chessInstance.load(previousFen);
                 return false;
             }
 
-            // Log the move
             if (onMove) {
                 onMove(sourceSquare, targetSquare);
             }
 
-            // Highlight the move squares
             setSquareStyles({
                 [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
                 [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
             });
 
-            // Highlight the king if in check
             if (chessInstance.isCheck()) {
                 highlightKingInCheck();
             }
 
             setFen(chessInstance.fen());
 
-            // Check for game over conditions
             if (chessInstance.isGameOver()) {
                 handleGameOver();
             }
             return true;
         } catch (error) {
-            chessInstance.load(previousFen); // Revert to previous state on error
+            chessInstance.load(previousFen);
             return false;
         }
     };
 
-    // Function to handle square click
     const onSquareClick = (square) => {
-        setAnimationDuration(250); // Enable animation for click moves
+        setAnimationDuration(250);
         if (selectedSquare) {
             const legalMove = chessInstance
                 .moves({ square: selectedSquare, verbose: true })
@@ -84,7 +75,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
             if (legalMove) {
                 chessInstance.move({ from: selectedSquare, to: square, promotion: 'q' });
 
-                // Log the move
                 if (onMove) {
                     onMove(selectedSquare, square);
                 }
@@ -107,7 +97,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         highlightLegalMoves(square);
     };
 
-    // Function to highlight legal moves
     const highlightLegalMoves = (square) => {
         const moves = chessInstance.moves({ square, verbose: true });
         const newSquareStyles = {};
@@ -134,7 +123,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         setSquareStyles(newSquareStyles);
     };
 
-    // Function to highlight the king in check
     const highlightKingInCheck = (styles = {}) => {
         const kingPosition = chessInstance.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chessInstance.turn());
         if (kingPosition) {
@@ -145,7 +133,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         setSquareStyles(styles);
     };
 
-    // Function to handle game over conditions
     const handleGameOver = () => {
         if (chessInstance.isCheckmate()) {
             setWinLoss('Checkmate');
@@ -160,7 +147,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         }
     };
 
-    // Expose undoMove function to parent component
     useImperativeHandle(ref, () => ({
         undoMove: () => {
             chessInstance.undo();
