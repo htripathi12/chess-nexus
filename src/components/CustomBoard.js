@@ -9,31 +9,30 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }, ref) => {
-    const chess = useRef(new Chess());
+const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, chessInstance }, ref) => {
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
 
     useEffect(() => {
-        if (fen && fen !== chess.current.fen()) {
-            chess.current.load(fen);
+        if (fen && fen !== chessInstance.fen()) {
+            chessInstance.load(fen);
             setSquareStyles({});
             setSelectedSquare(null);
 
             // Check if the king is in check after loading the new position
-            if (chess.current.isCheck()) {
+            if (chessInstance.isCheck()) {
                 highlightKingInCheck();
             }
         }
-    }, [fen]);
+    }, [fen, chessInstance]);
 
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
-        const previousFen = chess.current.fen();
+        const previousFen = chessInstance.fen();
 
         try {
-            let move = chess.current.move({
+            let move = chessInstance.move({
                 from: sourceSquare,
                 to: targetSquare,
                 promotion: 'q' // always promote to queen
@@ -41,7 +40,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
 
             if (move === null) {
                 // Invalid move, revert to previous state
-                chess.current.load(previousFen);
+                chessInstance.load(previousFen);
                 return false;
             }
 
@@ -57,19 +56,19 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
             });
 
             // Highlight the king if in check
-            if (chess.current.isCheck()) {
+            if (chessInstance.isCheck()) {
                 highlightKingInCheck();
             }
 
-            setFen(chess.current.fen());
+            setFen(chessInstance.fen());
 
             // Check for game over conditions
-            if (chess.current.isGameOver()) {
+            if (chessInstance.isGameOver()) {
                 handleGameOver();
             }
             return true;
         } catch (error) {
-            chess.current.load(previousFen); // Revert to previous state on error
+            chessInstance.load(previousFen); // Revert to previous state on error
             return false;
         }
     };
@@ -78,26 +77,26 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
     const onSquareClick = (square) => {
         setAnimationDuration(250); // Enable animation for click moves
         if (selectedSquare) {
-            const legalMove = chess.current
+            const legalMove = chessInstance
                 .moves({ square: selectedSquare, verbose: true })
                 .some(move => move.to === square);
 
             if (legalMove) {
-                chess.current.move({ from: selectedSquare, to: square, promotion: 'q' });
+                chessInstance.move({ from: selectedSquare, to: square, promotion: 'q' });
 
                 // Log the move
                 if (onMove) {
                     onMove(selectedSquare, square);
                 }
 
-                setFen(chess.current.fen());
+                setFen(chessInstance.fen());
                 setSquareStyles({
                     [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
                     [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
                 });
                 setSelectedSquare(null);
 
-                if (chess.current.isCheck()) {
+                if (chessInstance.isCheck()) {
                     highlightKingInCheck();
                 }
                 return;
@@ -110,7 +109,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
 
     // Function to highlight legal moves
     const highlightLegalMoves = (square) => {
-        const moves = chess.current.moves({ square, verbose: true });
+        const moves = chessInstance.moves({ square, verbose: true });
         const newSquareStyles = {};
 
         for (const move of moves) {
@@ -128,7 +127,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
             }
         }
 
-        if (chess.current.isCheck()) {
+        if (chessInstance.isCheck()) {
             highlightKingInCheck(newSquareStyles);
         }
 
@@ -137,7 +136,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
 
     // Function to highlight the king in check
     const highlightKingInCheck = (styles = {}) => {
-        const kingPosition = chess.current.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chess.current.turn());
+        const kingPosition = chessInstance.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chessInstance.turn());
         if (kingPosition) {
             styles[kingPosition.square] = {
                 backgroundImage: 'radial-gradient(circle at center, rgba(255, 0, 0, 1) 25%, rgba(255, 0, 0, 0) 80%)'
@@ -148,15 +147,15 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
 
     // Function to handle game over conditions
     const handleGameOver = () => {
-        if (chess.current.isCheckmate()) {
+        if (chessInstance.isCheckmate()) {
             setWinLoss('Checkmate');
-        } else if (chess.current.isDraw()) {
+        } else if (chessInstance.isDraw()) {
             setWinLoss('Draw');
-        } else if (chess.current.isStalemate()) {
+        } else if (chessInstance.isStalemate()) {
             setWinLoss('Stalemate');
-        } else if (chess.current.isThreefoldRepetition()) {
+        } else if (chessInstance.isThreefoldRepetition()) {
             setWinLoss('Threefold Repetition');
-        } else if (chess.current.isInsufficientMaterial()) {
+        } else if (chessInstance.isInsufficientMaterial()) {
             setWinLoss('Insufficient Material');
         }
     };
@@ -164,8 +163,8 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }
     // Expose undoMove function to parent component
     useImperativeHandle(ref, () => ({
         undoMove: () => {
-            chess.current.undo();
-            setFen(chess.current.fen());
+            chessInstance.undo();
+            setFen(chessInstance.fen());
             setSquareStyles({});
         }
     }));

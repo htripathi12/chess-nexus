@@ -8,7 +8,7 @@ function Puzzles() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
     const [moves, setMoves] = useState([]);
-    const [moveIndex, setMoveIndex] = useState(0);
+    const [moveIndex, setMoveIndex] = useState(1);
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
 
@@ -25,7 +25,6 @@ function Puzzles() {
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
             setMoves(moveList);
-            setMoveIndex(0);
 
             chess.current.load(newFen);
             setFen(newFen);
@@ -78,6 +77,7 @@ function Puzzles() {
                     orientation={orientation}
                     setFen={setFen}
                     onMove={logMove}
+                    chessInstance={chess.current} // Pass the chess instance down
                 />
                 <Button onClick={getNextPuzzle} marginTop="3" bg='teal.400' border="1px" display="flex" flexDirection="row" color="white" _hover={{ bg: "teal.700", color: "white" }}>
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-right-filled" width="35" height="35" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
