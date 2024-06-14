@@ -1,17 +1,29 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
-const PORT = 3000;
-
-
+const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
 const db = require('./database');
-const puzzleRouter = require('./randomPuzzle');
+
+const app = express();
+const PORT = 3000;
 
 app.use(express.json());
 app.use(cors());
 app.use("/login", db);
 app.use("/puzzles", puzzleRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+loadPuzzles().then(() => {
+    const server = app.listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`);
+    });
+
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`Port ${PORT} is already in use`);
+            process.exit(1);
+        } else {
+            console.error('Server error:', err);
+        }
+    });
+}).catch((err) => {
+    console.error('Failed to load puzzles:', err);
 });
