@@ -1,19 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, Button, Text } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import CustomBoard from '../components/CustomBoard.js';
+import CustomBoard from '../components/CustomBoard';
+import { Chess } from 'chess.js';
 
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
     const customBoardRef = useRef(null);
+    const chessInstance = useRef(new Chess());
 
     useEffect(() => {
-        // Disable scrolling when the component is mounted
         document.body.style.overflow = 'hidden';
         return () => {
-            // Enable scrolling when the component is unmounted
             document.body.style.overflow = 'auto';
         };
     }, []);
@@ -58,6 +58,7 @@ function Play() {
                         fen={fen}
                         setFen={setFen}
                         setWinLoss={setWinLoss}
+                        chessInstance={chessInstance.current}
                     />
                     <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={handleUndo}>
                         Previous Move
