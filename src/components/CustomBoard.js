@@ -9,14 +9,11 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) => {
+const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove }, ref) => {
     const chess = useRef(new Chess());
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
-    const [promotionMove, setPromotionMove] = useState(null);
-    const [showPromotionOptions, setShowPromotionOptions] = useState(false);
-    const [promotionSquare, setPromotionSquare] = useState(null);
 
     useEffect(() => {
         if (fen && fen !== chess.current.fen()) {
@@ -34,25 +31,23 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
         const previousFen = chess.current.fen();
-        const isPromotion = (sourceSquare[1] === '7' && targetSquare[1] === '8') ||
-                            (sourceSquare[1] === '2' && targetSquare[1] === '1');
-        if (isPromotion) {
-            setPromotionMove({ from: sourceSquare, to: targetSquare });
-            setPromotionSquare(targetSquare);
-            setShowPromotionOptions(true);
-            return false; // Returning false to prevent the default promotion dialog
-        }
 
         try {
             let move = chess.current.move({
                 from: sourceSquare,
-                to: targetSquare
+                to: targetSquare,
+                promotion: 'q' // always promote to queen
             });
 
             if (move === null) {
                 // Invalid move, revert to previous state
                 chess.current.load(previousFen);
                 return false;
+            }
+
+            // Log the move
+            if (onMove) {
+                onMove(sourceSquare, targetSquare);
             }
 
             // Highlight the move squares
@@ -79,42 +74,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
         }
     };
 
-    const handlePromotion = (piece) => {
-        const { from, to } = promotionMove;
-        const move = chess.current.move({
-            from,
-            to,
-            promotion: piece
-        });
-
-        if (move === null) {
-            // Invalid move, return false
-            setShowPromotionOptions(false);
-            return false;
-        }
-
-        // Update the FEN string and return true
-        setFen(chess.current.fen());
-        setShowPromotionOptions(false);
-
-        // Highlight the move squares
-        setSquareStyles({
-            [from]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
-            [to]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
-        });
-
-        // Highlight the king if in check
-        if (chess.current.isCheck()) {
-            highlightKingInCheck();
-        }
-
-        // Check for game over conditions
-        if (chess.current.isGameOver()) {
-            handleGameOver();
-        }
-        return true;
-    };
-
     // Function to handle square click
     const onSquareClick = (square) => {
         setAnimationDuration(250); // Enable animation for click moves
@@ -124,16 +83,13 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
                 .some(move => move.to === square);
 
             if (legalMove) {
-                let move = { from: selectedSquare, to: square };
+                chess.current.move({ from: selectedSquare, to: square, promotion: 'q' });
 
-                if (selectedSquare[1] === '7' && square[1] === '8') {
-                    setPromotionMove(move);
-                    setPromotionSquare(square);
-                    setShowPromotionOptions(true);
-                    return;
+                // Log the move
+                if (onMove) {
+                    onMove(selectedSquare, square);
                 }
 
-                chess.current.move(move);
                 setFen(chess.current.fen());
                 setSquareStyles({
                     [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
@@ -218,8 +174,8 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
         <div style={{ position: 'relative' }}>
             <Chessboard
                 position={fen}
-                orientation={orientation}
                 onSquareClick={onSquareClick}
+                showPromotionDialog={false}
                 onPieceDrop={onDrop}
                 areArrowsAllowed={true}
                 customSquareStyles={squareStyles}
@@ -235,25 +191,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss }, ref) =
                 animationDuration={animationDuration}
                 onPieceDragEnd={() => setAnimationDuration(0)}
             />
-            {showPromotionOptions && promotionSquare && (
-                <div style={{
-                    position: 'absolute',
-                    top: promotionSquare[1] === '8' ? '10px' : 'auto',
-                    bottom: promotionSquare[1] === '1' ? '10px' : 'auto',
-                    left: `${(promotionSquare.charCodeAt(0) - 97) * 68}px`,
-                    zIndex: 1000,
-                    background: 'white',
-                    border: '1px solid black',
-                    borderRadius: '5px',
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
-                    <button onClick={() => handlePromotion('q')}>Queen</button>
-                    <button onClick={() => handlePromotion('r')}>Rook</button>
-                    <button onClick={() => handlePromotion('b')}>Bishop</button>
-                    <button onClick={() => handlePromotion('n')}>Knight</button>
-                </div>
-            )}
         </div>
     );
 });
