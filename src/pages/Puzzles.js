@@ -28,9 +28,8 @@ function Puzzles() {
             setMoveIndex(0);
 
             chess.current.load(newFen);
-
-            // Set the new FEN and orientation
             setFen(newFen);
+
             const activePlayer = newFen.split(' ')[1];
             setOrientation(activePlayer === 'w' ? 'black' : 'white');
 
@@ -40,6 +39,7 @@ function Puzzles() {
 
                 const updatedFen = chess.current.fen();
                 setFen(updatedFen);
+                setMoveIndex(1);
 
                 console.log(response.data);
             }, 1000);
@@ -51,14 +51,22 @@ function Puzzles() {
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
+        console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
 
         if (userMove === expectedMove) {
             console.log('Correct');
+            setTimeout(() => {
+                const nextMove = moves[moveIndex + 1];
+                if (nextMove) {
+                    chess.current.move(nextMove);
+                    const updatedFen = chess.current.fen();
+                    setFen(updatedFen);
+                    setMoveIndex(moveIndex => moveIndex + 2);
+                }
+            }, 1000);
         } else {
             console.log('Incorrect');
         }
-
-        setMoveIndex(moveIndex => moveIndex + 1);
     };
 
     return (
