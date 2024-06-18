@@ -12,6 +12,7 @@ function Puzzles() {
     const [moveIndex, setMoveIndex] = useState(1);
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
+    const [puzzleCompleted, setPuzzleCompleted] = useState(false);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -46,6 +47,7 @@ function Puzzles() {
         }
     };
 
+
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
@@ -53,16 +55,19 @@ function Puzzles() {
 
         if (userMove === expectedMove) {
             console.log('Correct');
-            setTimeout(() => {
-                const nextMove = moves[moveIndex + 1];
-                if (nextMove) {
+            const nextMove = moves[moveIndex + 1];
+            if (nextMove) {
+                setTimeout(() => {
                     chess.current.move(nextMove);
                     setFen(chess.current.fen());
                     setMoveIndex(moveIndex => moveIndex + 2);
-                }
-            }, 1000);
+                }, 1000);
+            } else {
+                setPuzzleCompleted(true);
+            }
         } else {
             console.log('Incorrect');
+            setPuzzleCompleted(false);
         }
     };
 
@@ -108,6 +113,23 @@ function Puzzles() {
                     </Button>
                 </div>
             </div>
+            {puzzleCompleted &&
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    padding: '20px',
+                    backgroundColor: '#282c34',
+                    borderRadius: '10px',
+                    color: '#fff',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    boxShadow: '0px 0px 10px 3px rgba(0, 0, 0, 0.2)',
+                    border: '1px solid #fff'
+                }}>Correct!</div>
+            }
         </div>
     );
 }
