@@ -24,6 +24,7 @@ function Puzzles() {
     const getNextPuzzle = async () => {
         try {
             // TODO: fix server issue with failed HTTP requests
+            setPuzzleCompleted(false);
             const response = await Axios.get('http://localhost:3000/puzzles');
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
