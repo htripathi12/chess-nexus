@@ -13,6 +13,7 @@ function Puzzles() {
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
     const [puzzleCompleted, setPuzzleCompleted] = useState(false);
+    const [incorrectMove, setIncorrectMove] = useState(false); // New state for incorrect move
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -23,8 +24,8 @@ function Puzzles() {
 
     const getNextPuzzle = async () => {
         try {
-            // TODO: fix server issue with failed HTTP requests
             setPuzzleCompleted(false);
+            setIncorrectMove(false);
             const response = await Axios.get('http://localhost:3000/puzzles');
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
@@ -48,7 +49,6 @@ function Puzzles() {
         }
     };
 
-
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
@@ -70,7 +70,7 @@ function Puzzles() {
             }
         } else {
             console.log('Incorrect');
-            setPuzzleCompleted(false);
+            setIncorrectMove(true); // Set incorrect move state
         }
     };
 
@@ -78,6 +78,7 @@ function Puzzles() {
         chess.current.load(initialFEN);
         setFen(initialFEN);
         setMoveIndex(1);
+        setIncorrectMove(false);
 
         // Make the first move after resetting
         const firstMove = moves[0];
@@ -99,6 +100,7 @@ function Puzzles() {
                     setFen={setFen}
                     onMove={logMove}
                     chessInstance={chess.current}
+                    disableBoard={incorrectMove} // Pass disableBoard prop to disable the board
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
                     <Button onClick={redoPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
@@ -132,9 +134,25 @@ function Puzzles() {
                         border: '1px solid #fff'
                     }}>Correct!</div>
                 }
+                {incorrectMove &&
+                    <div style={{
+                        position: 'absolute',
+                        right: '-150px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        padding: '20px',
+                        backgroundColor: '#ff0000',
+                        borderRadius: '10px',
+                        color: '#fff',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        boxShadow: '0px 0px 10px 3px rgba(0, 0, 0, 0.2)',
+                        border: '1px solid #fff'
+                    }}>Incorrect!</div>
+                }
             </div>
         </div>
-
     );
 }
 
