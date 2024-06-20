@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
-import Axios from 'axios';
+import axios from 'axios';
 import { Button } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 
@@ -13,7 +13,8 @@ function Puzzles() {
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
     const [puzzleCompleted, setPuzzleCompleted] = useState(false);
-    const [incorrectMove, setIncorrectMove] = useState(false); // New state for incorrect move
+    const [incorrectMove, setIncorrectMove] = useState(false);
+
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -26,7 +27,7 @@ function Puzzles() {
         try {
             setPuzzleCompleted(false);
             setIncorrectMove(false);
-            const response = await Axios.get('http://localhost:3000/puzzles');
+            const response = await axios.get('http://localhost:3000/puzzles');
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
             setMoves(moveList);
