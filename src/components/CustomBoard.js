@@ -192,7 +192,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
                     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
                 }}
                 animationDuration={animationDuration}
-                onPieceDragEnd={() => setAnimationDuration(0)}
             />
         </div>
     );
