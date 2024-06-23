@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
 const db = require('./database');
+const analyze = require('./analyze');
 
 const app = express();
 const PORT = 3000;
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/login", db);
 app.use("/puzzles", puzzleRouter);
+app.use("/play", analyze);
 //
 const startServer = async () => {
     try {
