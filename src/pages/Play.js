@@ -3,6 +3,8 @@ import { Link, Button, Text } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import { Chess } from 'chess.js';
+import axios from 'axios';
+
 
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -36,6 +38,16 @@ function Play() {
         });
     };
 
+    const loadPGN = async (sourceSquare, targetSquare) => {
+        try {
+            const response = await axios.post('http://localhost:3000/play');
+            console.log(response.data);
+        }
+        catch (error) {
+            console.error('There was an error!', error);
+        }
+    };
+
     return (
         <div>
             <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
@@ -60,9 +72,14 @@ function Play() {
                         setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
                     />
-                    <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={handleUndo}>
-                        Previous Move
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '3px' }}>
+                        <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={handleUndo}>
+                            Previous Move
+                        </Button>
+                        <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={loadPGN}>
+                            Load PGN
+                        </Button>
+                    </div>
                 </div>
             </div>
             {winLoss && <div>{winLoss}</div>}
