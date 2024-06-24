@@ -5,14 +5,15 @@ import CustomBoard from '../components/CustomBoard';
 import { Chess } from 'chess.js';
 import axios from 'axios';
 
-
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
+    const [pgnLoaded, setPgnLoaded] = useState(false);
     const customBoardRef = useRef(null);
     const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
+    const moveIndex = useRef(0);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -28,15 +29,20 @@ function Play() {
     }, [fen]);
 
     const handleUndo = () => {
-        setHistory((prevHistory) => {
-            if (prevHistory.length > 1) {
-                const newHistory = prevHistory.slice(0, -1);
-                const previousFen = newHistory[newHistory.length - 1];
-                setFen(previousFen);
-                return newHistory;
-            }
-            return prevHistory;
-        });
+        if (moveIndex.current > 0) {
+            moveIndex.current -= 1;
+            chessInstance.current.undo();
+            setFen(chessInstance.current.fen());
+        }
+    };
+
+    const handleNextMove = () => {
+        const moves = chessInstance.current.history();
+        if (moveIndex.current < moves.length) {
+            chessInstance.current.move(moves[moveIndex.current]);
+            setFen(chessInstance.current.fen());
+            moveIndex.current += 1;
+        }
     };
 
     const handleSubmit = async () => {
@@ -44,6 +50,15 @@ function Play() {
             const pgn = pgnRef.current.value;
             const response = await axios.post('http://localhost:3000/play', { pgn });
             console.log(response.data);
+            if (response.data.status === 'success') {
+                chessInstance.current.loadPgn(pgn);
+                setPgnLoaded(true);
+                moveIndex.current = 0;
+                setFen(chessInstance.current.fen());
+            } else {
+                setPgnLoaded(false);
+                setWinLoss(response.data.message);
+            }
         } catch (error) {
             console.error('There was an error!', error);
         }
@@ -75,9 +90,12 @@ function Play() {
                         setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
                     />
-                    <Button style={{ marginTop: '10px', alignSelf: 'flex-start' }} onClick={handleUndo}>
-                        Previous Move
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
+                        <Button onClick={handleUndo}>
+                            Previous Move
+                        </Button>
+                        {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>}
+                    </div>
                 </div>
                 <div style={{ 
                     display: 'flex', 
