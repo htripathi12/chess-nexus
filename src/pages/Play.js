@@ -47,10 +47,11 @@ function Play() {
 
     const handleSubmit = async () => {
         try {
-            const pgn = pgnRef.current.value;
+            let pgn = pgnRef.current.value;
             const response = await axios.post('http://localhost:3000/play', { pgn });
             console.log(response.data);
-            if (response.data.status === 'success') {
+            console.log(pgn);
+            if (response.data.status === 'success') { 
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
                 moveIndex.current = 0;
