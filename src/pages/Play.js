@@ -10,6 +10,7 @@ function Play() {
     const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
     const [pgnLoaded, setPgnLoaded] = useState(false);
+    const [orientation, setOrientation] = useState('white');
     const customBoardRef = useRef(null);
     const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
@@ -51,7 +52,7 @@ function Play() {
             const response = await axios.post('http://localhost:3000/play', { pgn });
             console.log(response.data);
             console.log(pgn);
-            if (response.data.status === 'success') { 
+            if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
                 moveIndex.current = 0;
@@ -63,6 +64,10 @@ function Play() {
         } catch (error) {
             console.error('There was an error!', error);
         }
+    };
+
+    const handleSwitchOrientation = () => {
+        setOrientation(orientation === 'white' ? 'black' : 'white');
     };
 
     return (
@@ -90,12 +95,22 @@ function Play() {
                         setFen={setFen}
                         setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
+                        orientation={orientation}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
                         <Button onClick={handleUndo}>
                             Previous Move
                         </Button>
                         {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>}
+                        <Button onClick={handleSwitchOrientation}>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M3 8l4 -4l4 4" />
+                                <path d="M7 4l0 9" />
+                                <path d="M13 16l4 4l4 -4" />
+                                <path d="M17 10l0 10" />
+                            </svg>
+                        </Button>
                     </div>
                 </div>
                 <div style={{ 
