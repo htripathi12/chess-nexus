@@ -12,6 +12,7 @@ function Play() {
     const [history, setHistory] = useState([]);
     const customBoardRef = useRef(null);
     const chessInstance = useRef(new Chess());
+    const pgnRef = useRef(null);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -38,12 +39,12 @@ function Play() {
         });
     };
 
-    const handleSubmit = async (sourceSquare, targetSquare) => {
+    const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/play');
+            const pgn = pgnRef.current.value;
+            const response = await axios.post('http://localhost:3000/play', { pgn });
             console.log(response.data);
-        }
-        catch (error) {
+        } catch (error) {
             console.error('There was an error!', error);
         }
     };
@@ -85,6 +86,7 @@ function Play() {
                     marginLeft: '20px', 
                 }}>
                     <Textarea
+                        ref={pgnRef}
                         width="300px"
                         height="300px"
                         fontSize="16px"
