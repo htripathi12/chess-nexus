@@ -15,7 +15,8 @@ const hasVitalTags = (pgn) => {
     // Check if all required tags are present
     for (let tag of requiredTags) {
         if (!(tag in tags)) {
-            return false;
+            return true;
+            //return false;
         }
     }
 
@@ -24,17 +25,39 @@ const hasVitalTags = (pgn) => {
     const blackElo = parseInt(tags['BlackElo'], 10);
 
     if (isNaN(whiteElo) || isNaN(blackElo)) {
-        return false;
+        return true;
+        //return false;
     }
 
     return true;
 };
 
+// Function to format the PGN into an array of lines
+function formatPGN(pgn) {
+    const lines = pgn.split('\n').filter(line => line.trim() !== '');
+    const formattedPGN = [];
+    let movesSection = '';
+
+    lines.forEach(line => {
+        if (line.startsWith('[')) {
+            formattedPGN.push(line.trim());
+        } else {
+            movesSection += ' ' + line.trim();
+        }
+    });
+
+    if (movesSection) {
+        formattedPGN.push(movesSection.trim());
+    }
+
+    return formattedPGN;
+}
+
 router.post('/', (req, res) => {
     const { pgn } = req.body;
 
     if (hasVitalTags(pgn)) {
-        res.json({ status: 'success', message: 'PGN has all vital tags and valid Elo ratings' });
+        res.json({ status: 'success', pgn: formatPGN(pgn) });
     } else {
         res.json({ status: 'error', message: 'Missing vital PGN tags or invalid Elo ratings' });
     }

@@ -142,7 +142,7 @@ function Puzzles() {
                             top: '50%',
                             transform: 'translateY(-50%)',
                             padding: '20px',
-                            backgroundColor: '#282c34',
+                            backgroundColor: '#008000',                       
                             borderRadius: '10px',
                             color: '#fff',
                             fontSize: '24px',
