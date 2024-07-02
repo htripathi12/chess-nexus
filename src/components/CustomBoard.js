@@ -9,7 +9,7 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, chessInstance, disableBoard }, ref) => {
+const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, chessInstance, disableBoard, customArrows }, ref) => {
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
@@ -191,6 +191,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
                     borderRadius: '5px',
                     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
                 }}
+                customArrows={customArrows}
                 animationDuration={animationDuration}
             />
         </div>

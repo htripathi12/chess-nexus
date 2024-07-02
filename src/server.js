@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); // Add this line to use the path module
 const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
 const db = require('./database');
 const analyze = require('./analyze');
@@ -13,7 +14,7 @@ app.use(cors());
 app.use("/login", db);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
-//
+
 const startServer = async () => {
     try {
         await loadPuzzles();
