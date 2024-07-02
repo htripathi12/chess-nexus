@@ -15,10 +15,11 @@ function Play() {
     const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
     const moveIndex = useRef(0);
+    const [bestMove, setBestMove] = useState([]);
 
     useEffect(() => {
         const stockfish = new Worker("./stockfish.js");
-        const DEPTH = 16; // number of halfmoves the engine looks ahead
+        const DEPTH = 24;
         const FEN_POSITION = chessInstance.current.fen();
 
         stockfish.postMessage("uci");
@@ -26,9 +27,14 @@ function Play() {
         stockfish.postMessage(`go depth ${DEPTH}`);
 
         stockfish.onmessage = (e) => {
-        if (e.data.startsWith('bestmove')) {
-            console.log(e.data); // Logs only messages that start with "bestmove"
-        }
+            if (e.data.startsWith('bestmove')) {
+                console.log(e.data);
+                let bestMoveFull = e.data.split(' ')[1];
+                console.log(bestMoveFull);
+                let bestMoveSquares = [bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)];
+                console.log(bestMoveSquares);
+                setBestMove(bestMoveSquares);
+            }
         };
     }, [fen]);
 
@@ -112,6 +118,7 @@ function Play() {
                         setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
                         orientation={orientation}
+                        // customArrows={bestMove}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
                         <Button onClick={handleUndo}>
