@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Textarea, Link, Button, Text } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import { Chess } from 'chess.js';
 import axios from 'axios';
-import Engine from '../stockfish/engine'
 
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -16,6 +15,22 @@ function Play() {
     const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
     const moveIndex = useRef(0);
+
+    useEffect(() => {
+        const stockfish = new Worker("./stockfish.js");
+        const DEPTH = 16; // number of halfmoves the engine looks ahead
+        const FEN_POSITION = chessInstance.current.fen();
+
+        stockfish.postMessage("uci");
+        stockfish.postMessage(`position fen ${FEN_POSITION}`);
+        stockfish.postMessage(`go depth ${DEPTH}`);
+
+        stockfish.onmessage = (e) => {
+        if (e.data.startsWith('bestmove')) {
+            console.log(e.data); // Logs only messages that start with "bestmove"
+        }
+        };
+    }, [fen]);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
