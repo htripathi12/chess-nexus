@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import { Chess } from 'chess.js';
 import axios from 'axios';
+import Engine from '../stockfish/engine'
 
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
