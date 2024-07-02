@@ -23,11 +23,11 @@ export default class Engine {
   }
 
   // Common sendMessage commands.
-  setPosition(fenString) {
+  setPosition(fenString: string) {
     this.sendMessage(`position fen ${fenString}`);
   }
 
-  evaluatePosition(fenString, depth = 16) {
+  evaluatePosition(fenString: string, depth: number = 16) {
     if (depth > 24) depth = 24;
 
     this.setPosition(fenString);
