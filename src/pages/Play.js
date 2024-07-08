@@ -126,7 +126,7 @@ function Play() {
                         </Button>
                         {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>}
                         <Button onClick={handleSwitchOrientation}>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M3 8l4 -4l4 4" />
                                 <path d="M7 4l0 9" />
