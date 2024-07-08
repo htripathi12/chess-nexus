@@ -15,6 +15,10 @@ app.use("/login", db);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 const startServer = async () => {
     try {
         await loadPuzzles();
