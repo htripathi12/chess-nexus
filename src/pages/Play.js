@@ -31,7 +31,7 @@ function Play() {
                 console.log(e.data);
                 let bestMoveFull = e.data.split(' ')[1];
                 console.log(bestMoveFull);
-                let bestMoveSquares = [bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)];
+                let bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
                 console.log(bestMoveSquares);
                 setBestMove(bestMoveSquares);
             }
@@ -118,7 +118,7 @@ function Play() {
                         setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
                         orientation={orientation}
-                        // customArrows={bestMove}
+                        customArrows={bestMove}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
                         <Button onClick={handleUndo}>
