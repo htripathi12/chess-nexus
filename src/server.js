@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // Add this line to use the path module
+const path = require('path');
 const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
 const db = require('./database');
 const analyze = require('./analyze');

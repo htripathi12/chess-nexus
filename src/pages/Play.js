@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Textarea, Link, Button, Text } from '@chakra-ui/react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Textarea, Link, Button, Text, Select } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import { Chess } from 'chess.js';
@@ -16,27 +16,31 @@ function Play() {
     const pgnRef = useRef(null);
     const moveIndex = useRef(0);
     const [bestMove, setBestMove] = useState([]);
+    const stockfishWorkerRef = useRef(null);
+    const [depth, setDepth] = useState(19);
 
     useEffect(() => {
-        const stockfish = new Worker("./stockfish.js");
-        const DEPTH = 24;
-        const FEN_POSITION = chessInstance.current.fen();
+        stockfishWorkerRef.current = new Worker("./stockfish.js");
+        stockfishWorkerRef.current.postMessage("uci");
 
-        stockfish.postMessage("uci");
-        stockfish.postMessage(`position fen ${FEN_POSITION}`);
-        stockfish.postMessage(`go depth ${DEPTH}`);
-
-        stockfish.onmessage = (e) => {
+        stockfishWorkerRef.current.onmessage = (e) => {
             if (e.data.startsWith('bestmove')) {
-                console.log(e.data);
-                let bestMoveFull = e.data.split(' ')[1];
-                console.log(bestMoveFull);
-                let bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
-                console.log(bestMoveSquares);
+                const bestMoveFull = e.data.split(' ')[1];
+                const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
                 setBestMove(bestMoveSquares);
             }
         };
-    }, [fen]);
+
+        return () => {
+            if (stockfishWorkerRef.current) {
+                stockfishWorkerRef.current.terminate();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        runStockfish(fen);
+    }, [fen, depth]);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -51,11 +55,19 @@ function Play() {
         }
     }, [fen]);
 
+    const runStockfish = (position) => {
+        if (stockfishWorkerRef.current) {
+            stockfishWorkerRef.current.postMessage(`position fen ${position}`);
+            stockfishWorkerRef.current.postMessage(`go depth ${depth}`);
+        }
+    };
+
     const handleUndo = () => {
-        if (moveIndex.current > 0) {
-            moveIndex.current -= 1;
+        if (chessInstance.current.history().length > 0) {
             chessInstance.current.undo();
-            setFen(chessInstance.current.fen());
+            const newFen = chessInstance.current.fen();
+            setFen(newFen);
+            runStockfish(newFen);
         }
     };
 
@@ -166,6 +178,17 @@ function Play() {
                     <Button style={{ marginTop: '10px' }} onClick={handleSubmit}>
                         Submit
                     </Button>
+                    <Select
+                        placeholder="Select depth"
+                        value={depth}
+                        onChange={(e) => setDepth(Number(e.target.value))}
+                        mt={4}
+                        width="300px"
+                    >
+                        {[...Array(24).keys()].map(i => (
+                            <option key={i} value={i + 1}>{i + 1}</option>
+                        ))}
+                    </Select>
                 </div>
             </div>
             {winLoss && <div>{winLoss}</div>}
