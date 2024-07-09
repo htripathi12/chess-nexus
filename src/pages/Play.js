@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Textarea, Link, Button, Text, Select } from '@chakra-ui/react';
-import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
+import EvaluationBar from '../components/EvaluationBar';
 import { Chess } from 'chess.js';
 import axios from 'axios';
 
@@ -18,16 +19,22 @@ function Play() {
     const [bestMove, setBestMove] = useState([]);
     const stockfishWorkerRef = useRef(null);
     const [depth, setDepth] = useState(19);
+    const [evaluation, setEvaluation] = useState(0);
 
     useEffect(() => {
         stockfishWorkerRef.current = new Worker("./stockfish.js");
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
+            //console.log(e.data);
             if (e.data.startsWith('bestmove')) {
                 const bestMoveFull = e.data.split(' ')[1];
                 const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
                 setBestMove(bestMoveSquares);
+            }
+            if (e.data.includes('cp')) {
+                const tempEval = e.data.split(' ')[9] / 100;
+                setEvaluation(tempEval);
             }
         };
 
@@ -122,6 +129,9 @@ function Play() {
                 </Link>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <div style={{ paddingRight: "20px" }}>
+                  <EvaluationBar evaluation={evaluation} orientation={orientation} />
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <CustomBoard
                         ref={customBoardRef}
