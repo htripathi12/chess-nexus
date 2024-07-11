@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Link, Button, Text, Select } from '@chakra-ui/react';
+import { Textarea, Link, Button, Text, Select, Input } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -8,6 +8,8 @@ import axios from 'axios';
 
 function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+    const [fenInput, setFenInput] = useState(fen);
+    const [fenError, setFenError] = useState(false);
     const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
     const [pgnLoaded, setPgnLoaded] = useState(false);
@@ -70,11 +72,26 @@ function Play() {
         }
     };
 
+    const handleFenChange = (event) => {
+        const inputFen = event.target.value;
+        setFenInput(inputFen);
+        try {
+            chessInstance.current.load(inputFen);
+            setFenError(false);
+            setFen(inputFen);
+            runStockfish(inputFen);
+        } catch (e) {
+            setFenError(true);
+        }
+    };
+    
+
     const handleUndo = () => {
         if (chessInstance.current.history().length > 0) {
             chessInstance.current.undo();
             const newFen = chessInstance.current.fen();
             setFen(newFen);
+            setFenInput(newFen);
             runStockfish(newFen);
         }
     };
@@ -83,7 +100,9 @@ function Play() {
         const moves = chessInstance.current.history();
         if (moveIndex.current < moves.length) {
             chessInstance.current.move(moves[moveIndex.current]);
-            setFen(chessInstance.current.fen());
+            const newFen = chessInstance.current.fen();
+            setFen(newFen);
+            setFenInput(newFen);
             moveIndex.current += 1;
         }
     };
@@ -98,7 +117,9 @@ function Play() {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
                 moveIndex.current = 0;
-                setFen(chessInstance.current.fen());
+                const newFen = chessInstance.current.fen();
+                setFen(newFen);
+                setFenInput(newFen);
             } else {
                 setPgnLoaded(false);
                 setWinLoss(response.data.message);
@@ -130,7 +151,7 @@ function Play() {
                 </Link>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <div style={{ paddingRight: "20px" }}>
+                <div style={{ paddingRight: "20px", paddingBottom: "30px" }}>
                   <EvaluationBar evaluation={evaluation} orientation={orientation} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -165,6 +186,29 @@ function Play() {
                     alignItems: 'flex-start',
                     marginLeft: '20px', 
                 }}>
+                    <Input
+                        value={fenInput}
+                        onChange={handleFenChange}
+                        width="300px"
+                        height="50px"
+                        fontSize="16px"
+                        padding="10px"
+                        margin="0 0 20px 0"
+                        border="3px solid"
+                        borderColor={fenError ? "red" : "#1E8C87"}
+                        borderRadius="8px"
+                        placeholder="Enter FEN"
+                        focusBorderColor="#008080"
+                        _hover={{
+                            borderColor: "#008080",
+                        }}
+                        sx={{
+                            '::placeholder': {
+                                color: '#008080',
+                            },
+                        }}
+                        onFocus={(event) => event.target.select()}
+                    />
                     <Textarea
                         ref={pgnRef}
                         width="300px"
