@@ -26,7 +26,7 @@ function Play() {
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
-            //console.log(e.data);
+            console.log(e.data);
             if (e.data.startsWith('bestmove')) {
                 const bestMoveFull = e.data.split(' ')[1];
                 const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
@@ -34,7 +34,8 @@ function Play() {
             }
             if (e.data.includes('cp')) {
                 const tempEval = e.data.split(' ')[9] / 100;
-                setEvaluation(tempEval);
+                const isWhiteTurn = chessInstance.current.turn() === 'w';
+                setEvaluation(isWhiteTurn ? tempEval : -tempEval);
             }
         };
 
