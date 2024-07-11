@@ -3,8 +3,8 @@ import { Box, Text } from '@chakra-ui/react';
 
 const EvaluationBar = ({ evaluation, orientation }) => {
   const scoreToPercentage = (score) => {
-    const cappedScore = Math.max(-1000, Math.min(1000, score));
-    return ((cappedScore + 1000) / 2000) * 100;
+    const cappedScore = Math.max(-10, Math.min(10, score));
+    return ((cappedScore + 10) / 20) * 100;
   };
 
   const percentage = scoreToPercentage(evaluation);
