@@ -119,17 +119,18 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         for (const move of moves) {
             const squareColor = getSquareColor(move.to);
             if (move.flags.includes('c')) {
-                let circleColor = squareColor === 'light' ? '#008080' : '#20B2AA';
+                let circleColor = squareColor === 'light' ? 'rgba(0, 128, 128, 0.85)' : 'rgba(32, 178, 170, 0.85)';
                 newSquareStyles[move.to] = {
                     backgroundColor: 'rgba(211, 211, 211, 1)',
                     backgroundImage: `radial-gradient(ellipse at center, ${circleColor} 50%, transparent 100%)`
                 };
             } else {
                 newSquareStyles[move.to] = {
-                    backgroundImage: 'radial-gradient(circle at center, rgba(211, 211, 211, 1) 20%, rgba(211, 211, 211, 0) 26%)'
+                    backgroundImage: 'radial-gradient(circle at center, rgba(211, 211, 211, 0.85) 20%, rgba(211, 211, 211, 0) 26%)'
                 };
             }
         }
+        
 
         if (chessInstance.isCheck()) {
             highlightKingInCheck(newSquareStyles);
