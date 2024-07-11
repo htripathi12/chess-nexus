@@ -186,6 +186,25 @@ function Play() {
                     alignItems: 'flex-start',
                     marginLeft: '20px', 
                 }}>
+                    <Select
+                        placeholder="Select Depth"
+                        value={depth}
+                        onChange={(e) => setDepth(Number(e.target.value))}
+                        mt={4}
+                        width="300px"
+                        margin="0 0 20px 0"
+                        border="3px solid"
+                        borderColor="#1E8C87"
+                        borderRadius="8px"
+                        focusBorderColor="#008080"
+                        _hover={{
+                            borderColor: "#008080",
+                        }}
+                    >
+                        {[...Array(24).keys()].map(i => (
+                            <option key={i} value={i + 1}>{i + 1}</option>
+                        ))}
+                    </Select>
                     <Input
                         value={fenInput}
                         onChange={handleFenChange}
@@ -233,17 +252,6 @@ function Play() {
                     <Button style={{ marginTop: '10px' }} onClick={handleSubmit}>
                         Submit
                     </Button>
-                    <Select
-                        placeholder="Select depth"
-                        value={depth}
-                        onChange={(e) => setDepth(Number(e.target.value))}
-                        mt={4}
-                        width="300px"
-                    >
-                        {[...Array(24).keys()].map(i => (
-                            <option key={i} value={i + 1}>{i + 1}</option>
-                        ))}
-                    </Select>
                 </div>
             </div>
             {winLoss && <div>{winLoss}</div>}
