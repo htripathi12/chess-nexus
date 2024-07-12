@@ -10,15 +10,15 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
   let displayValue;
   let percentage;
   if (isMate) {
-    displayValue = `M${evaluation}`; // Removed the '+' from the mate display
+    displayValue = `M${evaluation}`;
     percentage = evaluation > 0 ? 100 : 0;
   } else {
     percentage = scoreToPercentage(evaluation);
     displayValue = evaluation > 0 ? `+${evaluation}` : `${evaluation}`;
   }
 
-  const evaluationBoxHeight = 20; // Adjust based on actual height
-  const containerHeight = 500; // Container height
+  const evaluationBoxHeight = 20;
+  const containerHeight = 500;
   let pixelPosition = (percentage / 100) * containerHeight;
   pixelPosition = Math.max(evaluationBoxHeight / 2, Math.min(containerHeight - (evaluationBoxHeight / 2), pixelPosition));
   const textBoxPosition = `${100 - (pixelPosition / containerHeight) * 100}%`;
@@ -42,7 +42,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
         bottom="0"
         height="100%"
         width="100%"
-        background={orientation === 'black' ? `linear-gradient(to bottom, #008080 ${percentage}%, #FFFFFF ${percentage}%)` : `linear-gradient(to top, #008080 ${percentage}%, #FFFFFF ${percentage}%)`}
+        background={orientation === 'black' ? `linear-gradient(to bottom, #FFFFFF ${percentage}%, #008080 ${percentage}%)` : `linear-gradient(to top, #FFFFFF ${percentage}%, #008080 ${percentage}%)`}
         transition="background 0.5s ease"
       />
       <Box
