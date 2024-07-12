@@ -1,14 +1,27 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
 
-const EvaluationBar = ({ evaluation, orientation }) => {
+const EvaluationBar = ({ evaluation, orientation, isMate }) => {
   const scoreToPercentage = (score) => {
     const cappedScore = Math.max(-10, Math.min(10, score));
     return ((cappedScore + 10) / 20) * 100;
   };
 
-  const percentage = scoreToPercentage(evaluation);
-  const textBoxPosition = `${100 - percentage}%`;
+  let displayValue;
+  let percentage;
+  if (isMate) {
+    displayValue = `M${evaluation}`; // Removed the '+' from the mate display
+    percentage = evaluation > 0 ? 100 : 0;
+  } else {
+    percentage = scoreToPercentage(evaluation);
+    displayValue = evaluation > 0 ? `+${evaluation}` : `${evaluation}`;
+  }
+
+  const evaluationBoxHeight = 20; // Adjust based on actual height
+  const containerHeight = 500; // Container height
+  let pixelPosition = (percentage / 100) * containerHeight;
+  pixelPosition = Math.max(evaluationBoxHeight / 2, Math.min(containerHeight - (evaluationBoxHeight / 2), pixelPosition));
+  const textBoxPosition = `${100 - (pixelPosition / containerHeight) * 100}%`;
 
   return (
     <Box
@@ -16,12 +29,13 @@ const EvaluationBar = ({ evaluation, orientation }) => {
       flexDirection="column"
       alignItems="center"
       height="500px"
-      width="60px"
+      width="50px"
       border="1px solid #ccc"
       borderRadius="5px"
       overflow="hidden"
       position="relative"
       background="linear-gradient(to top, #f0f0f0, #ffffff)"
+      boxShadow="0 5px 15px rgba(0, 0, 0, 0.5)"
     >
       <Box
         position="absolute"
@@ -41,7 +55,7 @@ const EvaluationBar = ({ evaluation, orientation }) => {
         borderRadius="4px"
       >
         <Text fontSize="sm" fontWeight="bold" color="white">
-          {evaluation > 0 ? `+${evaluation}` : evaluation}
+          {displayValue}
         </Text>
       </Box>
     </Box>
