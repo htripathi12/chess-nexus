@@ -23,6 +23,7 @@ function Play() {
     const stockfishWorkerRef = useRef(null);
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
+    const [isMate, setIsMate] = useState(false);
 
     useEffect(() => {
         stockfishWorkerRef.current = new Worker("./stockfish.js");
@@ -34,12 +35,16 @@ function Play() {
                 const bestMoveFull = e.data.split(' ')[1];
                 const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
                 setBestMove(bestMoveSquares);
-                setLoading(false); // Stop loading when the best move is received
+                setLoading(false);
             }
             if (e.data.includes('cp')) {
                 const tempEval = e.data.split(' ')[9] / 100;
                 const isWhiteTurn = chessInstance.current.turn() === 'w';
                 setEvaluation(isWhiteTurn ? tempEval : -tempEval);
+            } else if (e.data.includes('mate')) {
+                const mateInMoves = e.data.split(' ')[9];
+                setEvaluation(mateInMoves);
+                setIsMate(true);
             }
         };
 
@@ -69,7 +74,7 @@ function Play() {
 
     const runStockfish = (position) => {
         if (stockfishWorkerRef.current) {
-            setLoading(true); // Start loading when Stockfish starts processing
+            setLoading(true);
             stockfishWorkerRef.current.postMessage(`position fen ${position}`);
             stockfishWorkerRef.current.postMessage(`go depth ${depth}`);
         }
@@ -154,7 +159,7 @@ function Play() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 <div style={{ paddingRight: "20px", paddingBottom: "30px" }}>
-                  <EvaluationBar evaluation={evaluation} orientation={orientation} />
+                  <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <CustomBoard
@@ -187,10 +192,15 @@ function Play() {
                     flexDirection: 'column', 
                     alignItems: 'flex-start',
                     marginLeft: '20px', 
+                    position: 'relative'
                 }}>
                     {loading && (
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <Spinner size="md" color="teal.500" />
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            position: 'absolute', 
+                        }}>
+                            <Spinner size="lg" color="teal.500" />
                         </div>
                     )}
                     <Select
@@ -199,7 +209,7 @@ function Play() {
                         onChange={(e) => setDepth(Number(e.target.value))}
                         mt={4}
                         width="300px"
-                        margin="0 0 20px 0"
+                        margin="40px 0 20px 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
@@ -234,6 +244,7 @@ function Play() {
                             },
                         }}
                         onFocus={(event) => event.target.select()}
+                        spellCheck="false"
                     />
                     <Textarea
                         ref={pgnRef}
