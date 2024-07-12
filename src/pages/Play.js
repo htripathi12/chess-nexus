@@ -56,6 +56,7 @@ function Play() {
     }, []);
 
     useEffect(() => {
+        setBestMove([[]]);
         runStockfish(fen);
     }, [fen, depth]);
 
@@ -199,6 +200,7 @@ function Play() {
                             display: 'flex', 
                             alignItems: 'center', 
                             position: 'absolute', 
+                            top: '-20px',
                         }}>
                             <Spinner size="lg" color="teal.500" />
                         </div>
