@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Link, Button, Text, Select, Input } from '@chakra-ui/react';
+import { Textarea, Link, Button, Text, Select, Input, Spinner } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -14,6 +14,7 @@ function Play() {
     const [history, setHistory] = useState([]);
     const [pgnLoaded, setPgnLoaded] = useState(false);
     const [orientation, setOrientation] = useState('white');
+    const [loading, setLoading] = useState(false);
     const customBoardRef = useRef(null);
     const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
@@ -33,6 +34,7 @@ function Play() {
                 const bestMoveFull = e.data.split(' ')[1];
                 const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
                 setBestMove(bestMoveSquares);
+                setLoading(false); // Stop loading when the best move is received
             }
             if (e.data.includes('cp')) {
                 const tempEval = e.data.split(' ')[9] / 100;
@@ -67,6 +69,7 @@ function Play() {
 
     const runStockfish = (position) => {
         if (stockfishWorkerRef.current) {
+            setLoading(true); // Start loading when Stockfish starts processing
             stockfishWorkerRef.current.postMessage(`position fen ${position}`);
             stockfishWorkerRef.current.postMessage(`go depth ${depth}`);
         }
@@ -84,7 +87,6 @@ function Play() {
             setFenError(true);
         }
     };
-    
 
     const handleUndo = () => {
         if (chessInstance.current.history().length > 0) {
@@ -186,6 +188,11 @@ function Play() {
                     alignItems: 'flex-start',
                     marginLeft: '20px', 
                 }}>
+                    {loading && (
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            <Spinner size="md" color="teal.500" />
+                        </div>
+                    )}
                     <Select
                         placeholder="Select Depth"
                         value={depth}
@@ -202,7 +209,7 @@ function Play() {
                         }}
                     >
                         {[...Array(24).keys()].map(i => (
-                            <option key={i} value={i + 1}>{i + 1}</option>
+                            <option key={i} value={i + 1}>Depth: {i + 1}</option>
                         ))}
                     </Select>
                     <Input
