@@ -7,6 +7,7 @@ import { Chess } from 'chess.js';
 import axios from 'axios';
 
 function Play() {
+    // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [fenInput, setFenInput] = useState(fen);
     const [fenError, setFenError] = useState(false);
@@ -15,16 +16,19 @@ function Play() {
     const [pgnLoaded, setPgnLoaded] = useState(false);
     const [orientation, setOrientation] = useState('white');
     const [loading, setLoading] = useState(false);
-    const customBoardRef = useRef(null);
-    const chessInstance = useRef(new Chess());
-    const pgnRef = useRef(null);
-    const moveIndex = useRef(0);
     const [bestMove, setBestMove] = useState([]);
-    const stockfishWorkerRef = useRef(null);
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
 
+    // Refs
+    const customBoardRef = useRef(null);
+    const chessInstance = useRef(new Chess());
+    const pgnRef = useRef(null);
+    const moveIndex = useRef(0);
+    const stockfishWorkerRef = useRef(null);
+
+    // Initialize and handle Stockfish messages
     useEffect(() => {
         stockfishWorkerRef.current = new Worker("./stockfish.js");
         stockfishWorkerRef.current.postMessage("uci");
@@ -32,19 +36,11 @@ function Play() {
         stockfishWorkerRef.current.onmessage = (e) => {
             console.log(e.data);
             if (e.data.startsWith('bestmove')) {
-                const bestMoveFull = e.data.split(' ')[1];
-                const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
-                setBestMove(bestMoveSquares);
-                setLoading(false);
-            }
-            if (e.data.includes('cp')) {
-                const tempEval = e.data.split(' ')[9] / 100;
-                const isWhiteTurn = chessInstance.current.turn() === 'w';
-                setEvaluation(isWhiteTurn ? tempEval : -tempEval);
+                handleBestMove(e.data);
+            } else if (e.data.includes('cp')) {
+                handleCentipawnEvaluation(e.data);
             } else if (e.data.includes('mate')) {
-                const mateInMoves = e.data.split(' ')[9];
-                setEvaluation(mateInMoves);
-                setIsMate(true);
+                handleMateEvaluation(e.data);
             }
         };
 
@@ -55,11 +51,13 @@ function Play() {
         };
     }, []);
 
+    // Run Stockfish on fen or depth change
     useEffect(() => {
         setBestMove([[]]);
         runStockfish(fen);
     }, [fen, depth]);
 
+    // Prevent page scroll
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
@@ -67,12 +65,36 @@ function Play() {
         };
     }, []);
 
+    // Track fen history
     useEffect(() => {
         if (fen && history[history.length - 1] !== fen) {
             setHistory((prevHistory) => [...prevHistory, fen]);
         }
     }, [fen]);
 
+    // Handle best move from Stockfish
+    const handleBestMove = (data) => {
+        const bestMoveFull = data.split(' ')[1];
+        const bestMoveSquares = [[bestMoveFull.substring(0, 2), bestMoveFull.substring(2, 4)]];
+        setBestMove(bestMoveSquares);
+        setLoading(false);
+    };
+
+    // Handle centipawn evaluation from Stockfish
+    const handleCentipawnEvaluation = (data) => {
+        const tempEval = data.split(' ')[9] / 100;
+        const isWhiteTurn = chessInstance.current.turn() === 'w';
+        setEvaluation(isWhiteTurn ? tempEval : -tempEval);
+    };
+
+    // Handle mate evaluation from Stockfish
+    const handleMateEvaluation = (data) => {
+        const mateInMoves = data.split(' ')[9];
+        setEvaluation(mateInMoves);
+        setIsMate(true);
+    };
+
+    // Run Stockfish analysis
     const runStockfish = (position) => {
         if (stockfishWorkerRef.current) {
             setLoading(true);
@@ -81,6 +103,7 @@ function Play() {
         }
     };
 
+    // Handle FEN change
     const handleFenChange = (event) => {
         const inputFen = event.target.value;
         setFenInput(inputFen);
@@ -94,6 +117,7 @@ function Play() {
         }
     };
 
+    // Undo the last move
     const handleUndo = () => {
         if (chessInstance.current.history().length > 0) {
             chessInstance.current.undo();
@@ -104,6 +128,7 @@ function Play() {
         }
     };
 
+    // Move to the next move in the history
     const handleNextMove = () => {
         const moves = chessInstance.current.history();
         if (moveIndex.current < moves.length) {
@@ -115,12 +140,12 @@ function Play() {
         }
     };
 
+    // Handle PGN submission
     const handleSubmit = async () => {
         try {
             let pgn = pgnRef.current.value;
             const response = await axios.post('http://localhost:3000/play', { pgn });
             console.log(response.data);
-            console.log(pgn);
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
@@ -137,6 +162,7 @@ function Play() {
         }
     };
 
+    // Switch board orientation
     const handleSwitchOrientation = () => {
         setOrientation(orientation === 'white' ? 'black' : 'white');
     };

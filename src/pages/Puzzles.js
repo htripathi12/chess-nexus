@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import axios from 'axios';
-import { Textarea, Button, Text, Link } from '@chakra-ui/react';
+import { Button, Text, Link } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Chess } from 'chess.js';
 

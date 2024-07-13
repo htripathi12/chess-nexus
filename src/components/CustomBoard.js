@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Chessboard } from 'react-chessboard';
-import { Chess } from 'chess.js';
 
 // Function to determine the color of a square
 function getSquareColor(square) {
