@@ -8,17 +8,24 @@ const analyze = require('./analyze');
 const app = express();
 const PORT = 3000;
 
-app.use(express.static('public'));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Middleware
 app.use(express.json());
 app.use(cors());
+
+// API routes
 app.use("/login", db);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
 
+// Serve the main HTML file for any other routes
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
+// Start the server
 const startServer = async () => {
     try {
         await loadPuzzles();
