@@ -17,6 +17,7 @@ function Play() {
     const [orientation, setOrientation] = useState('white');
     const [loading, setLoading] = useState(false);
     const [bestMove, setBestMove] = useState([]);
+    const [bestLine, setBestLine] = useState([]);
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
@@ -41,6 +42,12 @@ function Play() {
                 handleCentipawnEvaluation(e.data);
             } else if (e.data.includes('mate')) {
                 handleMateEvaluation(e.data);
+            }
+            if (e.data.includes('pv')) {
+                const parts = e.data.split(' ');
+                const line = parts.slice(17).join(' ');
+                console.log("BEST LINE: " + line);
+                setBestLine(line);
             }
         };
 
@@ -79,6 +86,8 @@ function Play() {
         setBestMove(bestMoveSquares);
         setLoading(false);
     };
+
+    // Process best line from SAN to 
 
     // Handle centipawn evaluation from Stockfish
     const handleCentipawnEvaluation = (data) => {
@@ -226,9 +235,15 @@ function Play() {
                             display: 'flex', 
                             alignItems: 'center', 
                             position: 'absolute', 
-                            top: '-20px',
+                            top: '30px',
                         }}>
                             <Spinner size="lg" color="teal.500" />
+                        </div>
+                    )}
+                    {!loading && bestLine && (
+                        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', position: 'absolute', top: '0px' }}>
+                            <Text fontSize="lg" fontWeight="bold">Best Line</Text>
+                            <Text fontSize="sm" color="black">{bestLine}</Text>
                         </div>
                     )}
                     <Select
@@ -237,7 +252,7 @@ function Play() {
                         onChange={(e) => setDepth(Number(e.target.value))}
                         mt={4}
                         width="300px"
-                        margin="40px 0 20px 0"
+                        margin="100px 0 10px 0" // Increased top margin by 10px
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
@@ -257,7 +272,7 @@ function Play() {
                         height="50px"
                         fontSize="16px"
                         padding="10px"
-                        margin="0 0 20px 0"
+                        margin="10px 0 20px 0" // Increased top margin by 10px
                         border="3px solid"
                         borderColor={fenError ? "red" : "#1E8C87"}
                         borderRadius="8px"
@@ -295,7 +310,7 @@ function Play() {
                             },
                         }}
                     />
-                    <Button style={{ marginTop: '10px' }} onClick={handleSubmit}>
+                    <Button style={{ marginTop: '20px' }} onClick={handleSubmit}>
                         Submit
                     </Button>
                 </div>
