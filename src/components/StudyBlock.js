@@ -1,8 +1,6 @@
 import React from "react";
 import {Link as RouterLink} from 'react-router-dom';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider, FormControl, FormLabel, 
-    Input, Stack, Text, Tabs, Table, Tbody, Td, Tr, Th, Thead, TabList, TabPanels, Tab, TabPanel, CardBody, Image, 
-    Heading, Card, Divider, CardFooter, ButtonGroup } from '@chakra-ui/react';
+import { Stack, Text, CardBody, Image, Heading, Card } from '@chakra-ui/react';
 
 
 function StudyBlock(props) {

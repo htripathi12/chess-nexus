@@ -1,8 +1,7 @@
 import React from 'react';
 import StudyBlock from '../components/StudyBlock.js';
 import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, Image, ChakraProvider, FormControl, FormLabel, 
-    Input, Stack, Text, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { Link, Button, Text } from '@chakra-ui/react';
 
 import CaroKann from '../assets/Caro-Kann.png';
 import ModernDefense from '../assets/ModernDefense.png';
