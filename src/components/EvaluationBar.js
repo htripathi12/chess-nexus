@@ -30,7 +30,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
       alignItems="center"
       height="500px"
       width="50px"
-      border="1px solid #ccc"
+      border="1px solid #008080"
       borderRadius="5px"
       overflow="hidden"
       position="relative"
