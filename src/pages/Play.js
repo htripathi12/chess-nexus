@@ -44,11 +44,7 @@ function Play() {
                 handleMateEvaluation(e.data);
             }
             if (e.data.includes('pv')) {
-                const parts = e.data.split(' ');
-                let line = parts.slice(17).join(' ');
-                console.log("BEST LINE: " + line);
-                line = convertSAN(line);
-                setBestLine(line);
+                convertSAN(e.data);
             }
         };
 
@@ -88,17 +84,14 @@ function Play() {
         setLoading(false);
     };
 
-    // Process best line to SAN
-    const convertSAN = (line) => {
-        const arr = line.split(' ');
-        const tempChessInstance = new Chess(fen);
-        for (var i = 0; i < arr.length; i++) {
-            const move = arr[i];
-            tempChessInstance.move({ from: move.substring(0, 2), to: move.substring(2, 4) });
-        }
-        return tempChessInstance.history().join(' ');
-    };
-
+    const convertSAN = (data) => {
+        const parts = data.split(' ');
+        let lineParts = parts.slice(17);
+        lineParts = lineParts.slice(0, 21);
+        let line = lineParts.join(' ');
+        console.log("BEST LINE: " + line);
+        setBestLine(line);
+    }
 
     // Handle centipawn evaluation from Stockfish
     const handleCentipawnEvaluation = (data) => {
@@ -252,9 +245,9 @@ function Play() {
                         </div>
                     )}
                     {!loading && bestLine && (
-                        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', position: 'absolute', top: '0px' }}>
-                            <Text fontSize="lg" fontWeight="bold">Best Line</Text>
-                            <Text fontSize="sm" color="black">{bestLine}</Text>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '300px', maxHeight: '100px', position: 'absolute', top: '-4px', marginBottom: '10px' }}>
+                            <Text fontSize="lg" fontWeight="bold" style={{ width: '100%', textAlign: 'center' }}>Best Line</Text>
+                            <Text fontSize="md" color="black" style={{ width: '100%', textAlign: 'justify' }}>{bestLine}</Text>
                         </div>
                     )}
                     <Select
@@ -263,7 +256,7 @@ function Play() {
                         onChange={(e) => setDepth(Number(e.target.value))}
                         mt={4}
                         width="300px"
-                        margin="100px 0 10px 0" // Increased top margin by 10px
+                        margin="100px 0 10px 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
@@ -283,7 +276,7 @@ function Play() {
                         height="50px"
                         fontSize="16px"
                         padding="10px"
-                        margin="10px 0 20px 0" // Increased top margin by 10px
+                        margin="10px 0"
                         border="3px solid"
                         borderColor={fenError ? "red" : "#1E8C87"}
                         borderRadius="8px"
@@ -307,6 +300,7 @@ function Play() {
                         fontSize="16px"
                         padding="10px"
                         resize="none"
+                        margin="10px 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
@@ -321,9 +315,7 @@ function Play() {
                             },
                         }}
                     />
-                    <Button style={{ marginTop: '20px' }} onClick={handleSubmit}>
-                        Submit
-                    </Button>
+                    <Button onClick={handleSubmit} style={{ marginTop: '10px' }}>Submit</Button>
                 </div>
             </div>
             {winLoss && <div>{winLoss}</div>}
