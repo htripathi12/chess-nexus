@@ -7,6 +7,7 @@ import Play from './pages/Play.js';
 import Puzzles from './pages/Puzzles';
 import Learn from './pages/Learn.js';
 import Login from './pages/Login.js';
+import About from './pages/About.js'
 
 function RoutesAndNavbar() {
   const location = useLocation();
@@ -66,6 +67,7 @@ function RoutesAndNavbar() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Login />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </Container>
     </>
