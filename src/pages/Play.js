@@ -45,8 +45,9 @@ function Play() {
             }
             if (e.data.includes('pv')) {
                 const parts = e.data.split(' ');
-                const line = parts.slice(17).join(' ');
+                let line = parts.slice(17).join(' ');
                 console.log("BEST LINE: " + line);
+                line = convertSAN(line);
                 setBestLine(line);
             }
         };
@@ -87,7 +88,17 @@ function Play() {
         setLoading(false);
     };
 
-    // Process best line from SAN to 
+    // Process best line to SAN
+    const convertSAN = (line) => {
+        const arr = line.split(' ');
+        const tempChessInstance = new Chess(fen);
+        for (var i = 0; i < arr.length; i++) {
+            const move = arr[i];
+            tempChessInstance.move({ from: move.substring(0, 2), to: move.substring(2, 4) });
+        }
+        return tempChessInstance.history().join(' ');
+    };
+
 
     // Handle centipawn evaluation from Stockfish
     const handleCentipawnEvaluation = (data) => {
@@ -178,7 +189,7 @@ function Play() {
 
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
-            <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+            <div style={{ position: 'absolute', top: '10px', left: '10px'}}>
                 <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
                     <Button marginTop="3" bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }} width="auto">
                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-left-filled" 
