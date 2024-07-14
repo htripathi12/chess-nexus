@@ -157,7 +157,7 @@ function Play() {
     const handleSubmit = async () => {
         try {
             let pgn = pgnRef.current.value;
-            const response = await axios.post('http://localhost:3000/play', { pgn });
+            const response = await axios.post('http://localhost:8080/play', { pgn });
             console.log(response.data);
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
