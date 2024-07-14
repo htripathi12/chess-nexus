@@ -28,7 +28,7 @@ function Puzzles() {
         try {
             setPuzzleCompleted(false);
             setIncorrectMove(false);
-            const response = await axios.get('http://localhost:3000/puzzles');
+            const response = await axios.get('http://localhost:8080/puzzles');
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
             setMoves(moveList);
