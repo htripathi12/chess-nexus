@@ -44,7 +44,7 @@ function Contact() {
                         transition={{ duration: 0.5 }}
                     >
                         <Image
-                            src="https://via.placeholder.com/130"
+                            src="/ProfilePic.jpg"
                             alt="Profile Picture"
                             borderRadius="full"
                             boxSize="130px"
@@ -106,7 +106,7 @@ function Contact() {
                     bg="white"
                     p={4}
                     borderRadius="lg"
-                    boxShadow="md"
+                    boxShadow="xl"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -151,7 +151,7 @@ function Contact() {
                     bg="white"
                     p={4}
                     borderRadius="lg"
-                    boxShadow="md"
+                    boxShadow="xl"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
@@ -175,16 +175,29 @@ function Contact() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                    <Box w="50%" h="2px" bg="teal" mx="auto" mb={2}></Box> {/* Now centered */}
+                    <Box w="50%" h="2px" bg="teal" mx="auto" mb={2}></Box>
                     <Box w="25%" h="2px" bg="teal" mx="auto" mb={2}></Box>
                     <Box w="2.5%" h="2px" bg="teal" mx="auto" mb={4}></Box>
-                    <Box textAlign="center" fontSize="xs">
-                        Thank you all for visiting Chess Nexus! If you'd like to view the  <br /> source code
-                        you can do so {''}
-                        <Link href="https://github.com/htripathi12/chess-nexus" isExternal>
-                             here.
-                        </Link>
-                    </Box>
+                    <Flex
+                        direction="column"
+                        align="center"
+                        justify="center"
+                    >
+                        <Box
+                            fontSize="xs"
+                            maxWidth={400}
+                            textAlign="center"
+                        >
+                            Thank you all for visiting Chess Nexus! If you'd like to view the source code you can do so{' '}
+                            <Link href="https://github.com/htripathi12/chess-nexus" isExternal color="blue.500">
+                                here.
+                            </Link>
+                            {' '}If you would like to see the rest of my work, you can visit my website{' '}
+                            <Link href="https://htripathi12.github.io/" isExternal color="blue.500">
+                                here.
+                            </Link>
+                        </Box>
+                    </Flex>
                 </MotionBox>
 
             </VStack>
