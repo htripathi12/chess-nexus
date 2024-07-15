@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Center, Container, AbsoluteCenter, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
+import React, {useEffect} from 'react';
+import { Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink, useLocation } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 
@@ -8,9 +8,19 @@ import Puzzles from './pages/Puzzles';
 import Learn from './pages/Learn.js';
 import Login from './pages/Login.js';
 import About from './pages/About.js'
+import Contact from './pages/Contact.js';
+
 
 function RoutesAndNavbar() {
   const location = useLocation();
+
+  // Prevent page scroll
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+        document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return (
     <>
@@ -68,6 +78,7 @@ function RoutesAndNavbar() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Login />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Container>
     </>
