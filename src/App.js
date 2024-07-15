@@ -42,12 +42,16 @@ function RoutesAndNavbar() {
               </svg>
             </Button>
           </Box>
-          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
-            <Link as={RouterLink} to="/about" sx={{_hover: {textDecoration: "none"}}}>About</Link>
-          </Box>
-          <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
-            <Link as={RouterLink} to="/contact" sx={{_hover: {textDecoration: "none"}}}>Contact</Link>
-          </Box>
+          <Link as={RouterLink} to="/about" sx={{_hover: {textDecoration: "none"}}}>
+            <Box p="2" ml="3" _hover={{bg: "teal.700", borderRadius: "lg"}}>
+              About
+            </Box>
+          </Link>
+            <Link as={RouterLink} to="/contact" style={{ textDecoration: 'none' }}>
+              <Box p="2" ml="3" _hover={{ bg: "teal.700", borderRadius: "lg" }}>
+                Contact
+              </Box>
+            </Link>
           <Spacer />
           <Link as={RouterLink} to="/login" _hover={{ textDecoration: "none" }}>
             <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
@@ -56,7 +60,7 @@ function RoutesAndNavbar() {
           </Link>
         </Flex>
       )}
-      <Container maxW="100%" border="1px solid green">
+      <Container maxW="100%">
         <Routes>
           <Route path="/" element={
             <Center>
