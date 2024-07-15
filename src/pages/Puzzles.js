@@ -75,6 +75,7 @@ function Puzzles() {
             console.log('Correct');
             const nextMove = moves[moveIndex + 1];
             setPuzzleCompleted(true);
+            setIncorrectMove(false);
             if (nextMove) {
                 setTimeout(() => {
                     setPuzzleCompleted(false);
@@ -119,10 +120,12 @@ function Puzzles() {
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 display: 'flex',
                 justifyContent: 'center',
+                flexDirection: 'column',
                 alignItems: 'center',
                 zIndex: 10
               }}>
-                <Spinner size="xl" color="white" />
+                    <Spinner size="xl" style={{ width: '100px', height: '100px', color: 'white' }} speed=".35s" thickness='10px'/>
+                    <div style={{ color: 'white', fontSize: '24px' }}>Loading Puzzles</div>
               </div>
             )}
             <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
