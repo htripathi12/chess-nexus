@@ -50,10 +50,9 @@ function About() {
                             Software Developer
                         </Text>
                         <Flex mt={2}>
-                          {[FaLinkedin, FaGithub, FaEnvelope].map((SocialIcon, index) => (
+                          <a href="https://www.linkedin.com/in/hersh-tripathi-663a47225/" target="_blank" rel="noopener noreferrer">
                             <Icon
-                              as={SocialIcon}
-                              key={index}
+                              as={FaLinkedin}
                               boxSize={8}
                               color="teal.500"
                               mr={3}
@@ -61,7 +60,29 @@ function About() {
                               _hover={{ color: 'teal.700', transform: 'scale(1.2)' }}
                               transition="transform 0.2s ease-in-out"
                             />
-                          ))}
+                          </a>
+                          <a href="https://github.com/htripathi12" target="_blank" rel="noopener noreferrer">
+                            <Icon
+                              as={FaGithub}
+                              boxSize={8}
+                              color="teal.500"
+                              mr={3}
+                              cursor="pointer"
+                              _hover={{ color: 'teal.700', transform: 'scale(1.2)' }}
+                              transition="transform 0.2s ease-in-out"
+                            />
+                          </a>
+                          <a href="mailto:tripathihersh@gmail.com">
+                            <Icon
+                              as={FaEnvelope}
+                              boxSize={8}
+                              color="teal.500"
+                              mr={3}
+                              cursor="pointer"
+                              _hover={{ color: 'teal.700', transform: 'scale(1.2)' }}
+                              transition="transform 0.2s ease-in-out"
+                            />
+                          </a>
                         </Flex>
                     </Box>
                 </Flex>

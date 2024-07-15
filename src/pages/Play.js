@@ -5,6 +5,7 @@ import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import { Chess } from 'chess.js';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 function Play() {
     // State variables
@@ -181,8 +182,13 @@ function Play() {
     };
 
     return (
-        <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
-            <div style={{ position: 'absolute', top: '10px', left: '10px'}}>
+        <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px', overflow: 'hidden' }}>
+            <motion.div 
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ position: 'absolute', top: '10px', left: '10px'}}
+            >
                 <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
                     <Button marginTop="3" bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }} width="auto">
                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-left-filled" 
@@ -196,12 +202,22 @@ function Play() {
                         <Text ml={2}>Back</Text>
                     </Button>
                 </Link>
-            </div>
+            </motion.div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <div style={{ paddingRight: "20px", paddingBottom: "30px" }}>
-                  <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <motion.div 
+                    initial={{ y: -100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ paddingRight: "20px", paddingBottom: "30px" }}
+                >
+                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} />
+                </motion.div>
+                <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                >
                     <CustomBoard
                         ref={customBoardRef}
                         fen={fen}
@@ -226,14 +242,19 @@ function Play() {
                             </svg>
                         </Button>
                     </div>
-                </div>
-                <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'flex-start',
-                    marginLeft: '20px', 
-                    position: 'relative'
-                }}>
+                </motion.div>
+                <motion.div 
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'flex-start',
+                        marginLeft: '20px', 
+                        position: 'relative'
+                    }}
+                >
                     {loading && (
                         <div style={{ 
                             display: 'flex', 
@@ -316,9 +337,26 @@ function Play() {
                         }}
                     />
                     <Button onClick={handleSubmit} style={{ marginTop: '10px' }}>Submit</Button>
-                </div>
+                </motion.div>
             </div>
-            {winLoss && <div>{winLoss}</div>}
+            {winLoss && <motion.div 
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    zIndex: 1000
+                }}
+            >
+                {winLoss}
+            </motion.div>}
         </div>
     );
 }
