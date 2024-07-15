@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import axios from 'axios';
-import { Button, Text, Link } from '@chakra-ui/react';
+import { Button, Text, Link, Spinner } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Chess } from 'chess.js';
 
@@ -14,6 +14,7 @@ function Puzzles() {
     const [puzzleCompleted, setPuzzleCompleted] = useState(false);
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
@@ -30,6 +31,7 @@ function Puzzles() {
 
         try {
             setMoveInProgress(true);
+            setLoading(true);
             setPuzzleCompleted(false);
             setIncorrectMove(false);
             const response = await axios.get('http://localhost:8080/puzzles');
@@ -40,6 +42,8 @@ function Puzzles() {
             chess.current.load(newFen);
             setFen(newFen);
             setInitialFEN(newFen);
+
+            setLoading(false);
 
             const activePlayer = newFen.split(' ')[1];
             setOrientation(activePlayer === 'w' ? 'black' : 'white');
@@ -54,6 +58,7 @@ function Puzzles() {
         } catch (error) {
             console.error('There was an error!', error);
             setMoveInProgress(false);
+            setLoading(false); // Set loading state to false in case of error
         }
     };
 
@@ -100,6 +105,22 @@ function Puzzles() {
 
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
+            {loading && (
+              <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 10
+              }}>
+                <Spinner size="xl" color="white" />
+              </div>
+            )}
             <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
                 <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
                     <Button marginTop="3" bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }} width="auto">
