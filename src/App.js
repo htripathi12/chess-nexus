@@ -94,7 +94,7 @@ function App() {
   return (
     <Router>
       <ChakraProvider>
-        <Box bg="teal.400" minHeight="100vh">
+        <Box bg="teal.400" minHeight="100vh" minWidth="100vw" overflow="hidden">
           <RoutesAndNavbar />
         </Box>
       </ChakraProvider>
