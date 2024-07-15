@@ -186,7 +186,7 @@ function Play() {
             <motion.div 
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.0 }}
                 style={{ position: 'absolute', top: '10px', left: '10px'}}
             >
                 <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
@@ -207,7 +207,7 @@ function Play() {
                 <motion.div 
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ paddingRight: "20px", paddingBottom: "30px" }}
                 >
                     <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} />
@@ -215,7 +215,7 @@ function Play() {
                 <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                     <CustomBoard
@@ -246,13 +246,13 @@ function Play() {
                 <motion.div 
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ 
                         display: 'flex', 
                         flexDirection: 'column', 
-                        alignItems: 'flex-start',
                         marginLeft: '20px', 
-                        position: 'relative'
+                        position: 'relative',
+                        alignItems: 'center',
                     }}
                 >
                     {loading && (
@@ -262,7 +262,7 @@ function Play() {
                             position: 'absolute', 
                             top: '30px',
                         }}>
-                            <Spinner size="lg" color="teal.500" />
+                            <Spinner size="xl" color="teal.500" />
                         </div>
                     )}
                     {!loading && bestLine && (
@@ -336,13 +336,13 @@ function Play() {
                             },
                         }}
                     />
-                    <Button onClick={handleSubmit} style={{ marginTop: '10px' }}>Submit</Button>
+                    <Button onClick={handleSubmit} style={{ marginTop: '10px', width: '300px' }}>Submit</Button>
                 </motion.div>
             </div>
             {winLoss && <motion.div 
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.0 }}
                 style={{
                     position: 'absolute',
                     bottom: '20px',
@@ -358,6 +358,7 @@ function Play() {
                 {winLoss}
             </motion.div>}
         </div>
+
     );
 }
 
