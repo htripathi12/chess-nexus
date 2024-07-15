@@ -11,11 +11,12 @@ function Puzzles() {
     const [orientation, setOrientation] = useState('white');
     const [moves, setMoves] = useState([]);
     const [moveIndex, setMoveIndex] = useState(1);
-    const customBoardRef = useRef(null);
-    const chess = useRef(new Chess());
     const [puzzleCompleted, setPuzzleCompleted] = useState(false);
     const [incorrectMove, setIncorrectMove] = useState(false);
+    const [moveInProgress, setMoveInProgress] = useState(false);
 
+    const customBoardRef = useRef(null);
+    const chess = useRef(new Chess());
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -25,7 +26,10 @@ function Puzzles() {
     }, []);
 
     const getNextPuzzle = async () => {
+        if (moveInProgress) return;
+
         try {
+            setMoveInProgress(true);
             setPuzzleCompleted(false);
             setIncorrectMove(false);
             const response = await axios.get('http://localhost:8080/puzzles');
@@ -45,9 +49,11 @@ function Puzzles() {
                 setFen(chess.current.fen());
                 setMoveIndex(1);
                 console.log(response.data);
+                setMoveInProgress(false);
             }, 1000);
         } catch (error) {
             console.error('There was an error!', error);
+            setMoveInProgress(false);
         }
     };
 
@@ -72,7 +78,7 @@ function Puzzles() {
             }
         } else {
             console.log('Incorrect');
-            setIncorrectMove(true); // Set incorrect move state
+            setIncorrectMove(true);
         }
     };
 
