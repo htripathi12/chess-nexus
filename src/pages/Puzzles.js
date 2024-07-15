@@ -14,7 +14,8 @@ function Puzzles() {
     const [puzzleCompleted, setPuzzleCompleted] = useState(false);
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
+    const [firstPuzzle, setFirstPuzzle] = useState(true);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
@@ -31,7 +32,10 @@ function Puzzles() {
 
         try {
             setMoveInProgress(true);
-            setLoading(true);
+            if (firstPuzzle) {
+                setLoading(true);
+            }
+            setFirstPuzzle(false);
             setPuzzleCompleted(false);
             setIncorrectMove(false);
             const response = await axios.get('http://localhost:8080/puzzles');
@@ -58,7 +62,7 @@ function Puzzles() {
         } catch (error) {
             console.error('There was an error!', error);
             setMoveInProgress(false);
-            setLoading(false); // Set loading state to false in case of error
+            setLoading(false);
         }
     };
 
@@ -145,7 +149,7 @@ function Puzzles() {
                         setFen={setFen}
                         onMove={logMove}
                         chessInstance={chess.current}
-                        disableBoard={incorrectMove} // Pass disableBoard prop to disable the board
+                        disableBoard={incorrectMove}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
                         <Button onClick={redoPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
