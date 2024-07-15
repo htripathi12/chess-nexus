@@ -27,17 +27,18 @@ function Contact() {
             bg="gray.50"
             p={[4, 6]}
             borderRadius="xl"
-            boxShadow="xl"
+            boxShadow="2xl"
             maxW="800px"
             mx="auto"
             mt={10}
             mb={7}
+            border={{ base: 'none', md: '2px solid #008080' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
             <VStack spacing={6} align="stretch">
-                <Flex direction={['column', 'row']} align="center" justify="space-between">
+                <Flex direction={['column', 'row']} align="center" justify="center">
                     <MotionBox
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
