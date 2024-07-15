@@ -14,13 +14,14 @@ import Contact from './pages/Contact.js';
 function RoutesAndNavbar() {
   const location = useLocation();
 
-  // Prevent page scroll
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
+    if (location.pathname === '/') {
+      document.body.style.overflow = 'hidden';
+      return () => {
         document.body.style.overflow = 'auto';
-    };
-  }, []);
+      };
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -55,7 +56,7 @@ function RoutesAndNavbar() {
           </Link>
         </Flex>
       )}
-      <Container h="100vh" maxW="100%" border="1px solid green">
+      <Container maxW="100%" border="1px solid green">
         <Routes>
           <Route path="/" element={
             <Center>

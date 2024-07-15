@@ -1,17 +1,25 @@
 import React from 'react';
-import { Box, Heading, Text, VStack, Image, Button, Flex, Icon, SimpleGrid } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack, Image, Link, Flex, Icon, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
-import { DiReact, DiNodejs, DiPython } from 'react-icons/di';
+import { DiReact, DiNodejs, DiPython, DiJavascript1, DiJava, DiHtml5 } from 'react-icons/di';
+import { SiExpress, SiC, SiCplusplus } from "react-icons/si";
+
 
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
 
 function Contact() {
     const skills = [
-        { name: 'React', icon: DiReact, color: 'blue.500' },
-        { name: 'Node.js', icon: DiNodejs, color: 'green.500' },
-        { name: 'Python', icon: DiPython, color: 'yellow.500' },
+        { name: 'React', icon: DiReact, color: '#00d8ff' },
+        { name: 'Node.js', icon: DiNodejs, color: '#339933' },
+        { name: 'Python', icon: DiPython, color: '#3776AB' },
+        { name: 'JavaScript', icon: DiJavascript1, color: '#EBC700'},
+        { name: 'Express', icon: SiExpress, color: '#000000' },
+        { name: 'Java', icon: DiJava, color: '#007396' },
+        { name: '', icon: SiC, color: '#A8B9CC' },
+        { name: '', icon: SiCplusplus, color: '#00599C' },
+        { name: 'HTML5', icon: DiHtml5, color: '#E34F26'}
     ];
 
     return (
@@ -22,7 +30,8 @@ function Contact() {
             boxShadow="xl"
             maxW="800px"
             mx="auto"
-            mt={8}
+            mt={10}
+            mb={7}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -87,10 +96,10 @@ function Contact() {
                     </Box>
                 </Flex>
 
-                <Text fontSize="md" color="gray.700">
+                <Text fontSize="sm" color="gray.700">
                     I'm a passionate software developer with expertise in building web applications.
-                    Currently I'm pursuing my undergraduate degree as a sophomore in Computer Science
-                    at Purdue University. 
+                    Currently, I'm pursuing my undergraduate degree in Computer Science
+                    at Purdue University as a sophomore concentrating in Software Engineering and Systems.
                 </Text>
 
                 <MotionBox
@@ -106,10 +115,17 @@ function Contact() {
                         Professional Background
                     </Heading>
                     <Text fontSize="sm" color="gray.700" mb={3}>
-                        I have a strong background in software development, having worked on multiple projects across various domains.
-                        My core competencies include React, Node.js, and Python. I am also proficient in cloud technologies such as AWS and Azure.
+                        I began my journey in the tech world through an entrepreneurial venture, running my
+                        own shoe reselling business. It was there that I first dabbled in the development
+                        of raffle bots, sparking my initial interest in computer science. This curiosity
+                        pushed me to grow my programming skillset, eventually leading me to do R&D data science
+                        research at Raytheon, providing me with a deeper insight into the field. Through
+                        these experiences, I discovered my true passion lies in web development. Right now, I'm
+                        working towards expanding my skills in React, Express, and MongoDB, aiming
+                        to become a full stack MERN software engineer.
                     </Text>
-                    <SimpleGrid columns={3} spacing={3}>
+
+                    <SimpleGrid columns={3} spacing={3} alignItems="center" justifyContent="space-evenly">
                         {skills.map((skill, index) => (
                             <MotionFlex
                                 key={index}
@@ -119,9 +135,10 @@ function Contact() {
                                 color="white"
                                 p={2}
                                 borderRadius="md"
-                                initial={{ opacity: 0, x: -20 }}
+                                initial={{ opacity: 0, x: -50 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3, type: "spring", stiffness: 800, damping: 10 }}
                             >
                                 <Icon as={skill.icon} boxSize={5} mr={1} />
                                 <Text fontSize="sm" fontWeight="bold">{skill.name}</Text>
@@ -143,22 +160,33 @@ function Contact() {
                         Personal Interests
                     </Heading>
                     <Text fontSize="sm" color="gray.700">
-                        Outside of work, I enjoy hiking, reading, and exploring new places. I am also an avid chess player and love to participate in local tournaments.
+                        Outside of work, I love playing basketball, video games, and skateboarding.
+                        I also enjoy the thrill of poker, from the excitement of big hands and memories with friends
+                        to the mathematical strategy behind the game. Coding is obviously a big part of my life,
+                        but my passion for chess is even greater which is why I made Chess Nexus - the perfect combination of the two.
                     </Text>
                 </MotionBox>
 
-                <Button
-                    as={motion.button}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    bg="teal.400"
-                    color="white"
-                    _hover={{ bg: "teal.500" }}
-                    size="md"
-                    leftIcon={<FaEnvelope />}
+                <MotionBox
+                    p={6}
+                    bg="gray.50"
+                    borderRadius="md"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                    Contact Me
-                </Button>
+                    <Box w="50%" h="2px" bg="teal" mx="auto" mb={2}></Box> {/* Now centered */}
+                    <Box w="25%" h="2px" bg="teal" mx="auto" mb={2}></Box>
+                    <Box w="2.5%" h="2px" bg="teal" mx="auto" mb={4}></Box>
+                    <Box textAlign="center" fontSize="xs">
+                        Thank you all for visiting Chess Nexus! If you'd like to view the  <br /> source code
+                        you can do so {''}
+                        <Link href="https://github.com/htripathi12/chess-nexus" isExternal>
+                             here.
+                        </Link>
+                    </Box>
+                </MotionBox>
+
             </VStack>
         </MotionBox>
     );
