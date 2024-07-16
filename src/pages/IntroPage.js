@@ -30,10 +30,9 @@ function IntroPage({ onEnter }) {
   }, [controls, onEnter, isMounted]);
 
   if (!isMounted) {
-    return null; // or a loading indicator
+    return null;
   }
-    
-    
+
   return (
     <MotionBox
       initial={{ opacity: 0 }}
@@ -57,8 +56,9 @@ function IntroPage({ onEnter }) {
           animate={controls}
           variants={{
             welcome: { y: 0, transition: { duration: 0.5 } },
-            to: { y: 0 },
-            chessNexus: { y: 0 }
+            to: { y: 0, },
+            chessNexus: { y: 0 },
+            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
           }}
           position="absolute"
           top={0}
@@ -80,7 +80,12 @@ function IntroPage({ onEnter }) {
           variants={{
             welcome: { y: "100%" },
             to: { y: 0, transition: { duration: 0.5 } },
-            chessNexus: { y: 0 }
+            chessNexus: { y: 0 },
+            fadeOut: {
+              opacity: 0,
+              transition: { duration: 0.5 },
+              transitionEnd: { zIndex: -100 }
+            }
           }}
           position="absolute"
           top={0}
@@ -103,7 +108,7 @@ function IntroPage({ onEnter }) {
             welcome: { x: "-100%" },
             to: { x: "-100%" },
             chessNexus: { x: 0, transition: { duration: 0.5 } },
-            exit: { opacity: 0, transition: { duration: 0.5 } }
+            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
           }}
           position="absolute"
           top={0}
@@ -127,7 +132,7 @@ function IntroPage({ onEnter }) {
             welcome: { x: "100%" },
             to: { x: "100%" },
             chessNexus: { x: 0, transition: { duration: 0.5 } },
-            exit: { opacity: 0, transition: { duration: 0.5 } }
+            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
           }}
           position="absolute"
           top={0}
