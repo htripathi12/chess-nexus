@@ -17,7 +17,7 @@ const MotionBox = motion(Box);
 
 function RoutesAndNavbar() {
   const location = useLocation();
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(location.pathname === '/');
 
   useEffect(() => {
     if (location.pathname !== '/') {

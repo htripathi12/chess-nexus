@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Text, VStack } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 
@@ -6,20 +6,34 @@ const MotionBox = motion(Box);
 
 function IntroPage({ onEnter }) {
   const controls = useAnimation();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const sequence = async () => {
-      await controls.start("welcome");
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await controls.start("to");
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await controls.start("chessNexus");
-      await new Promise(resolve => setTimeout(resolve, 500));
-      onEnter();
-    };
-    sequence();
-  }, [controls, onEnter]);
+    setIsMounted(true);
+  }, []);
 
+  useEffect(() => {
+    if (isMounted) {
+      const sequence = async () => {
+        await controls.start("welcome");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await controls.start("to");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await controls.start("chessNexus");
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        await controls.start("fadeOut");
+        await new Promise(resolve => setTimeout(resolve, 500));
+        onEnter();
+      };
+      sequence();
+    }
+  }, [controls, onEnter, isMounted]);
+
+  if (!isMounted) {
+    return null; // or a loading indicator
+  }
+    
+    
   return (
     <MotionBox
       initial={{ opacity: 0 }}
