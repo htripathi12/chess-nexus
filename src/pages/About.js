@@ -12,7 +12,6 @@ function About() {
         { name: 'Puzzle Practice', icon: FaPuzzlePiece, description: 'Access a vast database of tactical puzzles from both platforms to sharpen your skills.' },
         { name: 'Opening Explorer', icon: FaBook, description: 'Improve your opening knowledge with a comprehensive database that combines information from both sites.' },
         { name: 'Engine Analysis', icon: FaMicrochip, description: 'Utilize the power of Stockfish, integrated via WebAssembly, for deep game analysis.' },
-        { name: 'Cross-Platform Stats', icon: FaChartBar, description: 'Get a holistic view of your chess progress across both chess.com and lichess.org.' },
     ];
 
     return (
@@ -53,26 +52,28 @@ function About() {
                     </Heading>
                     <MotionSimpleGrid columns={[1, null, 2]} spacing={4}>
                         {features.map((feature, index) => (
-                            <Flex justify="center" align="center">
-                              <MotionBox
-                                key={index}
-                                p={3}
-                                borderRadius="md"
-                                boxShadow="md"
-                                bg="black.50"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3, delay: index * 0.1 }}
-                              >
-                                <Icon as={feature.icon} boxSize={6} color="teal.500" mb={2} />
-                                <Heading as="h3" size="sm" color="teal.600" mb={2}>
-                                  {feature.name}
-                                </Heading>
-                                <Text fontSize="sm" color="gray.700">
-                                  {feature.description}
-                                </Text>
-                              </MotionBox>
-                            </Flex>
+                          <Flex justify="center" align="center">
+                            <MotionBox
+                              key={index}
+                              p={3}
+                              minWidth="300px"
+                              height="150px"
+                              borderRadius="md"
+                              boxShadow="md"
+                              bg="black.50"
+                              initial={{ opacity: 0, x: -50 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                            >
+                              <Icon as={feature.icon} boxSize={6} color="teal.500" mb={2} />
+                              <Heading as="h3" size="sm" color="teal.600" mb={2}>
+                                {feature.name}
+                              </Heading>
+                              <Text fontSize="sm" color="gray.700">
+                                {feature.description}
+                              </Text>
+                            </MotionBox>
+                          </Flex>
                         ))}
                     </MotionSimpleGrid>
                 </MotionBox>

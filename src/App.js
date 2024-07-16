@@ -1,28 +1,33 @@
-import React, {useEffect} from 'react';
-import { Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router, Link as RouterLink, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider, Text, VStack } from '@chakra-ui/react';
+import { BrowserRouter as Router, Link as RouterLink, useLocation, Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
+// Import your existing components
 import Play from './pages/Play.js';
 import Puzzles from './pages/Puzzles';
 import Learn from './pages/Learn.js';
 import Login from './pages/Login.js';
 import About from './pages/About.js'
 import Contact from './pages/Contact.js';
+import IntroPage from './pages/IntroPage.js';
 
+const MotionBox = motion(Box);
 
 function RoutesAndNavbar() {
   const location = useLocation();
+  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    if (location.pathname === '/') {
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = 'auto';
-      };
+    if (location.pathname !== '/') {
+      setShowIntro(false);
     }
   }, [location.pathname]);
 
+  if (showIntro) {
+    return <IntroPage onEnter={() => setShowIntro(false)} />;
+  }
   return (
     <>
       {(location.pathname !== '/login' || location.pathname !== '/signup') && (
@@ -95,7 +100,9 @@ function App() {
     <Router>
       <ChakraProvider>
         <Box bg="teal.400" minHeight="100vh" minWidth="100vw" overflow="hidden">
-          <RoutesAndNavbar />
+          <AnimatePresence>
+            <RoutesAndNavbar />
+          </AnimatePresence>
         </Box>
       </ChakraProvider>
     </Router>
