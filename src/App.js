@@ -28,6 +28,7 @@ function RoutesAndNavbar() {
   if (showIntro) {
     return <IntroPage onEnter={() => setShowIntro(false)} />;
   }
+  
   return (
     <>
       {(location.pathname !== '/login' || location.pathname !== '/signup') && (
