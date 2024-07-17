@@ -266,10 +266,51 @@ function Play() {
                         </div>
                     )}
                     {!loading && bestLine && (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '300px', maxHeight: '100px', position: 'absolute', top: '-4px', marginBottom: '10px' }}>
-                            <Text fontSize="lg" fontWeight="bold" style={{ width: '100%', textAlign: 'center' }}>Best Line</Text>
-                            <Text fontSize="md" color="black" style={{ width: '100%', textAlign: 'justify' }}>{bestLine}</Text>
-                        </div>
+                        <motion.div 
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            style={{ 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                alignItems: 'center', 
+                                width: '300px',
+                                maxHeight: '150px',
+                                position: 'absolute',
+                                top: '-30px',
+                                marginBottom: '30px',
+                                backgroundColor: 'white',
+                                borderRadius: '10px',
+                                border: '2px solid #008080',
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                padding: '15px',
+                            }}
+                        >
+                            <Text 
+                                fontSize="xl" 
+                                fontWeight="bold" 
+                                style={{ 
+                                    width: '100%', 
+                                    textAlign: 'center',
+                                    marginBottom: '10px',
+                                    color: '#2C7A7B' 
+                                }}
+                            >
+                                Best Line
+                            </Text>
+                            <Text 
+                                fontSize="sm" 
+                                color="gray.700" 
+                                style={{ 
+                                    width: '100%', 
+                                    textAlign: 'left',
+                                    overflowY: 'auto',
+                                    paddingRight: '5px'
+                                }}
+                            >
+                                {bestLine}
+                            </Text>
+                        </motion.div>
                     )}
                     <Select
                         placeholder="Select Depth"
@@ -277,7 +318,7 @@ function Play() {
                         onChange={(e) => setDepth(Number(e.target.value))}
                         mt={4}
                         width="300px"
-                        margin="100px 0 10px 0"
+                        margin="120px 0 0 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
@@ -321,7 +362,7 @@ function Play() {
                         fontSize="16px"
                         padding="10px"
                         resize="none"
-                        margin="10px 0"
+                        margin="0px 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"

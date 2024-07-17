@@ -16,11 +16,11 @@ function IntroPage({ onEnter }) {
     if (isMounted) {
       const sequence = async () => {
         await controls.start("welcome");
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 400));
         await controls.start("to");
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 400));
         await controls.start("chessNexus");
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await controls.start("fadeOut");
         await new Promise(resolve => setTimeout(resolve, 500));
         onEnter();
