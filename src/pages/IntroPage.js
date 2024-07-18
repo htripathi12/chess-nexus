@@ -20,7 +20,7 @@ function IntroPage({ onEnter }) {
         await controls.start("to");
         await new Promise(resolve => setTimeout(resolve, 400));
         await controls.start("chessNexus");
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 750));
         await controls.start("fadeOut");
         await new Promise(resolve => setTimeout(resolve, 500));
         onEnter();
@@ -35,13 +35,13 @@ function IntroPage({ onEnter }) {
 
   return (
     <MotionBox
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 1 }}
+      animate={controls}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       height="100vh"
       width="100vw"
-      bg="black"
+      bg="teal.400"
       color="white"
       display="flex"
       flexDirection="column"
@@ -58,7 +58,7 @@ function IntroPage({ onEnter }) {
             welcome: { y: 0, transition: { duration: 0.5 } },
             to: { y: 0, },
             chessNexus: { y: 0 },
-            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
+            fadeOut: { y: 0 }
           }}
           position="absolute"
           top={0}
@@ -81,11 +81,7 @@ function IntroPage({ onEnter }) {
             welcome: { y: "100%" },
             to: { y: 0, transition: { duration: 0.5 } },
             chessNexus: { y: 0 },
-            fadeOut: {
-              opacity: 0,
-              transition: { duration: 0.5 },
-              transitionEnd: { zIndex: -100 }
-            }
+            fadeOut: { y: 0 }
           }}
           position="absolute"
           top={0}
@@ -108,7 +104,7 @@ function IntroPage({ onEnter }) {
             welcome: { x: "-100%" },
             to: { x: "-100%" },
             chessNexus: { x: 0, transition: { duration: 0.5 } },
-            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
+            fadeOut: { x: 0 }
           }}
           position="absolute"
           top={0}
@@ -132,7 +128,7 @@ function IntroPage({ onEnter }) {
             welcome: { x: "100%" },
             to: { x: "100%" },
             chessNexus: { x: 0, transition: { duration: 0.5 } },
-            fadeOut: { opacity: 0, transition: { duration: 0.5 } }
+            fadeOut: { x: 0 }
           }}
           position="absolute"
           top={0}
