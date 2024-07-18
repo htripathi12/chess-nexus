@@ -16,11 +16,11 @@ function IntroPage({ onEnter }) {
     if (isMounted) {
       const sequence = async () => {
         await controls.start("welcome");
-        await new Promise(resolve => setTimeout(resolve, 400));
+        // await new Promise(resolve => setTimeout(resolve, 200));
         await controls.start("to");
-        await new Promise(resolve => setTimeout(resolve, 400));
+        await new Promise(resolve => setTimeout(resolve, 200));
         await controls.start("chessNexus");
-        await new Promise(resolve => setTimeout(resolve, 750));
+        await new Promise(resolve => setTimeout(resolve, 500));
         await controls.start("fadeOut");
         await new Promise(resolve => setTimeout(resolve, 500));
         onEnter();
@@ -55,8 +55,8 @@ function IntroPage({ onEnter }) {
           initial={{ y: "-100%" }}
           animate={controls}
           variants={{
-            welcome: { y: 0, transition: { duration: 0.5 } },
-            to: { y: 0, },
+            welcome: { y: 0, transition: { duration: 1, ease: [0.8, 0, 0.2, 1] } },
+            to: { y: 0 },
             chessNexus: { y: 0 },
             fadeOut: { y: 0 }
           }}
@@ -79,7 +79,7 @@ function IntroPage({ onEnter }) {
           animate={controls}
           variants={{
             welcome: { y: "100%" },
-            to: { y: 0, transition: { duration: 0.5 } },
+            to: { y: 0, transition: { duration: 1, ease: [0.8, 0, 0.2, 1] } },
             chessNexus: { y: 0 },
             fadeOut: { y: 0 }
           }}
@@ -103,7 +103,7 @@ function IntroPage({ onEnter }) {
           variants={{
             welcome: { x: "-100%" },
             to: { x: "-100%" },
-            chessNexus: { x: 0, transition: { duration: 0.5 } },
+            chessNexus: { x: 0, transition: { duration: 1, ease: [0.6, 0, 0.2, 1] } },
             fadeOut: { x: 0 }
           }}
           position="absolute"
@@ -127,7 +127,7 @@ function IntroPage({ onEnter }) {
           variants={{
             welcome: { x: "100%" },
             to: { x: "100%" },
-            chessNexus: { x: 0, transition: { duration: 0.5 } },
+            chessNexus: { x: 0, transition: { duration: 1, ease: [0.6, 0, 0.2, 1] } },
             fadeOut: { x: 0 }
           }}
           position="absolute"
