@@ -1,7 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import axios from 'axios';
-import { Button, Text, Link, Spinner } from '@chakra-ui/react';
+import { 
+    Button, 
+    Text, 
+    Link, 
+    Spinner,
+    useToast
+  } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Chess } from 'chess.js';
 
@@ -16,9 +22,23 @@ function Puzzles() {
     const [moveInProgress, setMoveInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
     const [firstPuzzle, setFirstPuzzle] = useState(true);
+    const [puzzleLoaded, setPuzzleLoaded] = useState(false);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
+
+    const toast = useToast();
+
+    const showFeedback = (isCorrect) => {
+      toast({
+        title: isCorrect ? "Correct!" : "Incorrect!",
+        status: isCorrect ? "success" : "error",
+        duration: 1500,
+        isClosable: true,
+        position: "top",
+        variant: "solid",
+      });
+    };
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -31,6 +51,7 @@ function Puzzles() {
         if (moveInProgress) return;
 
         try {
+            setPuzzleLoaded(true);
             setMoveInProgress(true);
             if (firstPuzzle) {
                 setLoading(true);
@@ -41,6 +62,7 @@ function Puzzles() {
             const response = await axios.get('http://localhost:8080/puzzles');
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
+            const rating = response.data.rating;
             setMoves(moveList);
 
             chess.current.load(newFen);
@@ -73,6 +95,7 @@ function Puzzles() {
 
         if (userMove === expectedMove) {
             console.log('Correct');
+            showFeedback(true);
             const nextMove = moves[moveIndex + 1];
             setPuzzleCompleted(true);
             setIncorrectMove(false);
@@ -88,6 +111,7 @@ function Puzzles() {
             }
         } else {
             console.log('Incorrect');
+            showFeedback(false);
             setIncorrectMove(true);
         }
     };
@@ -152,7 +176,7 @@ function Puzzles() {
                         setFen={setFen}
                         onMove={logMove}
                         chessInstance={chess.current}
-                        disableBoard={incorrectMove}
+                        disableBoard={incorrectMove || !puzzleLoaded}
                     />
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
                         <Button onClick={redoPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
@@ -203,6 +227,7 @@ function Puzzles() {
                             border: '1px solid #fff'
                         }}>Incorrect!</div>
                     }
+
                 </div>
             </div>
         </div>

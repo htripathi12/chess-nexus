@@ -28,11 +28,11 @@ router.get('/', (req, res) => {
     }
 
     const randomIndex = Math.floor(Math.random() * puzzles.length);
-    const { FEN, Moves, GameUrl } = puzzles[randomIndex];
+    const { FEN, Moves, GameUrl, Rating } = puzzles[randomIndex];
 
     // Validate that FEN and Moves exist
     if (FEN && Moves) {
-        res.send({ fen: FEN, moves: Moves, URL: GameUrl });
+        res.send({ fen: FEN, moves: Moves, URL: GameUrl, rating: Rating });
     } else {
         res.status(500).send({ error: 'Invalid puzzle format' });
     }

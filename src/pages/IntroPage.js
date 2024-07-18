@@ -16,7 +16,6 @@ function IntroPage({ onEnter }) {
     if (isMounted) {
       const sequence = async () => {
         await controls.start("welcome");
-        // await new Promise(resolve => setTimeout(resolve, 200));
         await controls.start("to");
         await new Promise(resolve => setTimeout(resolve, 200));
         await controls.start("chessNexus");
