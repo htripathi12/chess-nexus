@@ -16,10 +16,11 @@ function IntroPage({ onEnter }) {
     if (isMounted) {
       const sequence = async () => {
         await controls.start("welcome");
+        await new Promise(resolve => setTimeout(resolve, 400));
         await controls.start("to");
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 400));
         await controls.start("chessNexus");
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 750));
         await controls.start("fadeOut");
         await new Promise(resolve => setTimeout(resolve, 500));
         onEnter();
@@ -67,9 +68,15 @@ function IntroPage({ onEnter }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          bg="teal.400"
+          bgGradient="linear(to-br, teal.300, teal.400, teal.500)"
+          boxShadow="inset 0 0 100px rgba(0,0,0,0.1)"
         >
-          <Text fontSize="200px" fontWeight="bold" color="#014D4E">
+          <Text 
+            fontSize="200px" 
+            fontWeight="bold" 
+            color="#014D4E"
+            textShadow="2px 2px 4px rgba(0,0,0,0.1)"
+          >
             Welcome
           </Text>
         </MotionBox>
@@ -90,9 +97,10 @@ function IntroPage({ onEnter }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          bg="teal.400"
+          bgGradient="linear(to-br, teal.300, teal.400, teal.500)"
+          boxShadow="inset 0 0 100px rgba(0,0,0,0.1)"
         >
-          <Text fontSize="200px" fontWeight="bold" color="#014D4E">
+          <Text fontSize="200px" fontWeight="bold" color="#014D4E" textShadow="2px 2px 4px rgba(0,0,0,0.1)">
             to
           </Text>
         </MotionBox>
@@ -113,7 +121,7 @@ function IntroPage({ onEnter }) {
           display="flex"
           justifyContent="flex-end"
           alignItems="center"
-          bg="teal.400"
+          bgGradient="linear(to-r, teal.300 0%, teal.400 25%, teal.500 100%)"
           overflow="hidden"
         >
           <Text marginRight="20px" fontSize="150px" fontWeight="bold" color="#014D4E" marginLeft="150px">
@@ -137,7 +145,7 @@ function IntroPage({ onEnter }) {
           display="flex"
           justifyContent="flex-start"
           alignItems="center"
-          bg="teal.400"
+          bgGradient="linear(to-r, teal.500 10%, teal.400 75%, teal.300 100%)"
           overflow="hidden"
         >
           <Text marginLeft="20px" fontSize="150px" fontWeight="bold" color="#014D4E">
