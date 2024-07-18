@@ -6,7 +6,7 @@ import {
     Text, 
     Link, 
     Spinner,
-    useToast
+    useToast,
   } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Chess } from 'chess.js';
@@ -17,12 +17,12 @@ function Puzzles() {
     const [orientation, setOrientation] = useState('white');
     const [moves, setMoves] = useState([]);
     const [moveIndex, setMoveIndex] = useState(1);
-    const [puzzleCompleted, setPuzzleCompleted] = useState(false);
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
     const [firstPuzzle, setFirstPuzzle] = useState(true);
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
+    const [rating, setRating] = useState(0);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
@@ -57,12 +57,11 @@ function Puzzles() {
                 setLoading(true);
             }
             setFirstPuzzle(false);
-            setPuzzleCompleted(false);
             setIncorrectMove(false);
             const response = await axios.get('http://localhost:8080/puzzles');
             const newFen = response.data.fen;
-            const moveList = response.data.moves.split(' ');
-            const rating = response.data.rating;
+            const moveList = response.data.moves.split(' '); 
+            setRating(response.data.rating);
             setMoves(moveList);
 
             chess.current.load(newFen);
@@ -97,17 +96,13 @@ function Puzzles() {
             console.log('Correct');
             showFeedback(true);
             const nextMove = moves[moveIndex + 1];
-            setPuzzleCompleted(true);
             setIncorrectMove(false);
             if (nextMove) {
                 setTimeout(() => {
-                    setPuzzleCompleted(false);
                     chess.current.move(nextMove);
                     setFen(chess.current.fen());
                     setMoveIndex(moveIndex => moveIndex + 2);
                 }, 1000);
-            } else {
-                setPuzzleCompleted(true);
             }
         } else {
             console.log('Incorrect');
@@ -193,41 +188,31 @@ function Puzzles() {
                             </svg>
                         </Button>
                     </div>
-                    {puzzleCompleted &&
-                        <div style={{
-                            position: 'absolute',
-                            right: '-150px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            padding: '20px',
-                            backgroundColor: '#008000',                       
+                </div>
+                <div style={{ height: '550px', display: 'flex', alignItems: 'flex-start' }}>
+                    <div 
+                        style={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            alignItems: 'center', 
+                            width: '300px',
+                            maxHeight: '150px',
+                            marginLeft: '20px',
+                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
                             borderRadius: '10px',
-                            color: '#fff',
-                            fontSize: '24px',
+                            border: '2px solid #008080',
+                            boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+                            padding: '10px',
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: '28px',
+                            color: '#008080',
                             fontWeight: 'bold',
+                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                             textAlign: 'center',
-                            boxShadow: '0px 0px 10px 3px rgba(0, 0, 0, 0.2)',
-                            border: '1px solid #fff'
-                        }}>Correct!</div>
-                    }
-                    {incorrectMove &&
-                        <div style={{
-                            position: 'absolute',
-                            right: '-150px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            padding: '20px',
-                            backgroundColor: '#ff0000',
-                            borderRadius: '10px',
-                            color: '#fff',
-                            fontSize: '24px',
-                            fontWeight: 'bold',
-                            textAlign: 'center',
-                            boxShadow: '0px 0px 10px 3px rgba(0, 0, 0, 0.2)',
-                            border: '1px solid #fff'
-                        }}>Incorrect!</div>
-                    }
-
+                        }}>{rating}</Text>
+                    </div>
                 </div>
             </div>
         </div>
