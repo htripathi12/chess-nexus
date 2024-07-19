@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Container, AbsoluteCenter, Button, FormControl, FormLabel, Input, Stack, Text} from '@chakra-ui/react';
+import { Box, Container, VStack, Button, FormControl, FormLabel, 
+  Input, Text, Heading, useToast, InputGroup, InputRightElement
+} from '@chakra-ui/react';
 import BackButton from '../components/BackButton';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+    const toast = useToast();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -16,39 +20,99 @@ function Login() {
             password: password,
         }).then((response) => {
             console.log(response);
+            toast({
+                title: "Login successful.",
+                description: "You've been logged in.",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
         }).catch((error) => {
             console.error('There was an error!', error);
+            toast({
+                title: "An error occurred.",
+                description: "Unable to log in.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
         });
     }
 
     return (
-        <>
-        <BackButton />
-        <AbsoluteCenter>
-            <Container bg='teal.600' borderRadius="30" w='500px' h='500px' color="white" p={5} shadow="2xl" border="2px" borderColor="gray.400">            
-                <Text fontSize="2xl" fontWeight="bold" mb={4}>Login</Text>
-                <form onSubmit={handleLogin}>
-                    <Stack spacing={3}>
-                        <FormControl id="loginEmail">
-                            <FormLabel>Email address</FormLabel>
-                            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-                        </FormControl>
-                        <FormControl id="loginPassword">
-                            <FormLabel>Password</FormLabel>
-                            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                        </FormControl>
-                        <Button mt={4} colorScheme="teal" type="submit" _hover={{ bg: "teal.800" }}>
-                            Login
+        <Box minHeight="100vh" py={12}>
+            <Box position="absolute" top="20px" left="20px">
+                <BackButton />
+            </Box>
+            <Container position="relative" display="flex" justifyContent="center" pt={32}>
+                <VStack 
+                    spacing={8} 
+                    bg="white" 
+                    boxShadow="xl" 
+                    borderRadius="xl" 
+                    border={{ base: 'none', md: '2px solid #008080' }}
+                    p={8}
+                    height="500px"
+                    width="500px"
+                    align="stretch"
+                >
+                    <Heading textAlign="center" color="teal.500">Login</Heading>
+                    <form onSubmit={handleLogin}>
+                        <VStack spacing={4}>
+                            <FormControl id="loginEmail" isRequired>
+                                <FormLabel>Email address</FormLabel>
+                                <Input 
+                                    type="email" 
+                                    value={email} 
+                                    onChange={e => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    focusBorderColor="teal.400"
+                                    borderColor="gray.400"
+                                />
+                            </FormControl>
+                            <FormControl id="loginPassword" isRequired>
+                                <FormLabel>Password</FormLabel>
+                                <InputGroup>
+                                    <Input 
+                                        type={showPassword ? "text" : "password"}
+                                        value={password} 
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder="Enter your password"
+                                        focusBorderColor="teal.400"
+                                        borderColor="gray.400"
+                                    />
+                                    <InputRightElement width="4.5rem">
+                                        <Button h="1.75rem" size="sm" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? "Hide" : "Show"}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                            </FormControl>
+                            <Button 
+                                mt={4} 
+                                colorScheme="teal" 
+                                type="submit" 
+                                width="full"
+                                _hover={{ bg: "teal.600" }}
+                            >
+                                Login
+                            </Button>
+                        </VStack>
+                    </form>
+                    <Text textAlign="center" mt={6}>
+                        Don't have an account?{" "}
+                        <Button 
+                            variant="link" 
+                            color="teal.500" 
+                            onClick={() => navigate('/signup')}
+                            _hover={{ color: "teal.600" }}
+                        >
+                            Sign Up
                         </Button>
-                    </Stack>
-                </form>
-                <Text mt={4}>Don't have an account?</Text>
-                <Button mt={2} colorScheme="teal" onClick={() => navigate('/signup')} _hover={{ bg: "teal.800" }}>
-                    Sign Up
-                </Button>
+                    </Text>
+                </VStack>
             </Container>
-        </AbsoluteCenter>
-        </>
+        </Box>
     );
 }
 
