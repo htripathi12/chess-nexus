@@ -32,6 +32,7 @@ app.use(cors());
 app.use(waitForPuzzlesMiddleware);
 
 app.use("/login", db);
+app.use("/signup", db);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
 

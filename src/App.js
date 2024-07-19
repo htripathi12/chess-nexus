@@ -9,6 +9,7 @@ import Play from './pages/Play.js';
 import Puzzles from './pages/Puzzles';
 import Learn from './pages/Learn.js';
 import Login from './pages/Login.js';
+import Signup from './pages/Signup.js';
 import About from './pages/About.js'
 import Contact from './pages/Contact.js';
 import IntroPage from './pages/IntroPage.js';
@@ -92,7 +93,7 @@ function RoutesAndNavbar() {
               <Route path="/puzzles" element={<Puzzles />} />
               <Route path="/learn" element={<Learn />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
