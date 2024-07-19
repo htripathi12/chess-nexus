@@ -75,7 +75,7 @@ function IntroPage({ onEnter }) {
             fontSize="200px" 
             fontWeight="bold" 
             color="#014D4E"
-            textShadow="2px 2px 4px rgba(0,0,0,0.1)"
+            textShadow="3px 3px 6px rgba(0,0,0,0.2)"
           >
             Welcome
           </Text>
@@ -97,10 +97,15 @@ function IntroPage({ onEnter }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          bgGradient="linear(to-br, teal.300, teal.400, teal.500)"
+          bgGradient="linear(to-t, teal.300, teal.400, teal.500)"
           boxShadow="inset 0 0 100px rgba(0,0,0,0.1)"
         >
-          <Text fontSize="200px" fontWeight="bold" color="#014D4E" textShadow="2px 2px 4px rgba(0,0,0,0.1)">
+          <Text
+            fontSize="200px"
+            fontWeight="bold"
+            color="#014D4E"
+            textShadow="3px 3px 6px rgba(0,0,0,0.2)"
+          >
             to
           </Text>
         </MotionBox>
@@ -122,9 +127,15 @@ function IntroPage({ onEnter }) {
           justifyContent="flex-end"
           alignItems="center"
           bgGradient="linear(to-r, teal.300 0%, teal.400 25%, teal.500 100%)"
-          overflow="hidden"
         >
-          <Text marginRight="20px" fontSize="150px" fontWeight="bold" color="#014D4E" marginLeft="150px">
+          <Text
+            marginRight="20px"
+            fontSize="150px"
+            fontWeight="bold"
+            color="#014D4E"
+            marginLeft="150px"
+            textShadow="3px 3px 6px rgba(0,0,0,0.2)"
+          >
             Chess
           </Text>
         </MotionBox>
@@ -146,9 +157,14 @@ function IntroPage({ onEnter }) {
           justifyContent="flex-start"
           alignItems="center"
           bgGradient="linear(to-r, teal.500 10%, teal.400 75%, teal.300 100%)"
-          overflow="hidden"
         >
-          <Text marginLeft="20px" fontSize="150px" fontWeight="bold" color="#014D4E">
+          <Text
+            marginLeft="20px"
+            fontSize="150px"
+            fontWeight="bold"
+            color="#014D4E"
+            textShadow="3px 3px 6px rgba(0,0,0,0.2)"
+          >
             Nexus
           </Text>
         </MotionBox>
