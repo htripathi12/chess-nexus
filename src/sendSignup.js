@@ -30,12 +30,23 @@ router.post('/', (req, res) => {
             console.error('Error hashing password:', err);
             return res.status(500).send('Error processing request');
         }
-        db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (err, result) => {
+        db.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
             if (err) {
-                console.error('Error inserting user:', err);
-                return res.status(500).send('Error inserting values');
+                console.error('Error querying the database:', err);
+                return res.status(500).send('Database query error');
             }
-            return res.send('Values Inserted');
+            if (result.length > 0) {
+                return res.status(400).send('Email already in use');
+            } else {
+                // Email does not exist, proceed with insertion
+                db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (insertErr, insertResult) => {
+                    if (insertErr) {
+                        console.error('Error inserting user:', insertErr);
+                        return res.status(500).send('Error inserting values');
+                    }
+                    return res.send('Values Inserted');
+                });
+            }
         });
     });
 });
