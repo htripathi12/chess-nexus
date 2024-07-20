@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const router = express.Router();
 
@@ -21,8 +22,13 @@ db.connect((err) => {
     console.log('Connected to the database successfully');
 });
 
-router.post("/login", (req, res) => {
+router.post("/", (req, res) => {
     const { email, password } = req.body;
+    console.log(`Received login request with email: ${email}`);
+    if (!process.env.JWT_SECRET) {
+        console.error('FATAL ERROR: JWT_SECRET is not defined.');
+        process.exit(1);
+    }
 
     // Find a user with the provided email
     db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {

@@ -21,7 +21,7 @@ db.connect((err) => {
     console.log('Connected to the database successfully');
 });
 
-router.post('/signup', (req, res) => {
+router.post('/', (req, res) => {
     const { email, password } = req.body;
 
     console.log(`Received signup request with email: ${email}`);
