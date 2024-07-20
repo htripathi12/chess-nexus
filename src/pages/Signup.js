@@ -31,6 +31,16 @@ function Signup() {
             navigate('/login');
         }).catch((error) => {
             console.error('There was an error!', error);
+            if (error.response.status === 400) {
+                toast({
+                    title: "Email already in use.",
+                    description: "The email you provided is already in use.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                return;
+            }
             toast({
                 title: "An error occurred.",
                 description: "Unable to create your account.",

@@ -27,6 +27,7 @@ function Login() {
                 duration: 3000,
                 isClosable: true,
             });
+            navigate('/')
         }).catch((error) => {
             console.error('There was an error!', error);
             toast({
