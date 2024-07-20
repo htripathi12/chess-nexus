@@ -16,7 +16,7 @@ function Signup() {
 
     const handleSignup = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:8080/signup', {
+        Axios.post('http://localhost:8080/signup/signup', {
             email: email,
             password: password,
         }).then((response) => {

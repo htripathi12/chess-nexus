@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
-const db = require('./database');
+const sendLogin = require('./sendLogin');
+const sendSignup = require('./sendSignup');
 const analyze = require('./analyze');
 
 const app = express();
@@ -31,8 +32,8 @@ app.use(express.json());
 app.use(cors());
 app.use(waitForPuzzlesMiddleware);
 
-app.use("/login", db);
-app.use("/signup", db);
+app.use("/login", sendLogin);
+app.use("/signup", sendSignup);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
 
