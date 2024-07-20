@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Link, Button, Text, Select, Input, Spinner } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Textarea, Button, Text, Select, Input, Spinner } from '@chakra-ui/react';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';

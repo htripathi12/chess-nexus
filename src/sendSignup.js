@@ -40,24 +40,4 @@ router.post('/signup', (req, res) => {
     });
 });
 
-router.post("/login", (req, res) => {
-    const { email, password } = req.body;
-
-    // Find a user with the provided email
-    db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
-        if (err) {
-            console.error('Error querying database:', err);
-            return res.status(500).send('Error querying database');
-        }
-
-        if (results.length > 0) {
-            console.log("Hello world");
-        } else {
-            console.log(`No user found with email: ${email}`);
-        }
-
-        return res.send('Received login request');
-    });
-});
-
 module.exports = router;
