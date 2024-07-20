@@ -16,6 +16,7 @@
     "chessboardjsx": "^2.4.7",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.2",
     "line-reader": "^0.4.0",
