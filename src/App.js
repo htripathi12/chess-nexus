@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider } from '@chakra-ui/react';
+import {
+  Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider, Menu,
+  MenuButton, MenuList, MenuItem, IconButton
+} from '@chakra-ui/react';
 import { BrowserRouter as Router, Link as RouterLink, useLocation, Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,12 +16,15 @@ import Signup from './pages/Signup.js';
 import About from './pages/About.js'
 import Contact from './pages/Contact.js';
 import IntroPage from './pages/IntroPage.js';
+import { useAuth } from './AuthContext.js';
+import { AuthProvider } from './AuthContext.js';
 
 const MotionBox = motion(Box);
 
 function RoutesAndNavbar() {
   const location = useLocation();
   const [showIntro, setShowIntro] = useState(location.pathname === '/');
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -65,11 +71,20 @@ function RoutesAndNavbar() {
                 </Box>
               </Link>
               <Spacer />
-              <Link as={RouterLink} to="/login" _hover={{ textDecoration: "none" }}>
-                <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
-                    Login
-                </Button>
-              </Link>
+              {isLoggedIn ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-circle" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#FFFFFF" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                    <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+                </svg>
+              ) : (
+                <Link as={RouterLink} to="/login" _hover={{ textDecoration: "none" }}>
+                  <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
+                      Login
+                  </Button>
+                </Link>
+              )}
             </Flex>
           )}
           <Container maxW="100%">
@@ -106,13 +121,15 @@ function RoutesAndNavbar() {
 
 function App() {
   return (
+  <AuthProvider>
     <Router>
       <ChakraProvider>
         <Box bg="teal.400" minHeight="100vh" minWidth="100vw" overflow="hidden">
           <RoutesAndNavbar />
         </Box>
       </ChakraProvider>
-    </Router>
+      </Router>
+  </AuthProvider>
   );
 }
 
