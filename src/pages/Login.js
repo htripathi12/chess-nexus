@@ -5,6 +5,7 @@ import { Box, Container, VStack, Button, FormControl, FormLabel,
   Input, Text, Heading, useToast, InputGroup, InputRightElement
 } from '@chakra-ui/react';
 import BackButton from '../components/BackButton';
+import { useAuth } from '../AuthContext';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const toast = useToast();
+    const { login } = useAuth();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -27,6 +29,7 @@ function Login() {
                 duration: 3000,
                 isClosable: true,
             });
+            login(response.data.token);
             navigate('/')
         }).catch((error) => {
             console.error('There was an error!', error);
