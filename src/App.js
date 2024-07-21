@@ -24,7 +24,7 @@ const MotionBox = motion(Box);
 function RoutesAndNavbar() {
   const location = useLocation();
   const [showIntro, setShowIntro] = useState(location.pathname === '/');
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -49,9 +49,8 @@ function RoutesAndNavbar() {
               <Box>
                 <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "teal.700"}}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-chess-king" width="30" height="30" 
-                    viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" 
-                    strokeLinejoin="round">
-                      
+                  viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" 
+                  strokeLinejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M8 16l-1.447 .724a1 1 0 0 0 -.553 .894v2.382h12v-2.382a1 1 0 0 0 -.553 -.894l-1.447 -.724h-8z" />
                     <path d="M8.5 16a3.5 3.5 0 1 1 3.163 -5h.674a3.5 3.5 0 1 1 3.163 5z" />
@@ -71,13 +70,56 @@ function RoutesAndNavbar() {
                 </Box>
               </Link>
               <Spacer />
-              {isLoggedIn ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-circle" width="44" height="44" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#FFFFFF" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                    <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
-                </svg>
+                {isLoggedIn ? (
+                  <Menu>
+                    <MenuButton
+                      as={Button}
+                      backgroundColor="teal.500"
+                      _hover={{ bg: "teal.600" }}
+                      p={0}
+                      width="44px"
+                      height="44px"
+                      borderRadius="full"
+                      transition="all 0.2s"
+                    >
+                      <Box
+                        as="span"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="flex-start"
+                        width="100%"
+                        height="100%"
+                        transition="transform 0.2s, box-shadow 0.2s"
+                        _hover={{
+                          transform: "translateX(2px)",
+                          boxShadow: "0 0 8px 2px rgba(0, 128, 128, 0.6)"
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="icon icon-tabler icon-tabler-user-circle"
+                          width="45"
+                          height="45"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="#FFFFFF"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ marginLeft: "auto" }}
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                          <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+                        </svg>
+                      </Box>
+                    </MenuButton>
+                    <MenuList textColor="black">
+                      <MenuItem>Account</MenuItem>
+                      <MenuItem onClick={logout}>Sign Out</MenuItem>
+                    </MenuList>
+                  </Menu>
               ) : (
                 <Link as={RouterLink} to="/login" _hover={{ textDecoration: "none" }}>
                   <Button colorScheme="white" variant="outline" _hover={{ bg: "teal.700", color: "white" }}>
