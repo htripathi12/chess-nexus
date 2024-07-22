@@ -45,7 +45,7 @@ function RoutesAndNavbar() {
           transition={{ duration: 0.5 }}
         >
           {(location.pathname !== '/login' && location.pathname !== '/signup') && (
-            <Flex as="nav" bg="teal.500" color="white" p={4}>
+            <Flex as="nav" bg="teal.500" color="white" p={5} maxH={20}>
               <Box>
                 <Button as={RouterLink} to="/" bg="teal.500" _hover={{bg: "teal.700"}}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-chess-king" width="30" height="30" 
@@ -73,40 +73,41 @@ function RoutesAndNavbar() {
                 {isLoggedIn ? (
                   <Menu>
                     <MenuButton
-                      as={Button}
+                      as={Button}  
                       backgroundColor="teal.500"
-                      _hover={{ bg: "teal.600" }}
-                      p={0}
-                      width="44px"
-                      height="44px"
+                      _hover={{ bg: "teal.600" }} 
+                      _active={{ bg: "teal.600" }}
+                      width="60px"
+                      height="60px"
                       borderRadius="full"
                       transition="all 0.2s"
+                      p={0}
+                      position="relative"
+                      top="-7px"
                     >
                       <Box
                         as="span"
                         display="flex"
                         alignItems="center"
-                        justifyContent="flex-start"
+                        justifyContent="center"
                         width="100%"
                         height="100%"
                         transition="transform 0.2s, box-shadow 0.2s"
                         _hover={{
-                          transform: "translateX(2px)",
                           boxShadow: "0 0 8px 2px rgba(0, 128, 128, 0.6)"
                         }}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="icon icon-tabler icon-tabler-user-circle"
-                          width="45"
-                          height="45"
+                          width="55"
+                          height="55"
                           viewBox="0 0 24 24"
                           strokeWidth="1.5"
                           stroke="#FFFFFF"
                           fill="none"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          style={{ marginLeft: "auto" }}
                         >
                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                           <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
