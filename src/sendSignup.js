@@ -38,7 +38,6 @@ router.post('/', (req, res) => {
             if (result.length > 0) {
                 return res.status(400).send('Email already in use');
             } else {
-                // Email does not exist, proceed with insertion
                 db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (insertErr, insertResult) => {
                     if (insertErr) {
                         console.error('Error inserting user:', insertErr);

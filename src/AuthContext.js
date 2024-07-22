@@ -6,6 +6,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [lichessUsername, setLichessUsername] = useState('');
+    const [chesscomUsername, setChesscomUsername] = useState('');
 
     const login = (token) => {
         document.cookie = `token=${token}; path=/`;
@@ -18,7 +20,10 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{
+            isLoggedIn, lichessUsername, setLichessUsername,
+            chesscomUsername, setChesscomUsername, login, logout
+        }}>
             {children}
         </AuthContext.Provider>
     );
