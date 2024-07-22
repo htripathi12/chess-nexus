@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   VStack,
@@ -9,64 +9,100 @@ import {
   Button,
   useToast,
   Container,
+  Text,
 } from '@chakra-ui/react';
 
+import { useAuth } from '../AuthContext';
+
 function Account() {
-  const [chesscomUsername, setChesscomUsername] = useState('');
-  const [lichessUsername, setLichessUsername] = useState('');
+  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
   const toast = useToast();
 
-  const handleSubmit = (e) => {
+  const handleChesscomSubmit = (e) => {
     e.preventDefault();
-    console.log('Chess.com username:', chesscomUsername);
-    console.log('Lichess username:', lichessUsername);
-    
-    toast({
-      title: 'Usernames submitted',
-      description: 'Your usernames have been logged to the console.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    if (chesscomUsername.trim()) {
+      console.log('Chess.com username:', chesscomUsername);
+      toast({
+        title: 'Connected Chess.com username!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleLichessSubmit = (e) => {
+    e.preventDefault();
+    if (lichessUsername.trim()) {
+      console.log('Lichess username:', lichessUsername);
+      toast({
+        title: 'Connected Lichess username!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
-    <Container maxW="container.md" py={10}>
+    <Container maxW="container.sm" py={10}>
       <Box bg="white" p={8} borderRadius="lg" boxShadow="lg">
-        <VStack spacing={6} align="stretch">
+        <VStack spacing={8} align="stretch">
           <Heading as="h1" size="xl" textAlign="center" color="teal.500">
-            Account Settings
+            Connect Your Accounts
           </Heading>
-          <form onSubmit={handleSubmit}>
-            <VStack spacing={4}>
-              <FormControl id="chesscom-username">
-                <FormLabel>Chess.com Username</FormLabel>
-                <Input 
-                  type="text" 
-                  value={chesscomUsername}
-                  onChange={(e) => setChesscomUsername(e.target.value)}
-                  placeholder="Enter your Chess.com username"
-                />
-              </FormControl>
-              <FormControl id="lichess-username">
-                <FormLabel>Lichess Username</FormLabel>
-                <Input 
-                  type="text"
-                  value={lichessUsername}
-                  onChange={(e) => setLichessUsername(e.target.value)}
-                  placeholder="Enter your Lichess username"
-                />
-              </FormControl>
-              <Button 
-                type="submit" 
-                colorScheme="teal" 
-                size="lg" 
-                width="full"
-              >
-                Save Changes
-              </Button>
-            </VStack>
-          </form>
+          
+          <Box>
+            <Text fontSize="lg" fontWeight="bold" mb={2}>Chess.com</Text>
+            <form onSubmit={handleChesscomSubmit}>
+              <VStack spacing={4}>
+                <FormControl id="chesscom-username">
+                  <FormLabel>Chess.com Username</FormLabel>
+                  <Input 
+                    type="text" 
+                    value={chesscomUsername}
+                    onChange={(e) => setChesscomUsername(e.target.value)}
+                    placeholder="Enter your Chess.com username"
+                  />
+                </FormControl>
+                <Button 
+                  type="submit" 
+                  colorScheme="teal" 
+                  size="md" 
+                  width="full"
+                  isDisabled={!chesscomUsername.trim()}
+                >
+                  Connect Chess.com
+                </Button>
+              </VStack>
+            </form>
+          </Box>
+
+          <Box>
+            <Text fontSize="lg" fontWeight="bold" mb={2}>Lichess</Text>
+            <form onSubmit={handleLichessSubmit}>
+              <VStack spacing={4}>
+                <FormControl id="lichess-username">
+                  <FormLabel>Lichess Username</FormLabel>
+                  <Input 
+                    type="text"
+                    value={lichessUsername}
+                    onChange={(e) => setLichessUsername(e.target.value)}
+                    placeholder="Enter your Lichess username"
+                  />
+                </FormControl>
+                <Button 
+                  type="submit" 
+                  colorScheme="teal" 
+                  size="md" 
+                  width="full"
+                  isDisabled={!lichessUsername.trim()}
+                >
+                  Connect Lichess
+                </Button>
+              </VStack>
+            </form>
+          </Box>
         </VStack>
       </Box>
     </Container>
