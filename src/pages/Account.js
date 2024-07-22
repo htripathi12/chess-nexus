@@ -15,19 +15,28 @@ import {
 import { useAuth } from '../AuthContext';
 
 function Account() {
-  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
-  const toast = useToast();
+    const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
+    const toast = useToast();
+    var ChessWebAPI = require('chess-web-api');
+    var chessAPI = new ChessWebAPI();
 
   const handleChesscomSubmit = (e) => {
     e.preventDefault();
     if (chesscomUsername.trim()) {
-      console.log('Chess.com username:', chesscomUsername);
-      toast({
-        title: 'Connected Chess.com username!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+        console.log('Chess.com username:', chesscomUsername);
+        toast({
+            title: 'Connected Chess.com username!',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+        });  
+        chessAPI.getPlayerStats(chesscomUsername).then(function(data) {
+            console.log(data);
+        });
+
+        chessAPI.getPlayerMonthlyArchives(chesscomUsername).then(function (data) {
+            console.log(data);
+        });
     }
   };
 
