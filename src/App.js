@@ -3,7 +3,7 @@ import {
   Box, Center, Container, Flex, Link, Spacer, Button, ChakraProvider, Menu,
   MenuButton, MenuList, MenuItem, IconButton
 } from '@chakra-ui/react';
-import { BrowserRouter as Router, Link as RouterLink, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,6 +16,9 @@ import Signup from './pages/Signup.js';
 import About from './pages/About.js'
 import Contact from './pages/Contact.js';
 import IntroPage from './pages/IntroPage.js';
+import Account from './pages/Account.js';
+
+// Import Contexts
 import { useAuth } from './AuthContext.js';
 import { AuthProvider } from './AuthContext.js';
 
@@ -25,6 +28,7 @@ function RoutesAndNavbar() {
   const location = useLocation();
   const [showIntro, setShowIntro] = useState(location.pathname === '/');
   const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -117,7 +121,7 @@ function RoutesAndNavbar() {
                       </Box>
                     </MenuButton>
                     <MenuList textColor="black">
-                      <MenuItem>Account</MenuItem>
+                      <MenuItem onClick={() => navigate("/account")}>Account</MenuItem>
                       <MenuItem onClick={logout}>Sign Out</MenuItem>
                     </MenuList>
                   </Menu>
@@ -154,6 +158,7 @@ function RoutesAndNavbar() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="account" element={<Account />} />
             </Routes>
           </Container>
         </MotionBox>
