@@ -1,4 +1,5 @@
 import React from 'react';
+import Axios from 'axios';
 import {
   Box,
   VStack,
@@ -19,6 +20,7 @@ function Account() {
     const toast = useToast();
     var ChessWebAPI = require('chess-web-api');
     var chessAPI = new ChessWebAPI();
+    const Date = new window.Date();
 
   const handleChesscomSubmit = (e) => {
     e.preventDefault();
@@ -30,11 +32,17 @@ function Account() {
             duration: 3000,
             isClosable: true,
         });  
-        chessAPI.getPlayerStats(chesscomUsername).then(function(data) {
-            console.log(data);
+
+        Axios.post('http://localhost:8080/account', {
+            chesscomUsername: chesscomUsername,
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error(error);
         });
 
-        chessAPI.getPlayerMonthlyArchives(chesscomUsername).then(function (data) {
+
+        chessAPI.getPlayerCompleteMonthlyArchives(chesscomUsername, Date.getFullYear(), Date.getMonth() + 1).then((data) => {
             console.log(data);
         });
     }
