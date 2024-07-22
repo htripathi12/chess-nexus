@@ -1,28 +1,12 @@
 const express = require('express');
-const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 const router = express.Router();
 
-const db = mysql.createConnection({
-    user: 'root',
-    host: 'localhost',
-    password: 'yashT2002!!',
-    database: 'ChessDB',
-    port: '3306'
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database: ', err);
-        process.exit(1);
-    }
-    console.log('Connected to the database successfully');
-});
-
 router.post('/', (req, res) => {
     const { email, password } = req.body;
+    const db = req.db;
 
     console.log(`Received signup request with email: ${email}`);
     bcrypt.hash(password, saltRounds, (err, hash) => {
