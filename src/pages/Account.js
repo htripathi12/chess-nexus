@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../AuthContext';
 
 function Account() {
-  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
+  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
   const toast = useToast();
 
   const handleChesscomSubmit = (e) => {
@@ -30,12 +30,15 @@ function Account() {
               isClosable: true,
           });
   
-          Axios.post('http://localhost:8080/account', {
-            chesscomUsername: chesscomUsername,
-          }).then((response) => {
-              console.log(response);
+          Axios.post('http://localhost:8080/account', 
+            { chesscomUsername },
+            {
+              headers: { 'Authorization': `Bearer ${getToken()}` }
+            }
+          ).then((response) => {
+            console.log(response);
           }).catch((error) => {
-              console.error(error);
+            console.error(error);
           });
       }
   };
