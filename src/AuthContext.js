@@ -10,13 +10,22 @@ export const AuthProvider = ({ children }) => {
     const [chesscomUsername, setChesscomUsername] = useState('');
 
     const checkTokenCookie = () => {
-        return document.cookie.split(';').some((item) => item.trim().startsWith('token='));
+        return document.cookie.split('; ').some((item) => item.trim().startsWith('token='));
+    };
+
+    const getToken = () => {
+        const tokenString = document.cookie.split('; ').find(row => row.startsWith('token='));
+        if (tokenString) {
+            return tokenString.split('=')[1];
+        }
+        return null;
     };
 
     const login = (token) => {
         document.cookie = `token=${token}; path=/`;
         setIsLoggedIn(true);
     };
+    
 
     const logout = () => {
         document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
@@ -32,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             isLoggedIn, lichessUsername, setLichessUsername,
-            chesscomUsername, setChesscomUsername, login, logout
+            chesscomUsername, setChesscomUsername, login, logout, getToken
         }}>
             {children}
         </AuthContext.Provider>
