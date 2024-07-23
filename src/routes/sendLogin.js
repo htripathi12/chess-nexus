@@ -15,7 +15,6 @@ router.post("/", (req, res) => {
         process.exit(1);
     }
 
-    // Find a user with the provided email
     db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
         if (err) {
             console.error('Error querying database:', err);
@@ -28,7 +27,6 @@ router.post("/", (req, res) => {
 
         const user = results[0];
 
-        // Compare the provided password with the stored hashed password
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
                 console.error('Error comparing passwords:', err);

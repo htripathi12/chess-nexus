@@ -1,9 +1,6 @@
 import React from 'react';
 import StudyBlock from '../components/StudyBlock.js';
 import BackButton from '../components/BackButton.js';
-import { BrowserRouter as Router, Link as RouterLink } from 'react-router-dom';
-import { Link, Button, Text } from '@chakra-ui/react';
-
 
 function Learn() {
     return (
