@@ -3,6 +3,7 @@ const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql');
+const jwt = require('jsonwebtoken');
 
 const { router: puzzleRouter, loadPuzzles } = require('./routes/randomPuzzle');
 const sendLogin = require('./routes/sendLogin');
@@ -32,6 +33,23 @@ const waitForPuzzlesMiddleware = async (req, res, next) => {
     next();
 };
 
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+      const bearer = bearerHeader.split(' ');
+      const bearerToken = bearer[1];
+      jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+          return res.status(403).json({ message: 'Invalid or expired token' });
+        }
+        req.userId = decoded.userId;
+        next();
+      });
+    } else {
+      res.status(403).json({ message: 'Token not provided' });
+    }
+};
+
 const db = mysql.createConnection({
     user: 'root',
     host: 'localhost',
@@ -55,7 +73,7 @@ app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
-app.use("/account", chesscom);
+app.use("/account", verifyToken, chesscom);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
