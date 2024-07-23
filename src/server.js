@@ -10,6 +10,7 @@ const sendLogin = require('./routes/sendLogin');
 const sendSignup = require('./routes/sendSignup');
 const analyze = require('./routes/analyze');
 const chesscom = require('./routes/sendChessCom');
+const lichess = require('./routes/sendLichess');
 
 const app = express();
 
@@ -73,7 +74,9 @@ app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
 app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
-app.use("/account", verifyToken, chesscom);
+app.use("/account/chesscom", verifyToken, chesscom);
+app.use("/account/lichess", verifyToken, lichess);
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));

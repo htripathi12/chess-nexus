@@ -20,49 +20,63 @@ function Account() {
   const toast = useToast();
 
   const handleChesscomSubmit = (e) => {
-      e.preventDefault();
-      if (chesscomUsername.trim()) {
-          console.log('Chess.com username:', chesscomUsername);
-          toast({
-              title: 'Connected Chess.com username!',
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-          });
-  
-          Axios.post('http://localhost:8080/account', 
-            { chesscomUsername },
-            {
-              headers: { 'Authorization': `Bearer ${getToken()}` }
-            }
-          ).then((response) => {
-            console.log(response);
-          }).catch((error) => {
-            console.error(error);
-          });
-      }
+    e.preventDefault();
+    if (chesscomUsername.trim()) {
+      console.log('Chess.com username:', chesscomUsername);
+      
+      Axios.post('http://localhost:8080/account/chesscom', 
+        { chesscomUsername },
+        {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        }
+      ).then((response) => {
+        console.log(response);
+        toast({
+          title: 'Connected Chess.com username!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }).catch((error) => {
+        console.error(error);
+        toast({
+          title: 'Failed to connect Chess.com username',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+    }
   };
   
   const handleLichessSubmit = (e) => {
-      e.preventDefault();
-      if (lichessUsername.trim()) {
-        console.log('Lichess username:', lichessUsername);
+    e.preventDefault();
+    if (lichessUsername.trim()) {
+      console.log('Lichess username:', lichessUsername);
+      
+      Axios.post('http://localhost:8080/account/lichess', 
+        { lichessUsername },
+        {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        }
+      ).then((response) => {
+        console.log(response);
         toast({
           title: 'Connected Lichess username!',
           status: 'success',
           duration: 3000,
           isClosable: true,
         });
-  
-        Axios.post('http://localhost:8080/account', {
-          platform: 'lichess', // Specify the platform
-          username: lichessUsername,
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.error(error);
+      }).catch((error) => {
+        console.error(error);
+        toast({
+          title: 'Failed to connect Lichess username',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
         });
-      }
+      });
+    }
   };
 
   return (
