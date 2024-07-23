@@ -4,11 +4,11 @@ const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql');
 
-const { router: puzzleRouter, loadPuzzles } = require('./randomPuzzle');
-const sendLogin = require('./sendLogin');
-const sendSignup = require('./sendSignup');
-const analyze = require('./analyze');
-const chesscom = require('./sendChessCom');
+const { router: puzzleRouter, loadPuzzles } = require('./routes/randomPuzzle');
+const sendLogin = require('./routes/sendLogin');
+const sendSignup = require('./routes/sendSignup');
+const analyze = require('./routes/analyze');
+const chesscom = require('./routes/sendChessCom');
 
 const app = express();
 
