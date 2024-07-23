@@ -16,49 +16,50 @@ import {
 import { useAuth } from '../AuthContext';
 
 function Account() {
-    const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
-    const toast = useToast();
-    var ChessWebAPI = require('chess-web-api');
-    var chessAPI = new ChessWebAPI();
-    const Date = new window.Date();
+  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername } = useAuth();
+  const toast = useToast();
 
   const handleChesscomSubmit = (e) => {
-    e.preventDefault();
-    if (chesscomUsername.trim()) {
-        console.log('Chess.com username:', chesscomUsername);
-        toast({
-            title: 'Connected Chess.com username!',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });  
-
-        Axios.post('http://localhost:8080/account', {
+      e.preventDefault();
+      if (chesscomUsername.trim()) {
+          console.log('Chess.com username:', chesscomUsername);
+          toast({
+              title: 'Connected Chess.com username!',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+          });
+  
+          Axios.post('http://localhost:8080/account', {
             chesscomUsername: chesscomUsername,
+          }).then((response) => {
+              console.log(response);
+          }).catch((error) => {
+              console.error(error);
+          });
+      }
+  };
+  
+  const handleLichessSubmit = (e) => {
+      e.preventDefault();
+      if (lichessUsername.trim()) {
+        console.log('Lichess username:', lichessUsername);
+        toast({
+          title: 'Connected Lichess username!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+  
+        Axios.post('http://localhost:8080/account', {
+          platform: 'lichess', // Specify the platform
+          username: lichessUsername,
         }).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.error(error);
         });
-
-
-        chessAPI.getPlayerCompleteMonthlyArchives(chesscomUsername, Date.getFullYear(), Date.getMonth() + 1).then((data) => {
-            console.log(data);
-        });
-    }
-  };
-
-  const handleLichessSubmit = (e) => {
-    e.preventDefault();
-    if (lichessUsername.trim()) {
-      console.log('Lichess username:', lichessUsername);
-      toast({
-        title: 'Connected Lichess username!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+      }
   };
 
   return (
