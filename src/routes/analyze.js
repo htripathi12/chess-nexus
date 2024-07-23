@@ -12,21 +12,17 @@ const hasVitalTags = (pgn) => {
         tags[match[1]] = match[2];
     }
 
-    // Check if all required tags are present
     for (let tag of requiredTags) {
         if (!(tag in tags)) {
             return true;
-            //return false;
         }
     }
 
-    // Check if WhiteElo and BlackElo are valid integers
     const whiteElo = parseInt(tags['WhiteElo'], 10);
     const blackElo = parseInt(tags['BlackElo'], 10);
 
     if (isNaN(whiteElo) || isNaN(blackElo)) {
         return true;
-        //return false;
     }
 
     return true;
