@@ -11,12 +11,6 @@ const analyze = require('./analyze');
 const chesscom = require('./sendChessCom');
 
 const app = express();
-app.use(session({
-    secret: process.env.JWT_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
 
 const PORT = process.env.PORT || 8080;
 console.log('PORT:', PORT);
