@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Box, Heading, Text, VStack, Icon, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FaChess, FaPuzzlePiece, FaBook, FaMicrochip, FaChartBar } from 'react-icons/fa';
+import { FaChess, FaPuzzlePiece, FaBook, FaMicrochip } from 'react-icons/fa';
 
 const MotionBox = motion(Box);
 const MotionSimpleGrid = motion(SimpleGrid);
