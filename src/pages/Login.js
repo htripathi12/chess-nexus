@@ -13,7 +13,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const toast = useToast();
-    const { login } = useAuth();
+    const { login, setLichessUsername, setChesscomUsername } = useAuth();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -21,7 +21,10 @@ function Login() {
             email: email,
             password: password,
         }).then((response) => {
-            console.log(response);
+            console.log(response.data);
+            const { lichessUsername, chesscomUsername, token } = response.data;
+            setLichessUsername(lichessUsername || '');
+            setChesscomUsername(chesscomUsername || '');
             toast({
                 title: "Login successful.",
                 description: "You've been logged in.",
@@ -29,7 +32,7 @@ function Login() {
                 duration: 3000,
                 isClosable: true,
             });
-            login(response.data.token);
+            login(token);
             navigate('/')
         }).catch((error) => {
             console.error('There was an error!', error);

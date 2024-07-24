@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 router.post("/", (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, setLichessUsername, setChesscomUsername } = req.body;
     const db = req.db;
     console.log(`Received login request with email: ${email}`);
     if (!process.env.JWT_SECRET) {
@@ -44,8 +44,8 @@ router.post("/", (req, res) => {
                 { expiresIn: '3h' }
             );
 
-            res.json({ message: 'Login successful', token });
-        });
+            console.log(user.lichess, user.chesscom);
+            res.json({ message: 'Login successful', token, lichessUsername: user.lichess, chesscomUsername: user.chesscom });        });
     });
 });
 
