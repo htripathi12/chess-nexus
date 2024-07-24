@@ -38,6 +38,7 @@ function Account() {
           isClosable: true,
         });
       }).catch((error) => {
+        console.error(error);
         toast({
           title: 'Failed to connect Chess.com username',
           status: 'error',
