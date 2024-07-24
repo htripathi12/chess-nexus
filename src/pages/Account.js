@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../AuthContext';
 
 function Account() {
-  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
+  const { isLoggedIn, chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
   const toast = useToast();
 
   const handleChesscomSubmit = (e) => {
@@ -86,7 +86,7 @@ function Account() {
           <Heading as="h1" size="xl" textAlign="center" color="teal.500">
             Connect Your Accounts
           </Heading>
-          
+                   
           <Box>
             <Text fontSize="lg" fontWeight="bold" mb={2}>Chess.com</Text>
             <form onSubmit={handleChesscomSubmit}>
@@ -112,7 +112,7 @@ function Account() {
               </VStack>
             </form>
           </Box>
-
+    
           <Box>
             <Text fontSize="lg" fontWeight="bold" mb={2}>Lichess</Text>
             <form onSubmit={handleLichessSubmit}>
