@@ -46,7 +46,7 @@ function Contact() {
                         transition={{ duration: 0.5 }}
                     >
                         <Image
-                            src="/ProfilePic.jpg"
+                            src="./assets/ProfilePic.jpg"
                             alt="Profile Picture"
                             borderRadius="full"
                             boxSize="130px"
