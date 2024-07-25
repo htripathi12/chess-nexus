@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../AuthContext';
 
 function Account() {
-  const { isLoggedIn, chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
+  const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
   const toast = useToast();
 
   const handleChesscomSubmit = (e) => {
