@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Heading, Text, VStack, Image, Link, Flex, Icon, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+
 import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 import { DiReact, DiNodejs, DiPython, DiJavascript1, DiJava, DiHtml5 } from 'react-icons/di';
 import { SiExpress, SiC, SiCplusplus } from "react-icons/si";
