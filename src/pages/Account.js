@@ -29,7 +29,6 @@ function Account() {
               headers: { 'Authorization': `Bearer ${getToken()}` }
             }
         ).then((response) => {
-            console.log(response);
             document.cookie = `chesscomUsername=${chesscomUsername}; path=/; expires=${new Date(Date.now() + 3 * 60 * 60 * 1000).toUTCString()}`;
             toast({
                 title: 'Connected Chess.com username!',
@@ -60,7 +59,6 @@ function Account() {
           headers: { 'Authorization': `Bearer ${getToken()}` }
         }
       ).then((response) => {
-        console.log(response);
         document.cookie = `lichessUsername=${lichessUsername}; path=/; expires=${new Date(Date.now() + 3 * 60 * 60 * 1000).toUTCString()}`;
         toast({
           title: 'Connected Lichess username!',

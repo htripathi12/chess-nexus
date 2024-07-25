@@ -36,7 +36,6 @@ function Play() {
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
-            console.log(e.data);
             if (e.data.startsWith('bestmove')) {
                 handleBestMove(e.data);
             } else if (e.data.includes('cp')) {
@@ -90,7 +89,6 @@ function Play() {
         let lineParts = parts.slice(17);
         lineParts = lineParts.slice(0, 21);
         let line = lineParts.join(' ');
-        console.log("BEST LINE: " + line);
         setBestLine(line);
     }
 
@@ -159,7 +157,6 @@ function Play() {
         try {
             let pgn = pgnRef.current.value;
             const response = await axios.post('http://localhost:8080/play', { pgn });
-            console.log(response.data);
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
