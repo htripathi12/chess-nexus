@@ -6,6 +6,9 @@ import {
   Input, Text, Heading, useToast, InputGroup, InputRightElement
 } from '@chakra-ui/react';
 import BackButton from '../components/BackButton';
+import { motion } from 'framer-motion';
+
+const MotionBox = motion(Box);
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -56,72 +59,78 @@ function Signup() {
                 <BackButton />
             </Box>
             <Container position="relative" display="flex" justifyContent="center" pt={32}>
-                <VStack 
-                    spacing={8} 
-                    bg="white" 
-                    boxShadow="xl" 
-                    borderRadius="xl" 
-                    border={{ base: 'none', md: '2px solid #008080' }}
-                    p={8}
-                    height="500px"
-                    width="500px"
-                    align="stretch"
+                <MotionBox
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
                 >
-                    <Heading textAlign="center" color="teal.500">Sign Up</Heading>
-                    <form onSubmit={handleSignup}>
-                        <VStack spacing={4}>
-                            <FormControl id="signupEmail" isRequired>
-                                <FormLabel>Email address</FormLabel>
-                                <Input 
-                                  type="email" 
-                                  value={email} 
-                                  onChange={e => setEmail(e.target.value)}
-                                  placeholder="Enter your email"
-                                  focusBorderColor="teal.400"
-                                  borderColor="gray.400"
-                                />
-                            </FormControl>
-                            <FormControl id="signupPassword" isRequired>
-                                <FormLabel>Password</FormLabel>
-                                <InputGroup>
+                    <VStack 
+                        spacing={8} 
+                        bg="white" 
+                        boxShadow="xl" 
+                        borderRadius="xl" 
+                        border={{ base: 'none', md: '2px solid #008080' }}
+                        p={8}
+                        height="500px"
+                        width="500px"
+                        align="stretch"
+                    >
+                        <Heading textAlign="center" color="teal.500">Sign Up</Heading>
+                        <form onSubmit={handleSignup}>
+                            <VStack spacing={4}>
+                                <FormControl id="signupEmail" isRequired>
+                                    <FormLabel>Email address</FormLabel>
                                     <Input 
-                                        type={showPassword ? "text" : "password"}
-                                        value={password} 
-                                        onChange={e => setPassword(e.target.value)}
-                                        placeholder="Enter your password"
-                                        focusBorderColor="teal.400"
-                                        borderColor="gray.400"
+                                    type="email" 
+                                    value={email} 
+                                    onChange={e => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    focusBorderColor="teal.400"
+                                    borderColor="gray.400"
                                     />
-                                    <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={() => setShowPassword(!showPassword)}>
-                                            {showPassword ? "Hide" : "Show"}
-                                        </Button>
-                                    </InputRightElement>
-                                </InputGroup>
-                            </FormControl>
+                                </FormControl>
+                                <FormControl id="signupPassword" isRequired>
+                                    <FormLabel>Password</FormLabel>
+                                    <InputGroup>
+                                        <Input 
+                                            type={showPassword ? "text" : "password"}
+                                            value={password} 
+                                            onChange={e => setPassword(e.target.value)}
+                                            placeholder="Enter your password"
+                                            focusBorderColor="teal.400"
+                                            borderColor="gray.400"
+                                        />
+                                        <InputRightElement width="4.5rem">
+                                            <Button h="1.75rem" size="sm" onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? "Hide" : "Show"}
+                                            </Button>
+                                        </InputRightElement>
+                                    </InputGroup>
+                                </FormControl>
+                                <Button 
+                                    mt={4} 
+                                    colorScheme="teal" 
+                                    type="submit" 
+                                    width="full"
+                                    _hover={{ bg: "teal.600" }}
+                                >
+                                    Sign Up
+                                </Button>
+                            </VStack>
+                        </form>
+                        <Text textAlign="center" mt={6}>
+                            Already have an account?{" "}
                             <Button 
-                                mt={4} 
-                                colorScheme="teal" 
-                                type="submit" 
-                                width="full"
-                                _hover={{ bg: "teal.600" }}
+                                variant="link" 
+                                color="teal.500" 
+                                onClick={() => navigate('/login')}
+                                _hover={{ color: "teal.600" }}
                             >
-                                Sign Up
+                                Login
                             </Button>
-                        </VStack>
-                    </form>
-                    <Text textAlign="center" mt={6}>
-                        Already have an account?{" "}
-                        <Button 
-                            variant="link" 
-                            color="teal.500" 
-                            onClick={() => navigate('/login')}
-                            _hover={{ color: "teal.600" }}
-                        >
-                            Login
-                        </Button>
-                    </Text>
-                </VStack>
+                        </Text>
+                    </VStack>
+                </MotionBox>
             </Container>
         </Box>
     );
