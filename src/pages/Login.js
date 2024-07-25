@@ -23,8 +23,7 @@ function Login() {
         }).then((response) => {
             console.log(response.data);
             const { lichessUsername, chesscomUsername, token } = response.data;
-            setLichessUsername(lichessUsername || '');
-            setChesscomUsername(chesscomUsername || '');
+            login(token, lichessUsername, chesscomUsername);
             toast({
                 title: "Login successful.",
                 description: "You've been logged in.",
@@ -32,7 +31,6 @@ function Login() {
                 duration: 3000,
                 isClosable: true,
             });
-            login(token);
             navigate('/')
         }).catch((error) => {
             console.error('There was an error!', error);
