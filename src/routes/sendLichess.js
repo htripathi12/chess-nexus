@@ -10,13 +10,25 @@ router.post("/", async (req, res) => {
 
     try {
         const lichessResponse = await axios.get(`https://lichess.org/api/user/${lichessUsername}`);
+        const now = new Date();
+        const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const sinceTimestamp = firstDayOfLastMonth.getTime();
         
+        const userPGNs = await axios.get(`https://lichess.org/api/games/user/${lichessUsername}?since=${sinceTimestamp}`);
+        console.log(userPGNs.data);
+
         if (lichessResponse.status === 200) {
             req.db.query('UPDATE users SET lichess = ? WHERE id = ?', [lichessUsername, userId], (err, result) => {
                 if (err) {
                     console.error('Error updating user:', err);
                     return res.status(500).json({ message: 'Internal server error' });
                 }
+                req.db.query('UPDATE users SET lichesspgns = ? WHERE id = ?', [userPGNs.data, userId], (err, result) => {
+                    if (err) {
+                        console.error('Error updating user:', err);
+                        return res.status(500).json({ message: 'Internal server error' });
+                    }
+                });
                 res.json({ message: 'Lichess username updated successfully' });
             });
         } else {
