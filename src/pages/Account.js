@@ -94,7 +94,7 @@ function Account() {
         p={[4, 6]}
         borderRadius="xl"
         boxShadow="2xl"
-        width={{ base: '70%', md: '65%', lg: '50%' }} // Adjusted widths to be less wide
+        width={{ base: '70%', md: '65%', lg: '50%' }}
         border={{ base: 'none', md: '2px solid #008080' }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -111,11 +111,10 @@ function Account() {
               </Heading>
                       
               <Box>
-                <Text fontSize="lg" fontWeight="bold" mb={2}>Chess.com</Text>
+                <Text fontSize="lg" fontWeight="bold" mb={2}>Chess.com Username</Text>
                 <form onSubmit={handleChesscomSubmit}>
                   <VStack spacing={4}>
                     <FormControl id="chesscom-username">
-                      <FormLabel>Chess.com Username</FormLabel>
                       <Input 
                         type="text" 
                         value={chesscomUsername}
@@ -137,11 +136,10 @@ function Account() {
               </Box>
         
               <Box>
-                <Text fontSize="lg" fontWeight="bold" mb={2}>Lichess</Text>
+                <Text fontSize="lg" fontWeight="bold" mb={2}>Lichess Username</Text>
                 <form onSubmit={handleLichessSubmit}>
                   <VStack spacing={4}>
                     <FormControl id="lichess-username">
-                      <FormLabel>Lichess Username</FormLabel>
                       <Input 
                         type="text"
                         value={lichessUsername}
