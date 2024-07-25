@@ -76,7 +76,6 @@ function Puzzles() {
                 chess.current.move(moveList[0]);
                 setFen(chess.current.fen());
                 setMoveIndex(1);
-                console.log(response.data);
                 setMoveInProgress(false);
             }, 1000);
         } catch (error) {
@@ -92,7 +91,6 @@ function Puzzles() {
         console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
 
         if (userMove === expectedMove) {
-            console.log('Correct');
             showFeedback(true);
             const nextMove = moves[moveIndex + 1];
             setIncorrectMove(false);
@@ -104,7 +102,6 @@ function Puzzles() {
                 }, 1000);
             }
         } else {
-            console.log('Incorrect');
             showFeedback(false);
             setIncorrectMove(true);
         }

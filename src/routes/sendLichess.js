@@ -6,7 +6,6 @@ router.post("/", async (req, res) => {
     const { lichessUsername } = req.body;
     const userId = req.userId;
 
-    console.log(`Received Lichess username: ${lichessUsername}`);
 
     try {
         const lichessResponse = await axios.get(`https://lichess.org/api/user/${lichessUsername}`);
@@ -15,7 +14,6 @@ router.post("/", async (req, res) => {
         const sinceTimestamp = firstDayOfLastMonth.getTime();
         
         const userPGNs = await axios.get(`https://lichess.org/api/games/user/${lichessUsername}?since=${sinceTimestamp}`);
-        console.log(userPGNs.data);
 
         if (lichessResponse.status === 200) {
             req.db.query('UPDATE users SET lichess = ? WHERE id = ?', [lichessUsername, userId], (err, result) => {

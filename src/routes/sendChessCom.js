@@ -7,7 +7,6 @@ var chessAPI = new ChessWebAPI();
 router.post("/", (req, res) => {
     const { chesscomUsername } = req.body;
     const userId = req.userId;
-    console.log(`Received Chess.com username: ${chesscomUsername}`);
 
     chessAPI.getPlayer(chesscomUsername).then((data) => {
         req.db.query('UPDATE users SET chesscom = ? WHERE id = ?', [chesscomUsername, userId], (err, result) => {
