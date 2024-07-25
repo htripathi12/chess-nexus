@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container, VStack, Button, FormControl, FormLabel, 
@@ -14,7 +14,6 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [animation, setAnimation] = useState(true);
     const navigate = useNavigate();
     const toast = useToast();
     const { login } = useAuth();
