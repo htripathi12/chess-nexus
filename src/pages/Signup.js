@@ -20,7 +20,6 @@ function Signup() {
             email: email,
             password: password,
         }).then((response) => {
-            console.log(response);
             toast({
                 title: "Account created.",
                 description: "We've created your account for you.",

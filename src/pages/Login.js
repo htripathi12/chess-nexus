@@ -21,7 +21,6 @@ function Login() {
             email: email,
             password: password,
         }).then((response) => {
-            console.log(response.data);
             const { lichessUsername, chesscomUsername, token } = response.data;
             login(token, lichessUsername, chesscomUsername);
             toast({
