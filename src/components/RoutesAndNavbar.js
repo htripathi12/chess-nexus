@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Center, Container, Flex, Link, Text, Spacer, Button, Menu,
-  MenuButton, MenuList, MenuItem
+  Box, Flex, Link, Text, Spacer, Button, Menu, MenuButton, MenuList, MenuItem
 } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { Route, Routes } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import your existing components
-import Play from '../pages/Play.js';
-import Puzzles from '../pages/Puzzles';
-import Learn from '../pages/Learn.js';
-import Login from '../pages/Login.js';
-import Signup from '../pages/Signup.js';
-import About from '../pages/About.js'
-import Contact from '../pages/Contact.js';
 import IntroPage from '../pages/IntroPage.js';
-import Account from '../pages/Account.js';
 
 // Import Contexts
 import { useAuth } from '../AuthContext.js';
@@ -150,33 +140,6 @@ function RoutesAndNavbar() {
               )}
             </Flex>
           )}
-          <Container maxW="100%">
-            <Routes>
-              <Route path="/" element={
-                <Center>
-                  <Flex direction="column">
-                    <Button as={RouterLink} to="/play" mb="2">
-                      Play
-                    </Button>
-                    <Button as={RouterLink} to="/puzzles" mb="2">
-                      Puzzles
-                    </Button>
-                    <Button as={RouterLink} to="/learn">
-                      Learn
-                    </Button>
-                  </Flex>
-                </Center>
-              }/>
-              <Route path="/play" element={<Play />} />
-              <Route path="/puzzles" element={<Puzzles />} />
-              <Route path="/learn" element={<Learn />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="account" element={<Account />} />
-            </Routes>
-          </Container>
         </MotionBox>
       )}
     </AnimatePresence>
