@@ -106,7 +106,7 @@ function RoutesAndNavbar() {
                           width="55"
                           height="55"
                           viewBox="0 0 24 24"
-                          strokeWidth="1.5"
+                          strokeWidth="1.1"
                           stroke="#FFFFFF"
                           fill="none"
                           strokeLinecap="round"
