@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Center, Container, Flex, Link, Spacer, Button, Menu,
+  Box, Center, Container, Flex, Link, Text, Spacer, Button, Menu,
   MenuButton, MenuList, MenuItem
 } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
@@ -120,8 +120,25 @@ function RoutesAndNavbar() {
                       </Box>
                     </MenuButton>
                     <MenuList textColor="black">
-                      <MenuItem onClick={() => navigate("/account")}>Account</MenuItem>
-                      <MenuItem onClick={logout}>Sign Out</MenuItem>
+                      <MenuItem onClick={() => navigate("/account")}>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-invoice" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                          <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                          <path d="M9 7l1 0" />
+                          <path d="M9 13l6 0" />
+                          <path d="M13 17l2 0" />
+                        </svg>
+                        <Text paddingLeft={3}>Account</Text>
+                      </MenuItem>
+                      <MenuItem onClick={logout}>
+                        <svg fill="none" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '3px' }}>
+                          <path d="M17 16L21 12M21 12L17 8M21 12L7 12M13 16V17C13 18.6569 11.6569 20 10 20H6C4.34315 20 
+                          3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H10C11.6569 4 13 5.34315 13 7V8" stroke="black"
+                            strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        </svg>
+                        <Text paddingLeft={2}>Sign Out</Text>
+                      </MenuItem>
                     </MenuList>
                   </Menu>
               ) : (
