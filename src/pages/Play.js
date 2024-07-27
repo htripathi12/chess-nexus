@@ -53,7 +53,7 @@ function Play() {
                 stockfishWorkerRef.current.terminate();
             }
         };
-    }, []);
+    }, [fen]);
 
     // Run Stockfish on fen or depth change
     useEffect(() => {
@@ -85,11 +85,17 @@ function Play() {
     };
 
     const convertSAN = (data) => {
-        const parts = data.split(' ');
-        let lineParts = parts.slice(17);
-        lineParts = lineParts.slice(0, 21);
-        let line = lineParts.join(' ');
-        setBestLine(line);
+        let index = data.indexOf(' pv ');
+        let line = data.substring(index + 4).split(' ');
+        let chessTwo = new Chess(fen);
+        try {
+            line.forEach(move => { 
+                chessTwo.move(move);
+            });
+        } catch (e) {
+            console.error('Error loading PGN:', e);
+        }
+        setBestLine(chessTwo.history().join(' '));
     }
 
     // Handle centipawn evaluation from Stockfish
