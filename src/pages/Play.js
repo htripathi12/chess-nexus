@@ -12,7 +12,6 @@ function Play() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [fenInput, setFenInput] = useState(fen);
     const [fenError, setFenError] = useState(false);
-    const [winLoss, setWinLoss] = useState('');
     const [history, setHistory] = useState([]);
     const [pgnLoaded, setPgnLoaded] = useState(false);
     const [orientation, setOrientation] = useState('white');
@@ -172,7 +171,6 @@ function Play() {
                 setFenInput(newFen);
             } else {
                 setPgnLoaded(false);
-                setWinLoss(response.data.message);
             }
         } catch (error) {
             console.error('There was an error!', error);
@@ -194,7 +192,7 @@ function Play() {
             >
                 <BackButton />
             </motion.div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', marginLeft: '50px' }}>
                 <motion.div 
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -213,7 +211,6 @@ function Play() {
                         ref={customBoardRef}
                         fen={fen}
                         setFen={setFen}
-                        setWinLoss={setWinLoss}
                         chessInstance={chessInstance.current}
                         orientation={orientation}
                         customArrows={bestMove}
@@ -370,25 +367,28 @@ function Play() {
                     />
                     <Button onClick={handleSubmit} style={{ marginTop: '10px', width: '300px' }}>Submit</Button>
                 </motion.div>
+                <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center', 
+                        width: '300px',
+                        maxHeight: '150px',
+                        position: 'relative',
+                        marginBottom: '30px',
+                        borderRadius: '10px',
+                        border: '3px solid #1E8C87',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                        padding: '15px',
+                        marginLeft: '20px',
+                    }}
+                >
+                    hello
+                </motion.div>
             </div>
-            {winLoss && <motion.div 
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.0 }}
-                style={{
-                    position: 'absolute',
-                    bottom: '20px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    color: 'white',
-                    padding: '10px 20px',
-                    borderRadius: '5px',
-                    zIndex: 1000
-                }}
-            >
-                {winLoss}
-            </motion.div>}
         </div>
 
     );
