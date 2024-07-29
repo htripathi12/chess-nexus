@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Button, Text, Select, Input, Spinner } from '@chakra-ui/react';
+import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
@@ -373,20 +373,63 @@ function Play() {
                     transition={{ duration: 0.5 }}
                     style={{ 
                         display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
                         width: '300px',
-                        maxHeight: '150px',
-                        position: 'relative',
-                        marginBottom: '30px',
+                        height: '600px',
+                        position: 'static',
                         borderRadius: '10px',
                         border: '3px solid #1E8C87',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                         padding: '15px',
                         marginLeft: '20px',
+                        marginBottom: '15px'
                     }}
                 >
-                    hello
+                    <Tabs orientation="vertical" variant="enclosed" height="100%" width="100%">
+                        <TabList width="100%" borderColor="#1E8C87" borderBottom="none">
+                            <Tab 
+                                justifyContent="center" 
+                                borderRadius="10px" 
+                                pl={0}
+                                border="1px solid #1E8C87"
+                                _selected={{ 
+                                    color: "white", 
+                                    bg: "#1E8C87",
+                                    borderColor: "#1E8C87",
+                                    borderBottom: "1px solid #1E8C87"
+                                }}
+                            >
+                                Tab 1
+                            </Tab>
+                            <Tab 
+                                justifyContent="center" 
+                                borderRadius="10px" 
+                                pl={0}
+                                border="1px solid #1E8C87"
+                                _selected={{ 
+                                    color: "white", 
+                                    bg: "#1E8C87",
+                                    borderColor: "#1E8C87",
+                                    borderBottom: "1px solid #1E8C87"
+                                }}
+                            >
+                                Tab 2
+                            </Tab>
+                            <Tab 
+                                justifyContent="center" 
+                                borderRadius="10px" 
+                                pl={0}
+                                border="1px solid #1E8C87"
+                                _selected={{ 
+                                    color: "white", 
+                                    bg: "#1E8C87",
+                                    borderColor: "#1E8C87",
+                                    borderBottom: "1px solid #1E8C87"
+                                }}
+                            >
+                                Tab 3
+                            </Tab>
+                        </TabList>
+                    </Tabs>
                 </motion.div>
             </div>
         </div>
