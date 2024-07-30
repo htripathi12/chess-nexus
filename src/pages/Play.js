@@ -145,17 +145,17 @@ function Play() {
         }
     };
 
-    // Move to the next move in the history
-    const handleNextMove = () => {
-        const moves = chessInstance.current.history();
-        if (moveIndex.current < moves.length) {
-            chessInstance.current.move(moves[moveIndex.current]);
-            const newFen = chessInstance.current.fen();
-            setFen(newFen);
-            setFenInput(newFen);
-            moveIndex.current += 1;
-        }
-    };
+    // // Move to the next move in the history
+    // const handleNextMove = () => {
+    //     const moves = chessInstance.current.history();
+    //     if (moveIndex.current < moves.length) {
+    //         chessInstance.current.move(moves[moveIndex.current]);
+    //         const newFen = chessInstance.current.fen();
+    //         setFen(newFen);
+    //         setFenInput(newFen);
+    //         moveIndex.current += 1;
+    //     }
+    // };
 
     // Handle PGN submission
     const handleSubmit = async () => {
@@ -219,7 +219,7 @@ function Play() {
                         <Button onClick={handleUndo}>
                             Previous Move
                         </Button>
-                        {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>}
+                        {/* {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>} */}
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -304,9 +304,8 @@ function Play() {
                         placeholder="Select Depth"
                         value={depth}
                         onChange={(e) => setDepth(Number(e.target.value))}
-                        mt={4}
                         width="300px"
-                        margin="120px 0 0 0"
+                        margin="125px 0 0 0"
                         border="3px solid"
                         borderColor="#1E8C87"
                         borderRadius="8px"
