@@ -21,7 +21,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
   const containerHeight = 500;
   let pixelPosition = (percentage / 100) * containerHeight;
   pixelPosition = Math.max(evaluationBoxHeight / 2, Math.min(containerHeight - (evaluationBoxHeight / 2), pixelPosition));
-  const textBoxPosition = `${100 - (pixelPosition / containerHeight) * 100}%`;
+  const textBoxPosition = orientation === 'black' ? `${(pixelPosition / containerHeight) * 100}%` : `${100 - (pixelPosition / containerHeight) * 100}%`;
 
   return (
     <Box
@@ -48,10 +48,12 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
       <Box
         position="absolute"
         top={textBoxPosition}
-        left="50%"
-        transform="translate(-50%, -50%)"
+        left="0"
+        width="100%"
+        transform="translateY(-50%)"
         backgroundColor="rgba(0, 0, 0, 0.75)"
-        padding="2px 6px"
+        padding="2px 0"
+        textAlign="center"
         borderRadius="4px"
       >
         <Text fontSize="sm" fontWeight="bold" color="white">
