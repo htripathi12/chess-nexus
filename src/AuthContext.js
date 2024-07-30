@@ -21,6 +21,15 @@ export const AuthProvider = ({ children }) => {
         return null;
     };
 
+    const getLichessUsername = () => { 
+        return document.cookie.split('; ').find(row => row.startsWith('lichessUsername='))?.split('=')[1] || '';
+    };
+
+    const getChesscomUsername = () => {
+        return document.cookie.split('; ').find(row => row.startsWith('chesscomUsername='))?.split('=')[1] || '';
+    };
+
+
     const login = (token, lichessUser, chesscomUser) => {
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
@@ -56,7 +65,8 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             isLoggedIn, lichessUsername, setLichessUsername,
-            chesscomUsername, setChesscomUsername, login, logout, getToken
+            chesscomUsername, setChesscomUsername, login, logout, getToken,
+            getLichessUsername, getChesscomUsername
         }}>
             {children}
         </AuthContext.Provider>
