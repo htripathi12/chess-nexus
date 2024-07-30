@@ -4,6 +4,18 @@ var ChessWebAPI = require('chess-web-api');
 
 var chessAPI = new ChessWebAPI();
 
+router.get("/", (req, res) => {
+    const { chesscomUsername } = req.query;
+    req.db.query('SELECT chesscompgns FROM users WHERE chesscom = ?', [chesscomUsername], (err, result) => {
+        if (err) {
+            console.error('Error updating user:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        return res.json({ message: 'Chess.com username available', pgnArray: result[0].chesscompgns });
+    });
+});
+
+
 router.post("/", (req, res) => {
     const { chesscomUsername } = req.body;
     const userId = req.userId;

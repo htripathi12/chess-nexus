@@ -3,6 +3,7 @@ import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Tab
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
+import { useAuth } from '../AuthContext';
 import { Chess } from 'chess.js';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -28,6 +29,28 @@ function Play() {
     const pgnRef = useRef(null);
     const moveIndex = useRef(0);
     const stockfishWorkerRef = useRef(null);
+
+    const auth = useAuth();
+
+    useEffect(() => { 
+        getChessComPGNs();
+    }, []);
+
+    const getChessComPGNs = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/account/chesscom', {
+                params: {
+                    chesscomUsername: auth.getChesscomUsername(),
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     // Initialize and handle Stockfish messages
     useEffect(() => {
