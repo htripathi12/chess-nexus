@@ -3,6 +3,7 @@ import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Ima
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
+import GameTab from '../components/GameTab';
 import { useAuth } from '../AuthContext';
 import { Chess } from 'chess.js';
 import axios from 'axios';
@@ -23,6 +24,8 @@ function Play() {
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
     const [pgnArray, setPgnArray] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 20;
 
     // Refs
     const customBoardRef = useRef(null);
@@ -34,9 +37,18 @@ function Play() {
     const auth = useAuth();
 
     useEffect(() => { 
-        const chesscompgn = getChessComPGNs();
-        const lichesspgn = getLichessGames();
-        
+        const fetchPGNs = async () => {
+            try {
+                const chesscompgn = await getChessComPGNs();
+                const lichesspgn = await getLichessGames();
+                setPgnArray(chesscompgn.concat(lichesspgn));
+                console.log(pgnArray);
+            } catch (error) {
+                console.error('Error fetching PGNs:', error);
+            }
+        };
+    
+        fetchPGNs();
     }, []);
 
     // Initialize and handle Stockfish messages
@@ -96,7 +108,6 @@ function Play() {
                     Authorization: `Bearer ${auth.getToken()}`,
                 }
             });
-            console.log("CHESSCOM PGNS\n\n", response.data.pgnArray);
             return response.data.pgnArray;
         } catch (error) {
             console.error(error);
@@ -114,7 +125,6 @@ function Play() {
                     Authorization: `Bearer ${auth.getToken()}`,
                 }
             });
-            console.log("LICHESS PGNS\n\n", response.data.pgnArray);
             return response.data.pgnArray;
         } catch (error) {
             console.error(error);
@@ -191,18 +201,6 @@ function Play() {
         }
     };
 
-    // // Move to the next move in the history
-    // const handleNextMove = () => {
-    //     const moves = chessInstance.current.history();
-    //     if (moveIndex.current < moves.length) {
-    //         chessInstance.current.move(moves[moveIndex.current]);
-    //         const newFen = chessInstance.current.fen();
-    //         setFen(newFen);
-    //         setFenInput(newFen);
-    //         moveIndex.current += 1;
-    //     }
-    // };
-
     // Handle PGN submission
     const handleSubmit = async () => {
         try {
@@ -226,6 +224,18 @@ function Play() {
     // Switch board orientation
     const handleSwitchOrientation = () => {
         setOrientation(orientation === 'white' ? 'black' : 'white');
+    };
+
+    // Get paginated PGNs
+    const getPaginatedPGNs = () => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return pgnArray.slice(startIndex, endIndex);
+    };
+
+    // Handle page change
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
     };
 
     return (
@@ -265,7 +275,6 @@ function Play() {
                         <Button onClick={handleUndo}>
                             Previous Move
                         </Button>
-                        {/* {pgnLoaded && <Button onClick={handleNextMove}>Next Move</Button>} */}
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -377,8 +386,7 @@ function Play() {
                         borderRadius="8px"
                         placeholder="Enter FEN"
                         focusBorderColor="#008080"
-                        _hover={{
-                            borderColor: "#008080",
+                        _hover={{borderColor: "#008080",
                         }}
                         sx={{
                             '::placeholder': {
@@ -417,7 +425,8 @@ function Play() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
                     style={{ 
-                        display: 'flex', 
+                        display: 'flex',
+                        flexDirection: 'column',
                         width: '300px',
                         height: '600px',
                         position: 'relative',
@@ -427,7 +436,6 @@ function Play() {
                         padding: '15px',
                         marginLeft: '20px',
                         marginBottom: '15px',
-                        justifyContent: 'center',
                     }}
                 >
                     <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex" justifyContent="center">
@@ -443,10 +451,7 @@ function Play() {
                                 }}
                                 mr={2}
                             >
-                                {/* <Image 
-                                    src='./assets/download.png' 
-                                    style={{ transform: 'scale(0.75)' }}
-                                ></Image> */} Chess.com
+                                Chess.com
                             </Tab>
                             <Tab 
                                 justifyContent="center" 
@@ -459,17 +464,34 @@ function Play() {
                                     borderBottom: "1px solid #1E8C87"
                                 }}
                             >
-                                {/* <Image 
-                                    src='./assets/download (1).png' 
-                                    style={{ transform: 'scale(0.75)' }}
-                                ></Image> */} Lichess.org
+                                Lichess.org
                             </Tab>
                         </TabList>
                     </Tabs>
+                    <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        style={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            alignItems: 'center', 
+                            width: '100%',
+                            maxHeight: '500px',
+                            overflowY: 'auto',
+                            marginTop: '10px',
+                        }}
+                    >
+                        <GameTab 
+                            games={getPaginatedPGNs()} 
+                            currentPage={currentPage}
+                            totalPages={Math.ceil(pgnArray.length / itemsPerPage)}
+                            onPageChange={handlePageChange}
+                        />
+                    </motion.div>
                 </motion.div>
             </div>
         </div>
-
     );
 }
 
