@@ -2,6 +2,19 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
+
+router.get("/", (req, res) => {
+    const { lichessUsername } = req.query;
+    req.db.query('SELECT lichesspgns FROM users WHERE lichess = ?', [lichessUsername], (err, result) => {
+        if (err) {
+            console.error('Error updating user:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        // console.log(result[0].lichesspgns);
+        return res.json({ message: 'Chess.com username available', pgnArray: result[0].chesscompgns });
+    });
+});
+
 router.post("/", async (req, res) => {
     const { lichessUsername } = req.body;
     const userId = req.userId;
