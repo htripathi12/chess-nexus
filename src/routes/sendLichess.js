@@ -10,8 +10,7 @@ router.get("/", (req, res) => {
             console.error('Error updating user:', err);
             return res.status(500).json({ message: 'Internal server error' });
         }
-        // console.log(result[0].lichesspgns);
-        return res.json({ message: 'Chess.com username available', pgnArray: result[0].chesscompgns });
+        return res.json({ message: 'Lichess pgns fetched', pgnArray: result[0].lichesspgns });
     });
 });
 
