@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
+import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Image } from '@chakra-ui/react';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
@@ -420,58 +420,49 @@ function Play() {
                         display: 'flex', 
                         width: '300px',
                         height: '600px',
-                        position: 'static',
+                        position: 'relative',
                         borderRadius: '10px',
                         border: '3px solid #1E8C87',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                         padding: '15px',
                         marginLeft: '20px',
-                        marginBottom: '15px'
+                        marginBottom: '15px',
+                        justifyContent: 'center',
                     }}
                 >
-                    <Tabs orientation="vertical" variant="enclosed" height="100%" width="100%">
-                        <TabList width="100%" borderColor="#1E8C87" borderBottom="none">
+                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex" justifyContent="center">
+                        <TabList borderColor="#1E8C87" borderBottom="none" display="flex" justifyContent="center" width="100%">
                             <Tab 
                                 justifyContent="center" 
                                 borderRadius="10px" 
-                                pl={0}
-                                border="1px solid #1E8C87"
                                 _selected={{ 
-                                    color: "white", 
+                                    color: "black", 
                                     bg: "#1E8C87",
                                     borderColor: "#1E8C87",
-                                    borderBottom: "1px solid #1E8C87"
+                                    borderBottom: "1px solid #1E8C87",
                                 }}
+                                mr={2}
                             >
-                                Tab 1
+                                {/* <Image 
+                                    src='./assets/download.png' 
+                                    style={{ transform: 'scale(0.75)' }}
+                                ></Image> */} Chess.com
                             </Tab>
                             <Tab 
                                 justifyContent="center" 
                                 borderRadius="10px" 
-                                pl={0}
                                 border="1px solid #1E8C87"
                                 _selected={{ 
-                                    color: "white", 
+                                    color: "black", 
                                     bg: "#1E8C87",
                                     borderColor: "#1E8C87",
                                     borderBottom: "1px solid #1E8C87"
                                 }}
                             >
-                                Tab 2
-                            </Tab>
-                            <Tab 
-                                justifyContent="center" 
-                                borderRadius="10px" 
-                                pl={0}
-                                border="1px solid #1E8C87"
-                                _selected={{ 
-                                    color: "white", 
-                                    bg: "#1E8C87",
-                                    borderColor: "#1E8C87",
-                                    borderBottom: "1px solid #1E8C87"
-                                }}
-                            >
-                                Tab 3
+                                {/* <Image 
+                                    src='./assets/download (1).png' 
+                                    style={{ transform: 'scale(0.75)' }}
+                                ></Image> */} Lichess.org
                             </Tab>
                         </TabList>
                     </Tabs>
