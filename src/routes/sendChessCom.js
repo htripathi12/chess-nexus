@@ -11,6 +11,7 @@ router.get("/", (req, res) => {
             console.error('Error updating user:', err);
             return res.status(500).json({ message: 'Internal server error' });
         }
+        // console.log(result[0].chesscompgns);
         return res.json({ message: 'Chess.com username available', pgnArray: result[0].chesscompgns });
     });
 });
@@ -29,8 +30,8 @@ router.post("/", (req, res) => {
             chessAPI.getPlayerCompleteMonthlyArchives(chesscomUsername, 2024, 7)
                 .then(data => {
                     const pgnArray = data.body.games.map(game => game.pgn);
-                    const pgnJSON = JSON.stringify(pgnArray);
-                    req.db.query('UPDATE users SET chesscompgns = ? WHERE id = ?', [pgnJSON, userId], (err, result) => {
+                    const pgnString = pgnArray.join('\n');
+                    req.db.query('UPDATE users SET chesscompgns = ? WHERE id = ?', [pgnString, userId], (err, result) => {
                         if (err) {
                             console.error('Error updating user:', err);
                             return res.status(500).json({ message: 'Internal server error' });
