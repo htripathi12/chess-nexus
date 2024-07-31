@@ -34,23 +34,8 @@ function Play() {
 
     useEffect(() => { 
         getChessComPGNs();
+        getLichessGames();
     }, []);
-
-    const getChessComPGNs = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/account/chesscom', {
-                params: {
-                    chesscomUsername: auth.getChesscomUsername(),
-                },
-                headers: {
-                    Authorization: `Bearer ${auth.getToken()}`,
-                }
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     // Initialize and handle Stockfish messages
     useEffect(() => {
@@ -97,6 +82,38 @@ function Play() {
             setHistory((prevHistory) => [...prevHistory, fen]);
         }
     }, [fen]);
+
+    // Get PGNs from Chess.com
+    const getChessComPGNs = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/account/chesscom', {
+                params: {
+                    chesscomUsername: auth.getChesscomUsername(),
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // Get Lichess games
+    const getLichessGames = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/account/lichess', {
+                params: {
+                    lichessUsername: auth.getLichessUsername(),
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     // Handle best move from Stockfish
     const handleBestMove = (data) => {
