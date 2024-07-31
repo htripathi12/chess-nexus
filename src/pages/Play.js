@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
@@ -22,6 +22,7 @@ function Play() {
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
+    const [pgnArray, setPgnArray] = useState([]);
 
     // Refs
     const customBoardRef = useRef(null);
@@ -33,8 +34,9 @@ function Play() {
     const auth = useAuth();
 
     useEffect(() => { 
-        getChessComPGNs();
-        getLichessGames();
+        const chesscompgn = getChessComPGNs();
+        const lichesspgn = getLichessGames();
+        
     }, []);
 
     // Initialize and handle Stockfish messages
@@ -94,6 +96,8 @@ function Play() {
                     Authorization: `Bearer ${auth.getToken()}`,
                 }
             });
+            console.log("CHESSCOM PGNS\n\n", response.data.pgnArray);
+            return response.data.pgnArray;
         } catch (error) {
             console.error(error);
         }
@@ -110,6 +114,8 @@ function Play() {
                     Authorization: `Bearer ${auth.getToken()}`,
                 }
             });
+            console.log("LICHESS PGNS\n\n", response.data.pgnArray);
+            return response.data.pgnArray;
         } catch (error) {
             console.error(error);
         }
