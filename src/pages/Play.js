@@ -121,7 +121,45 @@ function Play() {
         }
     }, [fen]);
 
-    
+    // Get other user from Chess.com PGN
+    const getOtherUserCC = (pgn) => {
+        const whiteTag = '[White "';
+        const blackTag = '[Black "';
+        
+        const startIndexWhite = pgn.indexOf(whiteTag) + whiteTag.length;
+        const endIndexWhite = pgn.indexOf('"', startIndexWhite);
+        const whiteUser = pgn.substring(startIndexWhite, endIndexWhite);
+        
+        const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
+        const endIndexBlack = pgn.indexOf('"', startIndexBlack);
+        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
+        
+        if (whiteUser === auth.getChesscomUsername()) {
+            return blackUser;
+        }
+        
+        return whiteUser;
+    };
+
+    // Get other user from Lichess PGN
+    const getOtherUserLichess = (pgn) => {
+        const whiteTag = '[White "';
+        const blackTag = '[Black "';
+        
+        const startIndexWhite = pgn.indexOf(whiteTag) + whiteTag.length;
+        const endIndexWhite = pgn.indexOf('"', startIndexWhite);
+        const whiteUser = pgn.substring(startIndexWhite, endIndexWhite);
+        
+        const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
+        const endIndexBlack = pgn.indexOf('"', startIndexBlack);
+        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
+        
+        if (whiteUser === auth.getLichessUsername()) {
+            return blackUser;
+        }
+        
+        return whiteUser;
+    };
 
     // Get PGNs from Chess.com
     const getChessComPGNs = async () => {
@@ -502,11 +540,12 @@ function Play() {
                             <Button 
                                 key={index} 
                                 width="100%" 
-                                p={2} 
+                                p={9} 
                                 mb={2} 
                                 borderRadius="10px"
                                 backgroundColor="#1E8C87"
                                 color="white"
+                                fontSize={14}
                                 _hover={{
                                     backgroundColor: "#17706B",
                                 }}
@@ -514,12 +553,53 @@ function Play() {
                                     try {
                                         chessInstance.current.loadPgn(pgn);
                                         setFen(chessInstance.current.fen());
+                                        console.log(ccPGN[index]);
                                     } catch (error) {
                                         console.error(`Error loading PGN Index ${index}:`, error);
                                     }
                                 }}
+                                style={{
+                                    overflow: 'hidden',
+                                }}
                             >
-                                Game {index + 1}
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
+                                    <span style={{ padding: '3px 0' }}>vs</span>
+                                    <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
+                                </div>
+                            </Button>
+                        ))}
+                        {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
+                            <Button 
+                                key={index} 
+                                width="100%" 
+                                mb={2} 
+                                p={9}
+                                borderRadius="10px"
+                                backgroundColor="#1E8C87"
+                                color="white"
+                                fontSize={14}
+                                _hover={{
+                                    backgroundColor: "#17706B",
+                                }}
+                                onClick={() => {
+                                    try {
+                                        chessInstance.current.loadPgn(pgn);
+                                        setFen(chessInstance.current.fen());
+                                        console.log(lichessPGN[index]);
+                                    } catch (error) {
+                                        console.error(`Error loading PGN Index ${index}:`, error);
+                                    }
+                                }}
+                                style={{
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
+                                    <span style={{ padding: '3px 0' }}>vs</span>
+                                    <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
+                                </div>
                             </Button>
                         ))}
                     </motion.div>
