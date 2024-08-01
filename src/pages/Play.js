@@ -45,24 +45,21 @@ function Play() {
                 const chesscompgn = await getChessComPGNs();
                 const lichesspgn = await getLichessGames();
     
-                // Split the string into an array of entries
                 const chesscompgnArray = chesscompgn.split('\n\n');
                 const lichesspgnArray = lichesspgn.split('\n\n');
     
-                // Function to combine entries in pairs
                 const combineInPairs = (array) => {
                     const combinedArray = [];
                     for (let i = 0; i < array.length; i += 2) {
                         if (i + 1 < array.length) {
                             combinedArray.push(array[i] + '\n\n' + array[i + 1]);
                         } else {
-                            combinedArray.push(array[i]); // Handle case where array length is odd
+                            combinedArray.push(array[i]);
                         }
                     }
                     return combinedArray;
                 };
     
-                // Combine entries in pairs
                 const combinedChesscompgn = combineInPairs(chesscompgnArray);
                 const combinedLichesspgn = combineInPairs(lichesspgnArray);
 
