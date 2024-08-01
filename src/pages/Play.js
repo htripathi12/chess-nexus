@@ -3,7 +3,6 @@ import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Ima
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
-import GameTab from '../components/GameTab';
 import { useAuth } from '../AuthContext';
 import { Chess } from 'chess.js';
 import axios from 'axios';
@@ -38,14 +37,19 @@ function Play() {
 
     const auth = useAuth();
 
+    // Fetch PGNs on component mount
     useEffect(() => { 
         const fetchPGNs = async () => {
             try {
                 const chesscompgn = await getChessComPGNs();
                 const lichesspgn = await getLichessGames();
     
-                const chesscompgnArray = chesscompgn.split('\n\n');
-                const lichesspgnArray = lichesspgn.split('\n\n');
+                const chesscompgnArray = chesscompgn ? chesscompgn.split('\n\n') : [];
+                const lichesspgnArray = lichesspgn ? lichesspgn.split('\n\n') : [];
+                
+                if (lichesspgnArray.length > 0) {
+                    lichesspgnArray.pop();
+                }
     
                 const combineInPairs = (array) => {
                     const combinedArray = [];
@@ -59,12 +63,12 @@ function Play() {
                     return combinedArray;
                 };
     
-                const combinedChesscompgn = combineInPairs(chesscompgnArray);
-                const combinedLichesspgn = combineInPairs(lichesspgnArray);
-
+                const combinedChesscompgn = chesscompgnArray.length > 0 ? combineInPairs(chesscompgnArray) : [];
+                const combinedLichesspgn = lichesspgnArray.length > 0 ? combineInPairs(lichesspgnArray) : [];
+    
                 setCCPGN(combinedChesscompgn);
                 setLichessPGN(combinedLichesspgn);
-
+    
                 // console.log('Chess.com PGNs:', combinedChesscompgn);
                 // console.log('Lichess PGNs:', combinedLichesspgn);
             } catch (error) {
@@ -121,6 +125,52 @@ function Play() {
         }
     }, [fen]);
 
+    // Check if user is white in Chess.com PGN
+    const isUserWhiteCC = (pgn) => {
+        const whiteTag = '[White "';
+        const startIndex = pgn.indexOf(whiteTag) + whiteTag.length;
+        const endIndex = pgn.indexOf('"', startIndex);
+        const whiteUser = pgn.substring(startIndex, endIndex);
+        return whiteUser === auth.getChesscomUsername();
+    };
+
+    // Check if user is white in Lichess PGN
+    const isUserWhiteLichess = (pgn) => {
+        const whiteTag = '[White "';
+        const startIndex = pgn.indexOf(whiteTag) + whiteTag.length;
+        const endIndex = pgn.indexOf('"', startIndex);
+        const whiteUser = pgn.substring(startIndex, endIndex);
+        return whiteUser === auth.getLichessUsername();
+    };
+
+    // Check if user won in Chess.com PGN
+    const didUserWinCC = (pgn) => {
+        const resultTag = '[Result "';
+        const startIndex = pgn.indexOf(resultTag) + resultTag.length;
+        const endIndex = pgn.indexOf('"', startIndex);
+        const result = pgn.substring(startIndex, endIndex);
+        if (result === '1-0' && isUserWhiteCC(pgn)) {
+            return true;
+        } else if (result === '0-1' && !isUserWhiteCC(pgn)) {
+            return true;
+        }
+        return false;
+    }
+
+    // Check if user won in Lichess PGN
+    const didUserWinLichess = (pgn) => {
+        const resultTag = '[Result "';
+        const startIndex = pgn.indexOf(resultTag) + resultTag.length;
+        const endIndex = pgn.indexOf('"', startIndex);
+        const result = pgn.substring(startIndex, endIndex);
+        if (result === '1-0' && isUserWhiteLichess(pgn)) {
+            return true;
+        } else if (result === '0-1' && !isUserWhiteLichess(pgn)) {
+            return true;
+        }
+        return false;
+    }
+    
     // Get other user from Chess.com PGN
     const getOtherUserCC = (pgn) => {
         const whiteTag = '[White "';
@@ -548,6 +598,7 @@ function Play() {
                                 fontSize={14}
                                 _hover={{
                                     backgroundColor: "#17706B",
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                                 }}
                                 onClick={() => {
                                     try {
@@ -560,6 +611,8 @@ function Play() {
                                 }}
                                 style={{
                                     overflow: 'hidden',
+                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                    border: "1px solid #17706B",
                                 }}
                             >
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -581,6 +634,7 @@ function Play() {
                                 fontSize={14}
                                 _hover={{
                                     backgroundColor: "#17706B",
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                                 }}
                                 onClick={() => {
                                     try {
@@ -593,6 +647,8 @@ function Play() {
                                 }}
                                 style={{
                                     overflow: 'hidden',
+                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                    border: "1px solid #17706B",
                                 }}
                             >
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
