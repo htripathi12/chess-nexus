@@ -23,8 +23,7 @@ function Play() {
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 20;
+    const [selectedTab, setSelectedTab] = useState(0);
 
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
@@ -65,6 +64,9 @@ function Play() {
 
                 setCCPGN(combinedChesscompgn);
                 setLichessPGN(combinedLichesspgn);
+
+                // console.log('Chess.com PGNs:', combinedChesscompgn);
+                // console.log('Lichess PGNs:', combinedLichesspgn);
             } catch (error) {
                 console.error('Error fetching PGNs:', error);
             }
@@ -118,6 +120,8 @@ function Play() {
             setHistory((prevHistory) => [...prevHistory, fen]);
         }
     }, [fen]);
+
+    
 
     // Get PGNs from Chess.com
     const getChessComPGNs = async () => {
@@ -248,17 +252,6 @@ function Play() {
         setOrientation(orientation === 'white' ? 'black' : 'white');
     };
 
-    // Get paginated PGNs
-    const getPaginatedPGNs = () => {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        // return pgnArray.slice(startIndex, endIndex);
-    };
-
-    // Handle page change
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
-    };
 
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px', overflow: 'hidden' }}>
@@ -460,7 +453,7 @@ function Play() {
                         marginBottom: '15px',
                     }}
                 >
-                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex" justifyContent="center">
+                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex" justifyContent="center" onChange={(index) => setSelectedTab(index)}>
                         <TabList borderColor="#1E8C87" borderBottom="none" display="flex" justifyContent="center" width="100%">
                             <Tab 
                                 justifyContent="center" 
@@ -497,19 +490,38 @@ function Play() {
                         style={{ 
                             display: 'flex', 
                             flexDirection: 'column', 
-                            alignItems: 'center', 
+                            alignItems: 'stretch', 
                             width: '100%',
-                            maxHeight: '500px',
+                            height: '90%',
                             overflowY: 'auto',
                             marginTop: '10px',
+                            padding: '0 5px',
                         }}
                     >
-                        <GameTab 
-                            games={getPaginatedPGNs()} 
-                            currentPage={currentPage}
-                            // totalPages={Math.ceil(pgnArray.length / itemsPerPage)}
-                            onPageChange={handlePageChange}
-                        />
+                        {(selectedTab === 0) && ccPGN.map((pgn, index) => (
+                            <Button 
+                                key={index} 
+                                width="100%" 
+                                p={2} 
+                                mb={2} 
+                                borderRadius="10px"
+                                backgroundColor="#1E8C87"
+                                color="white"
+                                _hover={{
+                                    backgroundColor: "#17706B",
+                                }}
+                                onClick={() => {
+                                    try {
+                                        chessInstance.current.loadPgn(pgn);
+                                        setFen(chessInstance.current.fen());
+                                    } catch (error) {
+                                        console.error(`Error loading PGN Index ${index}:`, error);
+                                    }
+                                }}
+                            >
+                                Game {index + 1}
+                            </Button>
+                        ))}
                     </motion.div>
                 </motion.div>
             </div>
