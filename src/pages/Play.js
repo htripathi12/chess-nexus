@@ -23,9 +23,12 @@ function Play() {
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
-    const [pgnArray, setPgnArray] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 20;
+
+    const [ccPGN, setCCPGN] = useState([]);
+    const [lichessPGN, setLichessPGN] = useState([]);
+
 
     // Refs
     const customBoardRef = useRef(null);
@@ -41,8 +44,30 @@ function Play() {
             try {
                 const chesscompgn = await getChessComPGNs();
                 const lichesspgn = await getLichessGames();
-                setPgnArray(chesscompgn.concat(lichesspgn));
-                console.log(pgnArray);
+    
+                // Split the string into an array of entries
+                const chesscompgnArray = chesscompgn.split('\n\n');
+                const lichesspgnArray = lichesspgn.split('\n\n');
+    
+                // Function to combine entries in pairs
+                const combineInPairs = (array) => {
+                    const combinedArray = [];
+                    for (let i = 0; i < array.length; i += 2) {
+                        if (i + 1 < array.length) {
+                            combinedArray.push(array[i] + '\n\n' + array[i + 1]);
+                        } else {
+                            combinedArray.push(array[i]); // Handle case where array length is odd
+                        }
+                    }
+                    return combinedArray;
+                };
+    
+                // Combine entries in pairs
+                const combinedChesscompgn = combineInPairs(chesscompgnArray);
+                const combinedLichesspgn = combineInPairs(lichesspgnArray);
+
+                setCCPGN(combinedChesscompgn);
+                setLichessPGN(combinedLichesspgn);
             } catch (error) {
                 console.error('Error fetching PGNs:', error);
             }
@@ -230,7 +255,7 @@ function Play() {
     const getPaginatedPGNs = () => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        return pgnArray.slice(startIndex, endIndex);
+        // return pgnArray.slice(startIndex, endIndex);
     };
 
     // Handle page change
@@ -485,7 +510,7 @@ function Play() {
                         <GameTab 
                             games={getPaginatedPGNs()} 
                             currentPage={currentPage}
-                            totalPages={Math.ceil(pgnArray.length / itemsPerPage)}
+                            // totalPages={Math.ceil(pgnArray.length / itemsPerPage)}
                             onPageChange={handlePageChange}
                         />
                     </motion.div>
