@@ -309,9 +309,24 @@ function Play() {
         if (chessInstance.current.history().length > 0) {
             chessInstance.current.undo();
             const newFen = chessInstance.current.fen();
+            moveIndex.current -= 1;
             setFen(newFen);
             setFenInput(newFen);
             runStockfish(newFen);
+        }
+    };
+
+    // Redo the next move
+    const handleRedo = () => {
+        console.log(moveIndex.current, chessInstance.current.history().length);
+        if (moveIndex.current < chessInstance.current.history().length - 1) {
+            const move = chessInstance.current.history({ verbose: true })[moveIndex.current];
+            console.log(move);
+            // chessInstance.current.move(move);
+            // moveIndex.current += 1;
+            
+            // setFen(chessInstance.current.fen());
+            // setFenInput(chessInstance.current.fen());
         }
     };
 
@@ -323,7 +338,7 @@ function Play() {
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
-                moveIndex.current = 0;
+                moveIndex.current = chessInstance.current.history().length;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
                 setFenInput(newFen);
@@ -378,6 +393,11 @@ function Play() {
                         <Button onClick={handleUndo}>
                             Previous Move
                         </Button>
+                        {pgnLoaded && (
+                            <Button onClick={() => {handleRedo()}}>
+                                Next Move
+                            </Button>
+                        )}
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -546,6 +566,7 @@ function Play() {
                             <Tab 
                                 justifyContent="center" 
                                 borderRadius="10px" 
+                                border="1px solid #1E8C87"
                                 _selected={{ 
                                     color: "black", 
                                     bg: "#1E8C87",
@@ -604,6 +625,8 @@ function Play() {
                                     try {
                                         chessInstance.current.loadPgn(pgn);
                                         setFen(chessInstance.current.fen());
+                                        setPgnLoaded(true);
+                                        moveIndex.current = chessInstance.current.history().length - 1;
                                         console.log(ccPGN[index]);
                                     } catch (error) {
                                         console.error(`Error loading PGN Index ${index}:`, error);
@@ -640,6 +663,8 @@ function Play() {
                                     try {
                                         chessInstance.current.loadPgn(pgn);
                                         setFen(chessInstance.current.fen());
+                                        setPgnLoaded(true);
+                                        moveIndex.current = chessInstance.current.history().length - 1;
                                         console.log(lichessPGN[index]);
                                     } catch (error) {
                                         console.error(`Error loading PGN Index ${index}:`, error);
