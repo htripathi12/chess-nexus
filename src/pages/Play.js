@@ -85,6 +85,7 @@ function Play() {
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
+            console.log(e.data);
             if (e.data.startsWith('bestmove')) {
                 handleBestMove(e.data);
             } else if (e.data.includes('cp')) {
@@ -272,6 +273,7 @@ function Play() {
         const tempEval = data.split(' ')[9] / 100;
         const isWhiteTurn = chessInstance.current.turn() === 'w';
         setEvaluation(isWhiteTurn ? tempEval : -tempEval);
+        setIsMate(false);
     };
 
     // Handle mate evaluation from Stockfish
@@ -373,7 +375,7 @@ function Play() {
                     transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ paddingRight: "20px", paddingBottom: "30px" }}
                 >
-                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} />
+                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} fen={fen} />
                 </motion.div>
                 <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
