@@ -1,36 +1,38 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../AuthContext';
 import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Image } from '@chakra-ui/react';
+
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
 import BackButton from '../components/BackButton';
-import { useAuth } from '../AuthContext';
+
 import { Chess } from 'chess.js';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 
 function Play() {
     // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+    const [orientation, setOrientation] = useState('white');
     const [fenError, setFenError] = useState(false);
     const [pgnLoaded, setPgnLoaded] = useState(false);
-    const [orientation, setOrientation] = useState('white');
     const [loading, setLoading] = useState(false);
+    const [isMate, setIsMate] = useState(false);
+    const [gamesLoaded, setGamesLoaded] = useState(false);
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
-    const [depth, setDepth] = useState(19);
-    const [evaluation, setEvaluation] = useState(0);
-    const [isMate, setIsMate] = useState(false);
-    const [selectedTab, setSelectedTab] = useState(0);
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
-
+    const [depth, setDepth] = useState(19);
+    const [evaluation, setEvaluation] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(0);
 
     // Refs
     const customBoardRef = useRef(null);
-    const chessInstance = useRef(new Chess());
     const pgnRef = useRef(null);
-    const moveIndex = useRef(0);
     const stockfishWorkerRef = useRef(null);
+    const chessInstance = useRef(new Chess());
+    const moveIndex = useRef(0);
 
     const auth = useAuth();
 
@@ -65,6 +67,7 @@ function Play() {
     
                 setCCPGN(combinedChesscompgn);
                 setLichessPGN(combinedLichesspgn);
+                setGamesLoaded(true);
     
                 // console.log('Chess.com PGNs:', combinedChesscompgn);
                 // console.log('Lichess PGNs:', combinedLichesspgn);
@@ -345,7 +348,7 @@ function Play() {
 
 
     return (
-        <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
             <motion.div 
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -588,90 +591,104 @@ function Play() {
                         style={{ 
                             display: 'flex', 
                             flexDirection: 'column', 
-                            alignItems: 'stretch', 
+                            alignItems: 'stretch',
                             width: '100%',
-                            height: '90%',
+                            height: '100%',
                             overflowY: 'auto',
                             marginTop: '10px',
                             padding: '0 5px',
                         }}
                     >
-                        {(selectedTab === 0) && ccPGN.map((pgn, index) => (
-                            <Button 
-                                key={index} 
-                                width="100%" 
-                                p={9} 
-                                mb={2} 
-                                borderRadius="10px"
-                                backgroundColor="#1E8C87"
-                                color="white"
-                                fontSize={14}
-                                _hover={{
-                                    backgroundColor: "#17706B",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                }}
-                                onClick={() => {
-                                    try {
-                                        chessInstance.current.loadPgn(pgn);
-                                        setFen(chessInstance.current.fen());
-                                        setPgnLoaded(true);
-                                        moveIndex.current = chessInstance.current.history().length - 1;
-                                        console.log(ccPGN[index]);
-                                    } catch (error) {
-                                        console.error(`Error loading PGN Index ${index}:`, error);
-                                    }
-                                }}
-                                style={{
-                                    overflow: 'hidden',
-                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                    border: "1px solid #17706B",
-                                }}
-                            >
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
-                                    <span style={{ padding: '3px 0' }}>vs</span>
-                                    <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
-                                </div>
-                            </Button>
-                        ))}
-                        {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
-                            <Button 
-                                key={index} 
-                                width="100%" 
-                                mb={2} 
-                                p={9}
-                                borderRadius="10px"
-                                backgroundColor="#1E8C87"
-                                color="white"
-                                fontSize={14}
-                                _hover={{
-                                    backgroundColor: "#17706B",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                }}
-                                onClick={() => {
-                                    try {
-                                        chessInstance.current.loadPgn(pgn);
-                                        setFen(chessInstance.current.fen());
-                                        setPgnLoaded(true);
-                                        moveIndex.current = chessInstance.current.history().length - 1;
-                                        console.log(lichessPGN[index]);
-                                    } catch (error) {
-                                        console.error(`Error loading PGN Index ${index}:`, error);
-                                    }
-                                }}
-                                style={{
-                                    overflow: 'hidden',
-                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                    border: "1px solid #17706B",
-                                }}
-                            >
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
-                                    <span style={{ padding: '3px 0' }}>vs</span>
-                                    <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
-                                </div>
-                            </Button>
-                        ))}
+                        {!gamesLoaded ? (
+                            <div style={{ 
+                                display: 'flex', 
+                                alignItems: 'center',
+                                position: 'relative',
+                                justifyContent: 'center',
+                                height: '100%',
+                            }}>
+                                <Spinner boxSize="4rem" color="teal.500" />
+                            </div>
+                        ) : (
+                            <>
+                                {(selectedTab === 0) && ccPGN.map((pgn, index) => (
+                                    <Button 
+                                        key={index} 
+                                        width="100%" 
+                                        p={9} 
+                                        mb={2} 
+                                        borderRadius="10px"
+                                        backgroundColor="#1E8C87"
+                                        color="white"
+                                        fontSize={14}
+                                        _hover={{
+                                            backgroundColor: "#17706B",
+                                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                        }}
+                                        onClick={() => {
+                                            try {
+                                                chessInstance.current.loadPgn(pgn);
+                                                setFen(chessInstance.current.fen());
+                                                setPgnLoaded(true);
+                                                moveIndex.current = chessInstance.current.history().length - 1;
+                                                console.log(ccPGN[index]);
+                                            } catch (error) {
+                                                console.error(`Error loading PGN Index ${index}:`, error);
+                                            }
+                                        }}
+                                        style={{
+                                            overflow: 'hidden',
+                                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                            border: "1px solid #17706B",
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
+                                            <span style={{ padding: '3px 0' }}>vs</span>
+                                            <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
+                                        </div>
+                                    </Button>
+                                ))}
+                                {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
+                                    <Button 
+                                        key={index} 
+                                        width="100%" 
+                                        mb={2} 
+                                        p={9}
+                                        borderRadius="10px"
+                                        backgroundColor="#1E8C87"
+                                        color="white"
+                                        fontSize={14}
+                                        _hover={{
+                                            backgroundColor: "#17706B",
+                                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                        }}
+                                        onClick={() => {
+                                            try {
+                                                chessInstance.current.loadPgn(pgn);
+                                                setFen(chessInstance.current.fen());
+                                                setPgnLoaded(true);
+                                                moveIndex.current = chessInstance.current.history().length - 1;
+                                                console.log(lichessPGN[index]);
+                                            } catch (error) {
+                                                console.error(`Error loading PGN Index ${index}:`, error);
+                                            }
+                                        }}
+                                        style={{
+                                            overflow: 'hidden',
+                                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                            border: "1px solid #17706B",
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
+                                            <span style={{ padding: '3px 0' }}>vs</span>
+                                            <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
+                                        </div>
+                                    </Button>
+                                ))}
+                            </>
+                        )}
                     </motion.div>
                 </motion.div>
             </div>
