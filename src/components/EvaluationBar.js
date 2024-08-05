@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
 
-const EvaluationBar = ({ evaluation, orientation, isMate }) => {
+const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
+
   const scoreToPercentage = (score) => {
     const cappedScore = Math.max(-10, Math.min(10, score));
     return ((cappedScore + 10) / 20) * 100;
@@ -9,9 +10,10 @@ const EvaluationBar = ({ evaluation, orientation, isMate }) => {
 
   let displayValue;
   let percentage;
+  let playerMove = fen.split(' ')[1];
   if (isMate) {
     displayValue = `M${evaluation}`;
-    percentage = evaluation > 0 ? 100 : 0;
+    percentage = (playerMove === 'w') ? 100 : 0;
   } else {
     percentage = scoreToPercentage(evaluation);
     displayValue = evaluation > 0 ? `+${evaluation}` : `${evaluation}`;
