@@ -11,9 +11,7 @@ import { motion } from 'framer-motion';
 function Play() {
     // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
-    const [fenInput, setFenInput] = useState(fen);
     const [fenError, setFenError] = useState(false);
-    const [history, setHistory] = useState([]);
     const [pgnLoaded, setPgnLoaded] = useState(false);
     const [orientation, setOrientation] = useState('white');
     const [loading, setLoading] = useState(false);
@@ -23,7 +21,6 @@ function Play() {
     const [evaluation, setEvaluation] = useState(0);
     const [isMate, setIsMate] = useState(false);
     const [selectedTab, setSelectedTab] = useState(0);
-
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
 
@@ -118,13 +115,6 @@ function Play() {
             document.body.style.overflow = 'auto';
         };
     }, []);
-
-    // Track fen history
-    useEffect(() => {
-        if (fen && history[history.length - 1] !== fen) {
-            setHistory((prevHistory) => [...prevHistory, fen]);
-        }
-    }, [fen]);
 
     // Check if user is white in Chess.com PGN
     const isUserWhiteCC = (pgn) => {
@@ -295,7 +285,6 @@ function Play() {
     // Handle FEN change
     const handleFenChange = (event) => {
         const inputFen = event.target.value;
-        setFenInput(inputFen);
         try {
             chessInstance.current.load(inputFen);
             setFenError(false);
@@ -313,7 +302,6 @@ function Play() {
             const newFen = chessInstance.current.fen();
             moveIndex.current -= 1;
             setFen(newFen);
-            setFenInput(newFen);
             runStockfish(newFen);
         }
     };
@@ -328,7 +316,6 @@ function Play() {
             // moveIndex.current += 1;
             
             // setFen(chessInstance.current.fen());
-            // setFenInput(chessInstance.current.fen());
         }
     };
 
@@ -343,7 +330,6 @@ function Play() {
                 moveIndex.current = chessInstance.current.history().length;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
-                setFenInput(newFen);
             } else {
                 setPgnLoaded(false);
             }
@@ -499,7 +485,7 @@ function Play() {
                         ))}
                     </Select>
                     <Input
-                        value={fenInput}
+                        value={fen}
                         onChange={handleFenChange}
                         width="300px"
                         height="50px"
@@ -511,7 +497,8 @@ function Play() {
                         borderRadius="8px"
                         placeholder="Enter FEN"
                         focusBorderColor="#008080"
-                        _hover={{borderColor: "#008080",
+                        _hover={{
+                            borderColor: "#008080",
                         }}
                         sx={{
                             '::placeholder': {
