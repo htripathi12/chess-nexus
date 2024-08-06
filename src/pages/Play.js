@@ -263,7 +263,6 @@ function Play() {
 
     // Redo the next move
     const handleRedo = () => {
-        console.log(history);
         if (moveIndex.current < history.length) {
             chessInstance.current.load(history[moveIndex.current].after);
             moveIndex.current += 1;
