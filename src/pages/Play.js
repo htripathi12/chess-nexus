@@ -19,11 +19,13 @@ function Play() {
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
+    const [usingSideline, setUsingSideline] = useState(false);
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
     const [history, setHistory] = useState([]);
+    const [sidelineHistory, setSidelineHistory] = useState([]);
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
@@ -254,21 +256,42 @@ function Play() {
 
     // Undo the last move
     const handleUndo = () => {
-        if (history.length > 0) {
-            chessInstance.current.load(history[moveIndex.current].before);
-            moveIndex.current -= 1;
-            setFen(chessInstance.current.fen());
+        if (usingSideline) {
+            if (sidelineHistory.length > 0) {
+                chessInstance.current.undo();
+                setFen(chessInstance.current.fen());
+                setSidelineHistory(sidelineHistory.slice(0, -1));
+            } else {
+                setUsingSideline(false);
+                setHistory(history);
+                moveIndex.current = history.length - 1;
+            }
+        } else {
+            if (history.length > 0) {
+                chessInstance.current.undo();
+                setFen(chessInstance.current.fen());
+                setHistory(history.slice(0, -1));
+            }
         }
     };
 
     // Redo the next move
     const handleRedo = () => {
-        if (moveIndex.current < history.length) {
-            chessInstance.current.load(history[moveIndex.current].after);
-            moveIndex.current += 1;
-            setFen(chessInstance.current.fen());
+        if (usingSideline) {
+            if (moveIndex.current < sidelineHistory.length) {
+                chessInstance.current.move(sidelineHistory[moveIndex.current]);
+                setFen(chessInstance.current.fen());
+                moveIndex.current += 1;
+            }
+        } else {
+            if (moveIndex.current < history.length) {
+                chessInstance.current.move(history[moveIndex.current]);
+                setFen(chessInstance.current.fen());
+                moveIndex.current += 1;
+            }
         }
     };
+
 
     // Handle PGN submission
     const handleSubmit = async () => {
@@ -295,13 +318,15 @@ function Play() {
         setOrientation(orientation === 'white' ? 'black' : 'white');
     };
 
-    // Handle game list click
+    // Load PGN and handle deviations
     const handleGameListClick = (pgn) => {
         try {
             chessInstance.current.loadPgn(pgn);
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
-            setHistory(chessInstance.current.history({verbose: true}));
+            setHistory(chessInstance.current.history({ verbose: true }));
+            setSidelineHistory([]);
+            setUsingSideline(false);
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);
