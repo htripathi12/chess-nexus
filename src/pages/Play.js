@@ -86,7 +86,6 @@ function Play() {
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
-            console.log(e.data);
             if (e.data.startsWith('bestmove')) {
                 handleBestMove(e.data);
             } else if (e.data.includes('cp')) {
@@ -255,25 +254,20 @@ function Play() {
 
     // Undo the last move
     const handleUndo = () => {
-        if (chessInstance.current.history().length > 0) {
-            chessInstance.current.undo();
-            const newFen = chessInstance.current.fen();
+        if (history.length > 0) {
+            chessInstance.current.load(history[moveIndex.current].before);
             moveIndex.current -= 1;
-            setFen(newFen);
-            runStockfish(newFen);
+            setFen(chessInstance.current.fen());
         }
     };
 
     // Redo the next move
     const handleRedo = () => {
-        console.log(moveIndex.current, chessInstance.current.history().length);
-        if (moveIndex.current < chessInstance.current.history().length - 1) {
-            const move = chessInstance.current.history({ verbose: true })[moveIndex.current];
-            console.log(move);
-            // chessInstance.current.move(move);
-            // moveIndex.current += 1;
-            
-            // setFen(chessInstance.current.fen());
+        console.log(history);
+        if (moveIndex.current < history.length) {
+            chessInstance.current.load(history[moveIndex.current].after);
+            moveIndex.current += 1;
+            setFen(chessInstance.current.fen());
         }
     };
 
@@ -285,10 +279,10 @@ function Play() {
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);
-                moveIndex.current = chessInstance.current.history().length;
+                moveIndex.current = chessInstance.current.history().length - 1;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
-                setHistory(chessInstance.current.history());
+                setHistory(chessInstance.current.history({ verbose: true }));
             } else {
                 setPgnLoaded(false);
             }
@@ -308,7 +302,7 @@ function Play() {
             chessInstance.current.loadPgn(pgn);
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
-            setHistory(chessInstance.current.history());
+            setHistory(chessInstance.current.history({verbose: true}));
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);
