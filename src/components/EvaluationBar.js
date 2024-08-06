@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
+import { Chess } from 'chess.js';
 
 const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
   const scoreToPercentage = (score) => {
@@ -10,6 +11,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
   let displayValue;
   let percentage;
   let playerToMove = fen.split(' ')[1];
+  let tempChess = new Chess(fen);
 
   if (isMate) {
     let mateEval = playerToMove === 'w' ? evaluation : -evaluation;
@@ -19,6 +21,15 @@ const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
     percentage = scoreToPercentage(evaluation);
     displayValue = evaluation > 0 ? `+${evaluation.toFixed(2)}` : evaluation.toFixed(2);
   }
+
+  if (tempChess.isCheckmate()) {
+      if (orientation === 'black') {
+          (playerToMove === 'w') ? displayValue = '1-0' : displayValue = '0-1';
+      } else {
+          (playerToMove === 'w') ? displayValue = '0-1' : displayValue = '1-0';
+      }
+  }
+
 
   const evaluationBoxHeight = 20;
   const containerHeight = 500;
