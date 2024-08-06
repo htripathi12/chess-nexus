@@ -23,6 +23,7 @@ function Play() {
     const [bestLine, setBestLine] = useState([]);
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
+    const [history, setHistory] = useState([]);
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
@@ -118,52 +119,6 @@ function Play() {
             document.body.style.overflow = 'auto';
         };
     }, []);
-
-    // Check if user is white in Chess.com PGN
-    const isUserWhiteCC = (pgn) => {
-        const whiteTag = '[White "';
-        const startIndex = pgn.indexOf(whiteTag) + whiteTag.length;
-        const endIndex = pgn.indexOf('"', startIndex);
-        const whiteUser = pgn.substring(startIndex, endIndex);
-        return whiteUser === auth.getChesscomUsername();
-    };
-
-    // Check if user is white in Lichess PGN
-    const isUserWhiteLichess = (pgn) => {
-        const whiteTag = '[White "';
-        const startIndex = pgn.indexOf(whiteTag) + whiteTag.length;
-        const endIndex = pgn.indexOf('"', startIndex);
-        const whiteUser = pgn.substring(startIndex, endIndex);
-        return whiteUser === auth.getLichessUsername();
-    };
-
-    // Check if user won in Chess.com PGN
-    const didUserWinCC = (pgn) => {
-        const resultTag = '[Result "';
-        const startIndex = pgn.indexOf(resultTag) + resultTag.length;
-        const endIndex = pgn.indexOf('"', startIndex);
-        const result = pgn.substring(startIndex, endIndex);
-        if (result === '1-0' && isUserWhiteCC(pgn)) {
-            return true;
-        } else if (result === '0-1' && !isUserWhiteCC(pgn)) {
-            return true;
-        }
-        return false;
-    }
-
-    // Check if user won in Lichess PGN
-    const didUserWinLichess = (pgn) => {
-        const resultTag = '[Result "';
-        const startIndex = pgn.indexOf(resultTag) + resultTag.length;
-        const endIndex = pgn.indexOf('"', startIndex);
-        const result = pgn.substring(startIndex, endIndex);
-        if (result === '1-0' && isUserWhiteLichess(pgn)) {
-            return true;
-        } else if (result === '0-1' && !isUserWhiteLichess(pgn)) {
-            return true;
-        }
-        return false;
-    }
     
     // Get other user from Chess.com PGN
     const getOtherUserCC = (pgn) => {
@@ -333,6 +288,7 @@ function Play() {
                 moveIndex.current = chessInstance.current.history().length;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
+                setHistory(chessInstance.current.history());
             } else {
                 setPgnLoaded(false);
             }
@@ -344,6 +300,19 @@ function Play() {
     // Switch board orientation
     const handleSwitchOrientation = () => {
         setOrientation(orientation === 'white' ? 'black' : 'white');
+    };
+
+    // Handle game list click
+    const handleGameListClick = (pgn) => {
+        try {
+            chessInstance.current.loadPgn(pgn);
+            setFen(chessInstance.current.fen());
+            setPgnLoaded(true);
+            setHistory(chessInstance.current.history());
+            moveIndex.current = chessInstance.current.history().length - 1;
+        } catch (error) {
+            console.error(`Error loading PGN`, error);
+        }
     };
 
 
@@ -390,7 +359,9 @@ function Play() {
                             </Button>
                         )}
                         <Button onClick={handleSwitchOrientation}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical"
+                                width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none"
+                                strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M3 8l4 -4l4 4" />
                                 <path d="M7 4l0 9" />
@@ -553,7 +524,8 @@ function Play() {
                         marginBottom: '15px',
                     }}
                 >
-                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex" justifyContent="center" onChange={(index) => setSelectedTab(index)}>
+                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex"
+                        justifyContent="center" onChange={(index) => setSelectedTab(index)}>
                         <TabList borderColor="#1E8C87" borderBottom="none" display="flex" justifyContent="center" width="100%">
                             <Tab 
                                 justifyContent="center" 
@@ -625,17 +597,7 @@ function Play() {
                                             backgroundColor: "#17706B",
                                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                                         }}
-                                        onClick={() => {
-                                            try {
-                                                chessInstance.current.loadPgn(pgn);
-                                                setFen(chessInstance.current.fen());
-                                                setPgnLoaded(true);
-                                                moveIndex.current = chessInstance.current.history().length - 1;
-                                                console.log(ccPGN[index]);
-                                            } catch (error) {
-                                                console.error(`Error loading PGN Index ${index}:`, error);
-                                            }
-                                        }}
+                                        onClick={() => { handleGameListClick(pgn) }}
                                         style={{
                                             overflow: 'hidden',
                                             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -663,17 +625,7 @@ function Play() {
                                             backgroundColor: "#17706B",
                                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                                         }}
-                                        onClick={() => {
-                                            try {
-                                                chessInstance.current.loadPgn(pgn);
-                                                setFen(chessInstance.current.fen());
-                                                setPgnLoaded(true);
-                                                moveIndex.current = chessInstance.current.history().length - 1;
-                                                console.log(lichessPGN[index]);
-                                            } catch (error) {
-                                                console.error(`Error loading PGN Index ${index}:`, error);
-                                            }
-                                        }}
+                                        onClick={() => { handleGameListClick(pgn) }}
                                         style={{
                                             overflow: 'hidden',
                                             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
