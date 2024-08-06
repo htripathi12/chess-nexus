@@ -23,11 +23,12 @@ const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
   }
 
   if (tempChess.isCheckmate()) {
-      if (orientation === 'black') {
-          (playerToMove === 'w') ? displayValue = '1-0' : displayValue = '0-1';
-      } else {
-          (playerToMove === 'w') ? displayValue = '0-1' : displayValue = '1-0';
-      }
+    if (orientation === 'black') {
+        (playerToMove === 'w') ? displayValue = '1-0' : displayValue = '0-1';
+    } else {
+        (playerToMove === 'w') ? displayValue = '0-1' : displayValue = '1-0';
+    }
+    percentage = 50;
   }
 
 
