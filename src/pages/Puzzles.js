@@ -9,6 +9,8 @@ import {
     useToast,
   } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
+import { useAuth } from '../AuthContext';
+
 
 function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -25,8 +27,10 @@ function Puzzles() {
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
+    const userRating = useRef(0);
 
     const toast = useToast();
+    const auth = useAuth();
 
     const showFeedback = (isCorrect) => {
       toast({
@@ -44,6 +48,31 @@ function Puzzles() {
         return () => {
             document.body.style.overflow = 'auto';
         };
+    }, []);
+
+    useEffect(() => {
+        const fetchAverageRating = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/puzzles/averageRating', {
+                    params: {
+                        chesscomUsername: auth.getChesscomUsername(),
+                        lichessUsername: auth.getLichessUsername(),
+                    },
+                    headers: {
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
+                });
+                console.log(response.data);
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
+        };
+    
+        if (auth.isLoggedIn) {
+            fetchAverageRating();
+        } else {
+            console.log('User is not logged in, fetching random puzzles');
+        }
     }, []);
 
     const getNextPuzzle = async () => {
