@@ -61,6 +61,7 @@
     "typescript": "^4.9.5"
   },
   "overrides": {
-    "postcss": "8.4.31"
+    "postcss": "8.4.31",
+    "nth-check": "2.0.1"
   }
 }
