@@ -62,14 +62,14 @@ function Puzzles() {
                         Authorization: `Bearer ${auth.getToken()}`,
                     }
                 });
-                console.log(response.data);
+                return response.data.rating;
             } catch (error) {
                 console.error('There was an error!', error);
             }
         };
     
         if (auth.isLoggedIn) {
-            fetchAverageRating();
+            userRating.current = fetchAverageRating();
         } else {
             console.log('User is not logged in, fetching random puzzles');
         }
