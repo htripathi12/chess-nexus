@@ -275,20 +275,19 @@ function Play() {
         }
     };
 
-    // Redo the next move
     const handleRedo = () => {
         if (usingSideline) {
-            if (moveIndex.current < sidelineHistory.length) {
-                chessInstance.current.move(sidelineHistory[moveIndex.current]);
-                setFen(chessInstance.current.fen());
-                moveIndex.current += 1;
-            }
+            moveIndex.current += 1;
+            const move = sidelineHistory[moveIndex.current];
+            chessInstance.current.move(move);
+            setFen(chessInstance.current.fen());
+            setSidelineHistory(sidelineHistory);
         } else {
-            if (moveIndex.current < history.length) {
-                chessInstance.current.move(history[moveIndex.current]);
-                setFen(chessInstance.current.fen());
-                moveIndex.current += 1;
-            }
+            moveIndex.current += 1;
+            const move = history[moveIndex.current];
+            chessInstance.current.move(move);
+            setFen(chessInstance.current.fen());
+            setHistory(history);
         }
     };
 
