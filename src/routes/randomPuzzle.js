@@ -22,6 +22,14 @@ const loadPuzzles = async () => {
     });
 };
 
+router.get("/averageRating", (req, res) => {
+    const { chesscomUsername, lichessUsername } = req.query;
+    if (!chesscomUsername && !lichessUsername) {
+        return res.status(400).send({ error: 'User not logged in' });
+    }
+    res.send({ rating: 1500 });
+});
+
 router.get('/', (req, res) => {
     if (puzzles.length === 0) {
         return res.status(500).send({ error: 'No FENs loaded' });
