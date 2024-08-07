@@ -71,7 +71,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate, fen }) => {
         textAlign="center"
         borderRadius="4px"
       >
-        <Text fontSize="sm" fontWeight="bold" color="white">
+        <Text fontSize="xs" fontWeight="bold" color="white">
           {displayValue}
         </Text>
       </Box>
