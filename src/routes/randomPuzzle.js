@@ -1,7 +1,6 @@
 const fs = require('fs');
 const express = require('express');
 const csv = require('csv-parser');
-const axios = require('axios');
 const router = express.Router();
 
 let puzzles = [];
@@ -22,6 +21,27 @@ const loadPuzzles = async () => {
             });
     });
 };
+
+router.get('/rating', (req, res) => {
+    if (puzzles.length === 0) {
+        return res.status(500).send({ error: 'No FENs loaded' });
+    }
+
+    const userId = req.userId;
+    req.db.query('SELECT puzzlerating FROM users WHERE id = ?', [userId], (err, result) => {
+        if (err) {
+            console.error('Error fetching user:', err);
+            return res.status(500).send({ error: 'Internal server error' });
+        }
+
+        if (result.length === 0) {
+            return res.send({ rating: 0 });
+        }
+
+        res.send({ rating: result[0].puzzlerating });
+    }
+    );
+});
 
 router.get('/', (req, res) => {
     if (puzzles.length === 0) {
