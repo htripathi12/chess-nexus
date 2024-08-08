@@ -9,6 +9,7 @@ import {
     useToast,
   } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
+import { useAuth } from '../AuthContext';
 
 function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -25,7 +26,9 @@ function Puzzles() {
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
+    const puzzleRating = useRef(0);
 
+    const auth = useAuth();
     const toast = useToast();
 
     const showFeedback = (isCorrect) => {
@@ -40,11 +43,31 @@ function Puzzles() {
     };
 
     useEffect(() => {
+        getPuzzleRating();
+    }, []);
+
+    useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
             document.body.style.overflow = 'auto';
         };
     }, []);
+
+    const getPuzzleRating = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/puzzles/rating', 
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
+                }
+            );
+			puzzleRating.current = response.data.rating;
+			console.log('Puzzle rating:', puzzleRating.current);
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    }
 
     const getNextPuzzle = async () => {
         if (moveInProgress) return;
@@ -57,7 +80,13 @@ function Puzzles() {
             }
             setFirstPuzzle(false);
             setIncorrectMove(false);
-            const response = await axios.get('http://localhost:8080/puzzles');
+            const response = await axios.get('http://localhost:8080/puzzles', 
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
+                }
+            );
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' '); 
             setRating(response.data.rating);
