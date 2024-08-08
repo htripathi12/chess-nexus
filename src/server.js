@@ -71,7 +71,7 @@ app.use(waitForPuzzlesMiddleware);
 
 app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
-app.use("/puzzles", puzzleRouter);
+app.use("/puzzles", verifyToken, puzzleRouter);
 app.use("/play", analyze);
 app.use("/account/chesscom", verifyToken, chesscom);
 app.use("/account/lichess", verifyToken, lichess);
