@@ -7,7 +7,7 @@ import {
     Text, 
     Spinner,
     useToast,
-  } from '@chakra-ui/react';
+} from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
 
@@ -26,7 +26,7 @@ function Puzzles() {
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
-    const puzzleRating = useRef(0);
+    const userRating = useRef(0);
 
     const auth = useAuth();
     const toast = useToast();
@@ -62,8 +62,8 @@ function Puzzles() {
                     }
                 }
             );
-			puzzleRating.current = response.data.rating;
-			console.log('Puzzle rating:', puzzleRating.current);
+            userRating.current = response.data.rating;
+            console.log('Puzzle rating:', userRating.current);
         } catch (error) {
             console.error('There was an error!', error);
         }
@@ -114,6 +114,40 @@ function Puzzles() {
         }
     };
 
+	const handleEloRating = async () => {
+	  const K = 32;
+	  const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
+	  let actualScore;
+	
+	  if (incorrectMove) {
+		actualScore = 0;
+	  } else {
+		actualScore = 1;
+		if (rating < userRating.current) {
+		  actualScore += 0.5;
+		} else if (rating > userRating.current) {
+		  actualScore -= 0.5;
+		}
+	  }
+	
+	  const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));	
+		
+	  try {
+		await axios.post('http://localhost:8080/puzzles/updateRating', 
+		  { rating: newRating }, 
+		  {
+			headers: {
+			  Authorization: `Bearer ${auth.getToken()}`,
+			}
+		  }
+		);
+		userRating.current = newRating;
+		console.log('New user rating:', newRating);
+	  } catch (error) {
+		console.error('There was an error updating the rating!', error);
+	  }
+	};
+
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
@@ -133,7 +167,8 @@ function Puzzles() {
         } else {
             showFeedback(false);
             setIncorrectMove(true);
-        }
+		}
+		handleEloRating();
     };
 
     const redoPuzzle = () => {
@@ -155,22 +190,22 @@ function Puzzles() {
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
             {loading && (
-              <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-                zIndex: 10
-              }}>
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    zIndex: 10
+                }}>
                     <Spinner size="xl" style={{ width: '100px', height: '100px', color: 'white' }} speed=".35s" thickness='10px'/>
                     <div style={{ color: 'white', fontSize: '24px' }}>Loading Puzzles</div>
-              </div>
+                </div>
             )}
             <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
                 <BackButton />

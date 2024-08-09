@@ -22,11 +22,15 @@ const loadPuzzles = async () => {
     });
 };
 
-router.get('/rating', (req, res) => {
+// Middleware to ensure puzzles are loaded before handling requests
+router.use(async (req, res, next) => {
     if (puzzles.length === 0) {
-        return res.status(500).send({ error: 'No FENs loaded' });
+        await loadPuzzles().catch(next);
     }
+    next();
+});
 
+router.get('/rating', (req, res) => {
     const userId = req.userId;
     req.db.query('SELECT puzzlerating FROM users WHERE id = ?', [userId], (err, result) => {
         if (err) {
@@ -39,15 +43,10 @@ router.get('/rating', (req, res) => {
         }
 
         res.send({ rating: result[0].puzzlerating });
-    }
-    );
+    });
 });
 
 router.get('/', (req, res) => {
-    if (puzzles.length === 0) {
-        return res.status(500).send({ error: 'No FENs loaded' });
-    }
-
     const randomIndex = Math.floor(Math.random() * puzzles.length);
     const { FEN, Moves, GameUrl, Rating } = puzzles[randomIndex];
 
@@ -56,6 +55,20 @@ router.get('/', (req, res) => {
     } else {
         res.status(500).send({ error: 'Invalid puzzle format' });
     }
+});
+
+router.post('/updateRating', (req, res) => {
+    const userId = req.userId;
+    const { rating } = req.body;
+
+    req.db.query('UPDATE users SET puzzlerating = ? WHERE id = ?', [rating, userId], (err) => {
+        if (err) {
+            console.error('Error updating user rating:', err);
+            return res.status(500).send({ error: 'Internal server error' });
+        }
+
+        res.send({ success: true });
+    });
 });
 
 module.exports = { router, loadPuzzles };
