@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
-import { Box, Button, Text, Spinner, useToast} from '@chakra-ui/react';
+import { Box, Button, Text, Spinner, useToast } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
 
@@ -19,6 +19,7 @@ function Puzzles() {
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
     const [rating, setRating] = useState(0);
     const [ratingChange, setRatingChange] = useState(0);
+    const [showRatingChange, setShowRatingChange] = useState(false);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
@@ -28,14 +29,14 @@ function Puzzles() {
     const toast = useToast();
 
     const showFeedback = (isCorrect) => {
-      toast({
-        title: isCorrect ? "Correct!" : "Incorrect!",
-        status: isCorrect ? "success" : "error",
-        duration: 1500,
-        isClosable: true,
-        position: "top",
-        variant: "solid",
-      });
+        toast({
+            title: isCorrect ? "Correct!" : "Incorrect!",
+            status: isCorrect ? "success" : "error",
+            duration: 1500,
+            isClosable: true,
+            position: "top",
+            variant: "solid",
+        });
     };
 
     useEffect(() => {
@@ -51,7 +52,7 @@ function Puzzles() {
 
     const getPuzzleRating = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/puzzles/rating', 
+            const response = await axios.get('http://localhost:8080/puzzles/rating',
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
@@ -70,13 +71,14 @@ function Puzzles() {
 
         try {
             setPuzzleLoaded(true);
+            setShowRatingChange(false);
             setMoveInProgress(true);
             if (firstPuzzle) {
                 setLoading(true);
             }
             setFirstPuzzle(false);
             setIncorrectMove(false);
-            const response = await axios.get('http://localhost:8080/puzzles', 
+            const response = await axios.get('http://localhost:8080/puzzles',
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
@@ -87,7 +89,7 @@ function Puzzles() {
                 }
             );
             const newFen = response.data.fen;
-            const moveList = response.data.moves.split(' '); 
+            const moveList = response.data.moves.split(' ');
             setRating(response.data.rating);
             setMoves(moveList);
 
@@ -117,21 +119,21 @@ function Puzzles() {
         const previousRating = userRating.current;
         const diff = Math.abs(previousRating - rating);
         let K = 32;
-    
+
         if (diff < 100) {
             K = 16;
         } else if (diff > 200) {
             K = 40;
         }
-    
+
         const expectedScore = 1 / (1 + Math.pow(10, (rating - previousRating) / 400));
         const actualScore = isIncorrect ? 0 : 1;
-        
+
         const newRating = Math.round(previousRating + K * (actualScore - expectedScore));
-    
+
         try {
-            await axios.post('http://localhost:8080/puzzles/updateRating', 
-                { rating: newRating }, 
+            await axios.post('http://localhost:8080/puzzles/updateRating',
+                { rating: newRating },
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
@@ -139,7 +141,8 @@ function Puzzles() {
                 }
             );
             userRating.current = newRating;
-			setRatingChange(newRating - previousRating);
+            setRatingChange(newRating - previousRating);
+            setShowRatingChange(true);
             console.log('New user rating:', newRating);
         } catch (error) {
             console.error('There was an error updating the rating!', error);
@@ -150,7 +153,7 @@ function Puzzles() {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
         console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
-    
+
         if (userMove === expectedMove) {
             showFeedback(true);
             const nextMove = moves[moveIndex + 1];
@@ -162,13 +165,14 @@ function Puzzles() {
                     setMoveIndex(moveIndex => moveIndex + 2);
                 }, 1000);
             } else {
-				handleEloRating(false);
-				setPuzzleLoaded(false);
+                handleEloRating(false);
+                setPuzzleLoaded(false);
             }
         } else {
             showFeedback(false);
             setIncorrectMove(true);
             handleEloRating(true);
+            setPuzzleLoaded(false);
         }
     };
 
@@ -177,6 +181,8 @@ function Puzzles() {
         setFen(initialFEN);
         setMoveIndex(1);
         setIncorrectMove(false);
+		setShowRatingChange(false);
+		setPuzzleLoaded(true);
 
         const firstMove = moves[0];
         if (firstMove) {
@@ -203,7 +209,7 @@ function Puzzles() {
                     alignItems: 'center',
                     zIndex: 10
                 }}>
-                    <Spinner size="xl" style={{ width: '100px', height: '100px', color: 'white' }} speed=".35s" thickness='10px'/>
+                    <Spinner size="xl" style={{ width: '100px', height: '100px', color: 'white' }} speed=".35s" thickness='10px' />
                     <div style={{ color: 'white', fontSize: '24px' }}>Loading Puzzles</div>
                 </div>
             )}
@@ -224,70 +230,70 @@ function Puzzles() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
                         <Button onClick={redoPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload" width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
                                 <path d="M20 4v5h-5" />
                             </svg>
                         </Button>
                         <Button onClick={getNextPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right-filled" width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" strokeWidth="0" fill="currentColor" />
                             </svg>
                         </Button>
                     </div>
                 </div>
                 <div style={{ height: '550px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-					<div 
-						style={{ 
-							display: 'flex', 
-							flexDirection: 'column', 
-							alignItems: 'center', 
-							width: '300px',
-							marginLeft: '20px',
-							background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
-							borderRadius: '10px',
-							border: '2px solid #008080',
-							boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
-							padding: '10px',
-							marginBottom: '20px',
-						}}
-					>
-						<Text style={{
-							fontSize: '18px',
-							color: '#008080',
-							fontWeight: 'bold',
-							textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
-							textAlign: 'center',
-						}}>Your Rating</Text>
-						<Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" width="100%">
-							<Text style={{
-								fontSize: '28px',
-								color: '#008080',
-								fontWeight: 'bold',
-								textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
-								textAlign: 'center',
-								marginLeft: (puzzleLoaded && ratingChange) ? '15px' : '0px',
-							}}>{userRating.current}</Text>
-							{puzzleLoaded && ratingChange !== 0 && (
-								<Text style={{
-									fontSize: '16px',
-									color: ratingChange > 0 ? 'green' : 'red',
-									fontWeight: 'bold',
-									textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
-									textAlign: 'center',
-									position: 'relative',
-								}}>
-									{ratingChange > 0 ? `+${ratingChange}` : ratingChange}
-								</Text>
-							)}
-						</Box>
-					</div>
-                    <div 
-                        style={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            alignItems: 'center', 
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            width: '300px',
+                            marginLeft: '20px',
+                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                            borderRadius: '10px',
+                            border: '2px solid #008080',
+                            boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+                            padding: '10px',
+                            marginBottom: '20px',
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: '18px',
+                            color: '#008080',
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+                            textAlign: 'center',
+                        }}>Your Rating</Text>
+                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" width="100%">
+                            <Text style={{
+                                fontSize: '28px',
+                                color: '#008080',
+                                fontWeight: 'bold',
+                                textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+                                textAlign: 'center',
+                                marginLeft: (showRatingChange && ratingChange) ? '15px' : '0px',
+                            }}>{userRating.current}</Text>
+                            {showRatingChange && ratingChange !== 0 && (
+                                <Text style={{
+                                    fontSize: '16px',
+                                    color: ratingChange > 0 ? '#228B22' : 'red',
+                                    fontWeight: 'bold',
+                                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+                                    textAlign: 'center',
+                                    position: 'relative',
+                                }}>
+                                    {ratingChange > 0 ? `+${ratingChange}` : ratingChange}
+                                </Text>
+                            )}
+                        </Box>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
                             width: '300px',
                             marginLeft: '20px',
                             background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
