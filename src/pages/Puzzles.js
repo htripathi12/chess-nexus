@@ -114,39 +114,36 @@ function Puzzles() {
         }
     };
 
-	const handleEloRating = async () => {
-	  const K = 32;
-	  const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
-	  let actualScore;
-	
-	  if (incorrectMove) {
-		actualScore = 0;
-	  } else {
-		actualScore = 1;
-		if (rating < userRating.current) {
-		  actualScore += 0.5;
-		} else if (rating > userRating.current) {
-		  actualScore -= 0.5;
-		}
-	  }
-	
-	  const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));	
-		
-	  try {
-		await axios.post('http://localhost:8080/puzzles/updateRating', 
-		  { rating: newRating }, 
-		  {
-			headers: {
-			  Authorization: `Bearer ${auth.getToken()}`,
-			}
-		  }
-		);
-		userRating.current = newRating;
-		console.log('New user rating:', newRating);
-	  } catch (error) {
-		console.error('There was an error updating the rating!', error);
-	  }
-	};
+    const handleEloRating = async () => {
+        const diff = Math.abs(userRating.current - rating);
+        let K = 32;
+
+        if (diff < 100) {
+            K = 16;
+        } else if (diff > 200) {
+            K = 40;
+        }
+
+        const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
+        const actualScore = incorrectMove ? 0 : 1;
+        
+        const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));
+
+        try {
+            await axios.post('http://localhost:8080/puzzles/updateRating', 
+                { rating: newRating }, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
+                }
+            );
+            userRating.current = newRating;
+            console.log('New user rating:', newRating);
+        } catch (error) {
+            console.error('There was an error updating the rating!', error);
+        }
+    };
 
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
@@ -163,12 +160,13 @@ function Puzzles() {
                     setFen(chess.current.fen());
                     setMoveIndex(moveIndex => moveIndex + 2);
                 }, 1000);
+            } else {
+                handleEloRating();
             }
         } else {
             showFeedback(false);
             setIncorrectMove(true);
-		}
-		handleEloRating();
+        }
     };
 
     const redoPuzzle = () => {
