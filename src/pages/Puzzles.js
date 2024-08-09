@@ -123,7 +123,18 @@ function Puzzles() {
 
     const revealSolution = () => {
         setSolutionRevealed(true);
-        setPuzzleSolution(moves);
+        moves.shift();
+
+        let chessTwo = new Chess(fen);
+        try {
+            moves.forEach(move => { 
+                chessTwo.move(move);
+            });
+        } catch (e) {
+            console.error('Error loading PGN:', e);
+        }
+        chessTwo.history().shift();
+        setPuzzleSolution(chessTwo.history());
 
         if (!eloLost.current) {
             handleEloRating(true);
@@ -269,6 +280,7 @@ function Puzzles() {
                         </Button>
                     </div>
                 </div>
+
                 <div style={{ height: '550px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <div
                         style={{
@@ -315,6 +327,7 @@ function Puzzles() {
                             )}
                         </Box>
                     </div>
+                    
                     <div
                         style={{
                             display: 'flex',
@@ -344,16 +357,19 @@ function Puzzles() {
                             textAlign: 'center',
                         }}>{rating}</Text>
                     </div>
+
                     <Button
                         onClick={revealSolution}
-                        bg='gray.400'
                         border="1px"
-                        color="white"
-                        _hover={{ bg: "gray.700", color: "white" }}
                         marginTop="20px"
                         marginLeft="20px"
                         width="300px"
                         isDisabled={solutionRevealed || !puzzleLoaded}
+                        fontSize= '18px'
+                        color= '#008080'
+                        fontWeight= 'bold'
+                        textShadow= '1px 1px 2px rgba(0, 0, 0, 0.1)'
+                        textAlign= 'center'
                     >
                         Reveal Solution
                     </Button>
