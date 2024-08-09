@@ -3,7 +3,8 @@ import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
 import { 
-    Button, 
+	Box,
+	Button, 
     Text, 
     Spinner,
     useToast,
@@ -23,6 +24,7 @@ function Puzzles() {
     const [firstPuzzle, setFirstPuzzle] = useState(true);
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
     const [rating, setRating] = useState(0);
+    const [ratingChange, setRatingChange] = useState(0);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
@@ -58,8 +60,8 @@ function Puzzles() {
             const response = await axios.get('http://localhost:8080/puzzles/rating', 
                 {
                     headers: {
-						Authorization: `Bearer ${auth.getToken()}`,
-					}
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
                 }
             );
             userRating.current = response.data.rating;
@@ -84,10 +86,10 @@ function Puzzles() {
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
-					},
-					params: {
-						userRating: userRating.current,
-					}
+                    },
+                    params: {
+                        userRating: userRating.current,
+                    }
                 }
             );
             const newFen = response.data.fen;
@@ -118,62 +120,62 @@ function Puzzles() {
     };
 
     const handleEloRating = async (isIncorrect) => {
-		const diff = Math.abs(userRating.current - rating);
-		let K = 32;
-	
-		if (diff < 100) {
-			K = 16;
-		} else if (diff > 200) {
-			K = 40;
-		}
-	
-		const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
-		const actualScore = isIncorrect ? 0 : 1;
-		
-		const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));
-	
-		try {
-			await axios.post('http://localhost:8080/puzzles/updateRating', 
-				{ rating: newRating }, 
-				{
-					headers: {
-						Authorization: `Bearer ${auth.getToken()}`,
-					}
-				}
-			);
-			userRating.current = newRating;
-			console.log('New user rating:', newRating);
-		} catch (error) {
-			console.error('There was an error updating the rating!', error);
-		}
-	};
-	
+        const previousRating = userRating.current; // Store previous rating
+        const diff = Math.abs(previousRating - rating);
+        let K = 32;
+    
+        if (diff < 100) {
+            K = 16;
+        } else if (diff > 200) {
+            K = 40;
+        }
+    
+        const expectedScore = 1 / (1 + Math.pow(10, (rating - previousRating) / 400));
+        const actualScore = isIncorrect ? 0 : 1;
+        
+        const newRating = Math.round(previousRating + K * (actualScore - expectedScore));
+    
+        try {
+            await axios.post('http://localhost:8080/puzzles/updateRating', 
+                { rating: newRating }, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.getToken()}`,
+                    }
+                }
+            );
+            userRating.current = newRating;
+			setRatingChange(newRating - previousRating);
+            console.log('New user rating:', newRating);
+        } catch (error) {
+            console.error('There was an error updating the rating!', error);
+        }
+    };
 
     const logMove = (sourceSquare, targetSquare) => {
-		const userMove = sourceSquare + targetSquare;
-		const expectedMove = moves[moveIndex];
-		console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
-	
-		if (userMove === expectedMove) {
-			showFeedback(true);
-			const nextMove = moves[moveIndex + 1];
-			setIncorrectMove(false);
-			if (nextMove) {
-				setTimeout(() => {
-					chess.current.move(nextMove);
-					setFen(chess.current.fen());
-					setMoveIndex(moveIndex => moveIndex + 2);
-				}, 1000);
-			} else {
-				handleEloRating(false);
-			}
-		} else {
-			showFeedback(false);
-			setIncorrectMove(true);
-			handleEloRating(true);
-		}
-	};
-	
+        const userMove = sourceSquare + targetSquare;
+        const expectedMove = moves[moveIndex];
+        console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
+    
+        if (userMove === expectedMove) {
+            showFeedback(true);
+            const nextMove = moves[moveIndex + 1];
+            setIncorrectMove(false);
+            if (nextMove) {
+                setTimeout(() => {
+                    chess.current.move(nextMove);
+                    setFen(chess.current.fen());
+                    setMoveIndex(moveIndex => moveIndex + 2);
+                }, 1000);
+            } else {
+                handleEloRating(false);
+            }
+        } else {
+            showFeedback(false);
+            setIncorrectMove(true);
+            handleEloRating(true);
+        }
+    };
 
     const redoPuzzle = () => {
         chess.current.load(initialFEN);
@@ -240,14 +242,56 @@ function Puzzles() {
                         </Button>
                     </div>
                 </div>
-                <div style={{ height: '550px', display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ height: '550px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+					<div 
+						style={{ 
+							display: 'flex', 
+							flexDirection: 'column', 
+							alignItems: 'center', 
+							width: '300px',
+							marginLeft: '20px',
+							background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+							borderRadius: '10px',
+							border: '2px solid #008080',
+							boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+							padding: '10px',
+							marginBottom: '20px',
+						}}
+					>
+						<Text style={{
+							fontSize: '18px',
+							color: '#008080',
+							fontWeight: 'bold',
+							textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+							textAlign: 'center',
+						}}>Your Rating</Text>
+						<Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" width="100%">
+							<Text style={{
+								fontSize: '28px',
+								color: '#008080',
+								fontWeight: 'bold',
+								textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+								textAlign: 'center',
+								marginLeft: '12px',
+							}}>{userRating.current}</Text>
+							<Text style={{
+								fontSize: '16px',
+								color: ratingChange > 0 ? 'green' : 'red',
+								fontWeight: 'bold',
+								textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+								textAlign: 'center',
+								position: 'relative',
+							}}>
+								{ratingChange > 0 ? `+${ratingChange}` : ratingChange}
+							</Text>
+						</Box>
+					</div>
                     <div 
                         style={{ 
                             display: 'flex', 
                             flexDirection: 'column', 
                             alignItems: 'center', 
                             width: '300px',
-                            maxHeight: '150px',
                             marginLeft: '20px',
                             background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
                             borderRadius: '10px',
@@ -256,6 +300,13 @@ function Puzzles() {
                             padding: '10px',
                         }}
                     >
+                        <Text style={{
+                            fontSize: '18px',
+                            color: '#008080',
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+                            textAlign: 'center',
+                        }}>Puzzle Rating</Text>
                         <Text style={{
                             fontSize: '28px',
                             color: '#008080',
