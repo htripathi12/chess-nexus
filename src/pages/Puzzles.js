@@ -2,13 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
-import { 
-	Box,
-	Button, 
-    Text, 
-    Spinner,
-    useToast,
-} from '@chakra-ui/react';
+import { Box, Button, Text, Spinner, useToast} from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
 
@@ -120,7 +114,7 @@ function Puzzles() {
     };
 
     const handleEloRating = async (isIncorrect) => {
-        const previousRating = userRating.current; // Store previous rating
+        const previousRating = userRating.current;
         const diff = Math.abs(previousRating - rating);
         let K = 32;
     
@@ -168,7 +162,8 @@ function Puzzles() {
                     setMoveIndex(moveIndex => moveIndex + 2);
                 }, 1000);
             } else {
-                handleEloRating(false);
+				handleEloRating(false);
+				setPuzzleLoaded(false);
             }
         } else {
             showFeedback(false);
@@ -272,18 +267,20 @@ function Puzzles() {
 								fontWeight: 'bold',
 								textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
 								textAlign: 'center',
-								marginLeft: '12px',
+								marginLeft: (puzzleLoaded && ratingChange) ? '15px' : '0px',
 							}}>{userRating.current}</Text>
-							<Text style={{
-								fontSize: '16px',
-								color: ratingChange > 0 ? 'green' : 'red',
-								fontWeight: 'bold',
-								textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
-								textAlign: 'center',
-								position: 'relative',
-							}}>
-								{ratingChange > 0 ? `+${ratingChange}` : ratingChange}
-							</Text>
+							{puzzleLoaded && ratingChange !== 0 && (
+								<Text style={{
+									fontSize: '16px',
+									color: ratingChange > 0 ? 'green' : 'red',
+									fontWeight: 'bold',
+									textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+									textAlign: 'center',
+									position: 'relative',
+								}}>
+									{ratingChange > 0 ? `+${ratingChange}` : ratingChange}
+								</Text>
+							)}
 						</Box>
 					</div>
                     <div 
