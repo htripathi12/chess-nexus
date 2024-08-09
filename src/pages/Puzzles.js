@@ -11,19 +11,22 @@ function Puzzles() {
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
     const [moves, setMoves] = useState([]);
+    const [puzzleSolution, setPuzzleSolution] = useState([]);
     const [moveIndex, setMoveIndex] = useState(1);
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
     const [firstPuzzle, setFirstPuzzle] = useState(true);
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
+    const [solutionRevealed, setSolutionRevealed] = useState(false);
+    const [showRatingChange, setShowRatingChange] = useState(false);
     const [rating, setRating] = useState(0);
     const [ratingChange, setRatingChange] = useState(0);
-    const [showRatingChange, setShowRatingChange] = useState(false);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
     const userRating = useRef(0);
+    const eloLost = useRef(false);
 
     const auth = useAuth();
     const toast = useToast();
@@ -70,9 +73,12 @@ function Puzzles() {
         if (moveInProgress) return;
 
         try {
+            setSolutionRevealed(false);
+            setPuzzleSolution([]);
             setPuzzleLoaded(true);
             setShowRatingChange(false);
             setMoveInProgress(true);
+            eloLost.current = false;
             if (firstPuzzle) {
                 setLoading(true);
             }
@@ -113,6 +119,18 @@ function Puzzles() {
             setMoveInProgress(false);
             setLoading(false);
         }
+    };
+
+    const revealSolution = () => {
+        setSolutionRevealed(true);
+        setPuzzleSolution(moves);
+
+        if (!eloLost.current) {
+            handleEloRating(true);
+            eloLost.current = true;
+        }
+        
+        setPuzzleLoaded(false);
     };
 
     const handleEloRating = async (isIncorrect) => {
@@ -164,6 +182,10 @@ function Puzzles() {
                     setFen(chess.current.fen());
                     setMoveIndex(moveIndex => moveIndex + 2);
                 }, 1000);
+                if (!nextMove && !solutionRevealed) {
+                    handleEloRating(false);
+                }
+                setPuzzleLoaded(!solutionRevealed);
             } else {
                 handleEloRating(false);
                 setPuzzleLoaded(false);
@@ -181,8 +203,8 @@ function Puzzles() {
         setFen(initialFEN);
         setMoveIndex(1);
         setIncorrectMove(false);
-		setShowRatingChange(false);
-		setPuzzleLoaded(true);
+        setShowRatingChange(false);
+        setPuzzleLoaded(true);
 
         const firstMove = moves[0];
         if (firstMove) {
@@ -190,6 +212,10 @@ function Puzzles() {
                 chess.current.move(firstMove);
                 setFen(chess.current.fen());
             }, 1000);
+        }
+
+        if (solutionRevealed) {
+            setPuzzleLoaded(false);
         }
     };
 
@@ -318,6 +344,33 @@ function Puzzles() {
                             textAlign: 'center',
                         }}>{rating}</Text>
                     </div>
+                    <Button
+                        onClick={revealSolution}
+                        bg='gray.400'
+                        border="1px"
+                        color="white"
+                        _hover={{ bg: "gray.700", color: "white" }}
+                        marginTop="20px"
+                        marginLeft="20px"
+                        width="300px"
+                        isDisabled={solutionRevealed || !puzzleLoaded}
+                    >
+                        Reveal Solution
+                    </Button>
+
+                    {solutionRevealed && (
+                        <Box
+                            marginTop="20px"
+                            marginLeft="20px"
+                            width="300px"
+                            padding="10px"
+                            bg="gray.100"
+                            borderRadius="10px"
+                        >
+                            <Text fontWeight="bold" marginBottom="5px">Solution:</Text>
+                            <Text>{puzzleSolution.join(' ')}</Text>
+                        </Box>
+                    )}
                 </div>
             </div>
         </div>
