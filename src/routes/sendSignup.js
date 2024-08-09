@@ -22,12 +22,12 @@ router.post('/', (req, res) => {
             if (result.length > 0) {
                 return res.status(400).send('Email already in use');
             } else {
-                db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], (insertErr, insertResult) => {
-                    if (insertErr) {
-                        console.error('Error inserting user:', insertErr);
-                        return res.status(500).send('Error inserting values');
-                    }
-                    return res.send('Values Inserted');
+                db.query('INSERT INTO users (email, password, puzzlerating) VALUES (?, ?, ?)', [email, hash, 1800], (insertErr, insertResult) => {
+                  if (insertErr) {
+                    console.error('Error inserting user:', insertErr);
+                    return res.status(500).send('Error inserting values');
+                  }
+                  return res.send('Values Inserted');
                 });
             }
         });
