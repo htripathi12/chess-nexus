@@ -58,8 +58,8 @@ function Puzzles() {
             const response = await axios.get('http://localhost:8080/puzzles/rating', 
                 {
                     headers: {
-                        Authorization: `Bearer ${auth.getToken()}`,
-                    }
+						Authorization: `Bearer ${auth.getToken()}`,
+					}
                 }
             );
             userRating.current = response.data.rating;
@@ -84,7 +84,10 @@ function Puzzles() {
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
-                    }
+					},
+					params: {
+						userRating: userRating.current,
+					}
                 }
             );
             const newFen = response.data.fen;
@@ -114,60 +117,63 @@ function Puzzles() {
         }
     };
 
-    const handleEloRating = async () => {
-        const diff = Math.abs(userRating.current - rating);
-        let K = 32;
-
-        if (diff < 100) {
-            K = 16;
-        } else if (diff > 200) {
-            K = 40;
-        }
-
-        const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
-        const actualScore = incorrectMove ? 0 : 1;
-        
-        const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));
-
-        try {
-            await axios.post('http://localhost:8080/puzzles/updateRating', 
-                { rating: newRating }, 
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth.getToken()}`,
-                    }
-                }
-            );
-            userRating.current = newRating;
-            console.log('New user rating:', newRating);
-        } catch (error) {
-            console.error('There was an error updating the rating!', error);
-        }
-    };
+    const handleEloRating = async (isIncorrect) => {
+		const diff = Math.abs(userRating.current - rating);
+		let K = 32;
+	
+		if (diff < 100) {
+			K = 16;
+		} else if (diff > 200) {
+			K = 40;
+		}
+	
+		const expectedScore = 1 / (1 + Math.pow(10, (rating - userRating.current) / 400));
+		const actualScore = isIncorrect ? 0 : 1;
+		
+		const newRating = Math.round(userRating.current + K * (actualScore - expectedScore));
+	
+		try {
+			await axios.post('http://localhost:8080/puzzles/updateRating', 
+				{ rating: newRating }, 
+				{
+					headers: {
+						Authorization: `Bearer ${auth.getToken()}`,
+					}
+				}
+			);
+			userRating.current = newRating;
+			console.log('New user rating:', newRating);
+		} catch (error) {
+			console.error('There was an error updating the rating!', error);
+		}
+	};
+	
 
     const logMove = (sourceSquare, targetSquare) => {
-        const userMove = sourceSquare + targetSquare;
-        const expectedMove = moves[moveIndex];
-        console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
-
-        if (userMove === expectedMove) {
-            showFeedback(true);
-            const nextMove = moves[moveIndex + 1];
-            setIncorrectMove(false);
-            if (nextMove) {
-                setTimeout(() => {
-                    chess.current.move(nextMove);
-                    setFen(chess.current.fen());
-                    setMoveIndex(moveIndex => moveIndex + 2);
-                }, 1000);
-            } else {
-                handleEloRating();
-            }
-        } else {
-            showFeedback(false);
-            setIncorrectMove(true);
-        }
-    };
+		const userMove = sourceSquare + targetSquare;
+		const expectedMove = moves[moveIndex];
+		console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
+	
+		if (userMove === expectedMove) {
+			showFeedback(true);
+			const nextMove = moves[moveIndex + 1];
+			setIncorrectMove(false);
+			if (nextMove) {
+				setTimeout(() => {
+					chess.current.move(nextMove);
+					setFen(chess.current.fen());
+					setMoveIndex(moveIndex => moveIndex + 2);
+				}, 1000);
+			} else {
+				handleEloRating(false);
+			}
+		} else {
+			showFeedback(false);
+			setIncorrectMove(true);
+			handleEloRating(true);
+		}
+	};
+	
 
     const redoPuzzle = () => {
         chess.current.load(initialFEN);
@@ -175,7 +181,6 @@ function Puzzles() {
         setMoveIndex(1);
         setIncorrectMove(false);
 
-        // Make the first move after resetting
         const firstMove = moves[0];
         if (firstMove) {
             setTimeout(() => {
