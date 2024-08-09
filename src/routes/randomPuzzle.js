@@ -47,8 +47,21 @@ router.get('/rating', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    const randomIndex = Math.floor(Math.random() * puzzles.length);
-    const { FEN, Moves, GameUrl, Rating } = puzzles[randomIndex];
+    const userRating = parseInt(req.query.userRating, 10);
+    const lowerBound = userRating - 200;
+    const upperBound = userRating + 200;
+
+    const filteredPuzzles = puzzles.filter(puzzle => {
+        const puzzleRating = parseInt(puzzle.Rating, 10);
+        return puzzleRating >= lowerBound && puzzleRating <= upperBound;
+    });
+
+    if (filteredPuzzles.length === 0) {
+        return res.status(404).send({ error: 'No puzzles found within your rating range.' });
+    }
+
+    const randomIndex = Math.floor(Math.random() * filteredPuzzles.length);
+    const { FEN, Moves, GameUrl, Rating } = filteredPuzzles[randomIndex];
 
     if (FEN && Moves) {
         res.send({ fen: FEN, moves: Moves, URL: GameUrl, rating: Rating });
