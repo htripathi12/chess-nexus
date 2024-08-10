@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Axios from 'axios';
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   Input,
   Button,
   useToast,
+  Spinner, 
   Container,
   Text,
   AlertDialog,
@@ -29,39 +30,40 @@ function Account() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const [showSpinner, setShowSpinner] = useState(false);  
 
   const handleChesscomSubmit = (e) => {
     e.preventDefault();
     if (chesscomUsername.trim()) {
-        Axios.post('http://localhost:8080/account/chesscom', 
-            { chesscomUsername },
-            {
-              headers: { 'Authorization': `Bearer ${getToken()}` }
-            }
-        ).then((response) => {
-            document.cookie = `chesscomUsername=${chesscomUsername}; path=/; expires=${new Date(Date.now() + 3 * 60 * 60 * 1000).toUTCString()}`;
-            toast({
-                title: 'Connected Chess.com username!',
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            });
-        }).catch((error) => {
-            console.error(error);
-            toast({
-                title: 'Failed to connect Chess.com username',
-                status: 'error',
-                duration: 3000,
-                isClosable: true,
-            });
+      Axios.post('http://localhost:8080/account/chesscom',
+        { chesscomUsername },
+        {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        }
+      ).then((response) => {
+        document.cookie = `chesscomUsername=${chesscomUsername}; path=/; expires=${new Date(Date.now() + 3 * 60 * 60 * 1000).toUTCString()}`;
+        toast({
+          title: 'Connected Chess.com username!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
         });
+      }).catch((error) => {
+        console.error(error);
+        toast({
+          title: 'Failed to connect Chess.com username',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
     }
   };
   
   const handleLichessSubmit = (e) => {
     e.preventDefault();
-    if (lichessUsername.trim()) {      
-      Axios.post('http://localhost:8080/account/lichess', 
+    if (lichessUsername.trim()) {
+      Axios.post('http://localhost:8080/account/lichess',
         { lichessUsername },
         {
           headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -87,16 +89,26 @@ function Account() {
   };
 
   const handleDeleteAccount = () => {
-    // Implement the actual account deletion logic here
-    console.log('Deleting account...');
-    // After successful deletion, you might want to log the user out and redirect them
-    onClose();
-    toast({
-      title: 'Account deleted',
-      description: "Your account has been successfully deleted.",
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
+    setShowSpinner(true);
+    Axios.delete('http://localhost:8080/account', {
+      headers: {
+        'Authorization': `Bearer ${getToken()}`
+      }
+    }).then((response) => {
+      document.cookie = 'chesscomUsername=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+      document.cookie = 'lichessUsername=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+      document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+      window.location.href = '/';
+    }).catch((error) => {
+      console.error(error);
+      toast({
+        title: 'Failed to delete account',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }).finally(() => {
+      setShowSpinner(false);
     });
   };
 
@@ -108,6 +120,29 @@ function Account() {
       width="100%"
       p={10}
     >
+      {showSpinner && (
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            zIndex: 10
+        }}>
+            <Spinner
+                size="xl"
+                style={{ width: '100px', height: '100px', color: 'white' }}
+                speed=".35s"
+                thickness='10px'
+            />
+            <div style={{ color: 'white', fontSize: '24px' }}>Deleting Account</div>
+        </div>
+      )}
       <MotionBox
         bg="gray.50"
         p={[4, 6]}
