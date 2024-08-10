@@ -10,6 +10,13 @@ import {
   useToast,
   Container,
   Text,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 import { useAuth } from '../AuthContext';
@@ -20,11 +27,12 @@ const MotionBox = motion(Box);
 function Account() {
   const { chesscomUsername, setChesscomUsername, lichessUsername, setLichessUsername, getToken } = useAuth();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
 
   const handleChesscomSubmit = (e) => {
     e.preventDefault();
     if (chesscomUsername.trim()) {
-        console.log('Chess.com username:', chesscomUsername);
         Axios.post('http://localhost:8080/account/chesscom', 
             { chesscomUsername },
             {
@@ -52,9 +60,7 @@ function Account() {
   
   const handleLichessSubmit = (e) => {
     e.preventDefault();
-    if (lichessUsername.trim()) {
-      console.log('Lichess username:', lichessUsername);
-      
+    if (lichessUsername.trim()) {      
       Axios.post('http://localhost:8080/account/lichess', 
         { lichessUsername },
         {
@@ -78,6 +84,20 @@ function Account() {
         });
       });
     }
+  };
+
+  const handleDeleteAccount = () => {
+    // Implement the actual account deletion logic here
+    console.log('Deleting account...');
+    // After successful deletion, you might want to log the user out and redirect them
+    onClose();
+    toast({
+      title: 'Account deleted',
+      description: "Your account has been successfully deleted.",
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -160,6 +180,50 @@ function Account() {
               </Box>
             </VStack>
           </Box>
+
+          <Box display="flex" justifyContent="center" mt={10}>
+            <Button
+              colorScheme="red"
+              size="md"
+              width="30%"
+              _hover={{
+                boxShadow: '0 0 20px rgba(255, 0, 0, 0.6)',
+                backgroundColor: '#B22222',            
+              }}
+              onClick={onOpen}
+            >
+              Delete Account
+            </Button>
+          </Box>
+
+          <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+            isCentered
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  Delete Account
+                </AlertDialogHeader>
+
+                <AlertDialogBody>
+                  Are you sure? This action cannot be undone. All of your data will be permanently removed.
+                </AlertDialogBody>
+
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="red" onClick={handleDeleteAccount} ml={3}>
+                    Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
+
         </Container>
       </MotionBox>
     </Box>
