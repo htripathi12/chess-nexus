@@ -11,9 +11,10 @@ function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
+
     const [moves, setMoves] = useState([]);
     const [puzzleSolution, setPuzzleSolution] = useState([]);
-    const [moveIndex, setMoveIndex] = useState(1);
+
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -21,13 +22,16 @@ function Puzzles() {
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
     const [solutionRevealed, setSolutionRevealed] = useState(false);
     const [showRatingChange, setShowRatingChange] = useState(false);
+
     const [rating, setRating] = useState(0);
     const [ratingChange, setRatingChange] = useState(0);
+    const [moveIndex, setMoveIndex] = useState(1);
 
     const customBoardRef = useRef(null);
     const chess = useRef(new Chess());
     const userRating = useRef(0);
     const eloLost = useRef(false);
+    const puzzleCompleted = useRef(false);
 
     const auth = useAuth();
     const toast = useToast();
@@ -81,6 +85,7 @@ function Puzzles() {
             setShowRatingChange(false);
             setMoveInProgress(true);
             eloLost.current = false;
+            puzzleCompleted.current = false;
             if (firstPuzzle) {
                 setLoading(true);
             }
@@ -145,6 +150,7 @@ function Puzzles() {
     };
 
     const handleEloRating = async (isIncorrect) => {
+        if (puzzleCompleted.current) return;
         const previousRating = userRating.current;
         const diff = Math.abs(previousRating - rating);
         let K = 32;
@@ -176,6 +182,7 @@ function Puzzles() {
         } catch (error) {
             console.error('There was an error updating the rating!', error);
         }
+        puzzleCompleted.current = true;
     };
 
     const logMove = (sourceSquare, targetSquare) => {
@@ -229,7 +236,7 @@ function Puzzles() {
 
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
-            
+
             {loading && (
                 <div style={{
                     position: 'fixed',
