@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Box, Button, Text, Spinner, useToast } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
+import { motion } from 'framer-motion';
 
 function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -30,6 +31,7 @@ function Puzzles() {
 
     const auth = useAuth();
     const toast = useToast();
+    const MotionBox = motion(Box);
 
     const showFeedback = (isCorrect) => {
         toast({
@@ -227,6 +229,7 @@ function Puzzles() {
 
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
+            
             {loading && (
                 <div style={{
                     position: 'fixed',
@@ -245,10 +248,19 @@ function Puzzles() {
                     <div style={{ color: 'white', fontSize: '24px' }}>Loading Puzzles</div>
                 </div>
             )}
+
             <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
                 <BackButton />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'auto auto',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh'
+            }}>
+
                 <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
                     <CustomBoard
                         ref={customBoardRef}
@@ -259,21 +271,28 @@ function Puzzles() {
                         chessInstance={chess.current}
                         disableBoard={incorrectMove || !puzzleLoaded}
                     />
+                    
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
-                        <Button onClick={redoPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload" width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                        <Button onClick={redoPuzzle} bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)' _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'}}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
+                                width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
+                                strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
                                 <path d="M20 4v5h-5" />
                             </svg>
                         </Button>
-                        <Button onClick={getNextPuzzle} bg='teal.400' border="1px" color="white" _hover={{ bg: "teal.700", color: "white" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right-filled" width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" strokeWidth="0" fill="currentColor" />
+                        <Button onClick={getNextPuzzle} bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)' _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'}}>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-right"
+                                width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
+                                strokeLinecap="round" strokeLinejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 
+                                1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z" />
                             </svg>
                         </Button>
                     </div>
+
                 </div>
 
                 <div style={{ height: '550px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -375,17 +394,35 @@ function Puzzles() {
                     </Button>
 
                     {solutionRevealed && (
-                        <Box
+                        <MotionBox
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
                             marginTop="20px"
                             marginLeft="20px"
                             width="300px"
-                            padding="10px"
-                            bg="gray.100"
-                            borderRadius="10px"
+                            padding="15px"
+                            bg="teal.50"
+                            borderRadius="lg"
+                            boxShadow="md"
+                            border='2px solid #008080'
+                            color='#008080'
+                            background= 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'
                         >
-                            <Text fontWeight="bold" marginBottom="5px">Solution:</Text>
-                            <Text>{puzzleSolution.join(' ')}</Text>
-                        </Box>
+                            <Text 
+                                fontWeight="bold" 
+                                marginBottom="10px" 
+                                fontSize="xl" 
+                            >
+                                Solution:
+                            </Text>
+                            <Text 
+                                fontSize="lg" 
+                                letterSpacing="wide"
+                            >
+                                {puzzleSolution.join(' ')}
+                            </Text>
+                        </MotionBox>
                     )}
                 </div>
             </div>
