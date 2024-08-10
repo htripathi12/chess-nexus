@@ -37,17 +37,6 @@ function Puzzles() {
     const toast = useToast();
     const MotionBox = motion(Box);
 
-    const showFeedback = (isCorrect) => {
-        toast({
-            title: isCorrect ? "Correct!" : "Incorrect!",
-            status: isCorrect ? "success" : "error",
-            duration: 1500,
-            isClosable: true,
-            position: "top",
-            variant: "solid",
-        });
-    };
-
     useEffect(() => {
         getPuzzleRating();
     }, []);
@@ -59,6 +48,17 @@ function Puzzles() {
         };
     }, []);
 
+    const showFeedback = (isCorrect) => {
+        toast({
+            title: isCorrect ? "Correct!" : "Incorrect!",
+            status: isCorrect ? "success" : "error",
+            duration: 1500,
+            isClosable: true,
+            position: "top",
+            variant: "solid",
+        });
+    };
+
     const getPuzzleRating = async () => {
         try {
             const response = await axios.get('http://localhost:8080/puzzles/rating',
@@ -69,7 +69,6 @@ function Puzzles() {
                 }
             );
             userRating.current = response.data.rating;
-            console.log('Puzzle rating:', userRating.current);
         } catch (error) {
             console.error('There was an error!', error);
         }
@@ -151,6 +150,7 @@ function Puzzles() {
 
     const handleEloRating = async (isIncorrect) => {
         if (puzzleCompleted.current) return;
+
         const previousRating = userRating.current;
         const diff = Math.abs(previousRating - rating);
         let K = 32;
@@ -178,7 +178,6 @@ function Puzzles() {
             userRating.current = newRating;
             setRatingChange(newRating - previousRating);
             setShowRatingChange(true);
-            console.log('New user rating:', newRating);
         } catch (error) {
             console.error('There was an error updating the rating!', error);
         }
@@ -188,7 +187,6 @@ function Puzzles() {
     const logMove = (sourceSquare, targetSquare) => {
         const userMove = sourceSquare + targetSquare;
         const expectedMove = moves[moveIndex];
-        console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
 
         if (userMove === expectedMove) {
             showFeedback(true);
@@ -203,7 +201,6 @@ function Puzzles() {
                 if (!nextMove && !solutionRevealed) {
                     handleEloRating(false);
                 }
-                setPuzzleLoaded(!solutionRevealed);
             } else {
                 handleEloRating(false);
                 setPuzzleLoaded(false);
@@ -251,7 +248,12 @@ function Puzzles() {
                     alignItems: 'center',
                     zIndex: 10
                 }}>
-                    <Spinner size="xl" style={{ width: '100px', height: '100px', color: 'white' }} speed=".35s" thickness='10px' />
+                    <Spinner
+                        size="xl"
+                        style={{ width: '100px', height: '100px', color: 'white' }}
+                        speed=".35s"
+                        thickness='10px'
+                    />
                     <div style={{ color: 'white', fontSize: '24px' }}>Loading Puzzles</div>
                 </div>
             )}
@@ -268,7 +270,13 @@ function Puzzles() {
                 height: '100vh'
             }}>
 
-                <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+                <div style={{
+                    margin: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    position: 'relative'
+                }}>
                     <CustomBoard
                         ref={customBoardRef}
                         fen={fen}
@@ -278,9 +286,18 @@ function Puzzles() {
                         chessInstance={chess.current}
                         disableBoard={incorrectMove || !puzzleLoaded}
                     />
-                    
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '3', padding: '10px' }}>
-                        <Button onClick={redoPuzzle} bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)' _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'}}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        marginTop: '3',
+                        padding: '10px'
+                    }}>
+                        <Button
+                            onClick={redoPuzzle}
+                            bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
+                            _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
                                 width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
                                 strokeLinecap="round" strokeLinejoin="round">
@@ -289,7 +306,11 @@ function Puzzles() {
                                 <path d="M20 4v5h-5" />
                             </svg>
                         </Button>
-                        <Button onClick={getNextPuzzle} bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)' _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'}}>
+                        <Button
+                            onClick={getNextPuzzle}
+                            bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
+                            _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-right"
                                 width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
                                 strokeLinecap="round" strokeLinejoin="round">
@@ -299,10 +320,14 @@ function Puzzles() {
                             </svg>
                         </Button>
                     </div>
-
                 </div>
 
-                <div style={{ height: '550px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <div style={{
+                    height: '550px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                }}>
                     <div
                         style={{
                             display: 'flex',
@@ -325,7 +350,13 @@ function Puzzles() {
                             textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                             textAlign: 'center',
                         }}>Your Rating</Text>
-                        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" width="100%">
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            width="100%"
+                        >
                             <Text style={{
                                 fontSize: '28px',
                                 color: '#008080',
