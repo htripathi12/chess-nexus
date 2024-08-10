@@ -258,9 +258,14 @@ function Puzzles() {
                 </div>
             )}
 
-            <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+            <motion.div 
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.0 }}
+                style={{ position: 'absolute', top: '10px', left: '10px'}}
+            >
                 <BackButton />
-            </div>
+            </motion.div>   
 
             <div style={{
                 display: 'grid',
@@ -270,13 +275,18 @@ function Puzzles() {
                 height: '100vh'
             }}>
 
-                <div style={{
-                    margin: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    position: 'relative'
-                }}>
+                <motion.div
+                    style={{
+                        margin: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                    }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.0 }}
+                >
                     <CustomBoard
                         ref={customBoardRef}
                         fen={fen}
@@ -320,14 +330,19 @@ function Puzzles() {
                             </svg>
                         </Button>
                     </div>
-                </div>
+                </motion.div>
 
-                <div style={{
-                    height: '550px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start'
-                }}>
+                <motion.div
+                    style={{
+                        height: '550px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start'
+                    }}
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.0 }}
+                >
                     <div
                         style={{
                             display: 'flex',
@@ -462,7 +477,7 @@ function Puzzles() {
                             </Text>
                         </MotionBox>
                     )}
-                </div>
+                </motion.div>
             </div>
         </div>
     );

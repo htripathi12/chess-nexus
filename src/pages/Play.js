@@ -14,18 +14,21 @@ function Play() {
     // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [orientation, setOrientation] = useState('white');
+
     const [fenError, setFenError] = useState(false);
     const [pgnLoaded, setPgnLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
     const [usingSideline, setUsingSideline] = useState(false);
+
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
     const [history, setHistory] = useState([]);
     const [sidelineHistory, setSidelineHistory] = useState([]);
+
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
@@ -71,9 +74,6 @@ function Play() {
                 setCCPGN(combinedChesscompgn);
                 setLichessPGN(combinedLichesspgn);
                 setGamesLoaded(true);
-    
-                // console.log('Chess.com PGNs:', combinedChesscompgn);
-                // console.log('Lichess PGNs:', combinedLichesspgn);
             } catch (error) {
                 console.error('Error fetching PGNs:', error);
             }
@@ -343,7 +343,13 @@ function Play() {
             >
                 <BackButton />
             </motion.div>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', marginLeft: '50px' }}>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                marginLeft: '50px'
+            }}>
                 <motion.div 
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -366,7 +372,12 @@ function Play() {
                         orientation={orientation}
                         customArrows={bestMove}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        marginTop: '10px'
+                    }}>
                         <Button onClick={handleUndo}>
                             Previous Move
                         </Button>
@@ -541,9 +552,22 @@ function Play() {
                         marginBottom: '15px',
                     }}
                 >
-                    <Tabs orientation="horizontal" variant="enclosed" width="100%" height="10%" display="flex"
-                        justifyContent="center" onChange={(index) => setSelectedTab(index)}>
-                        <TabList borderColor="#1E8C87" borderBottom="none" display="flex" justifyContent="center" width="100%">
+                    <Tabs
+                        orientation="horizontal"
+                        variant="enclosed"
+                        width="100%"
+                        height="10%"
+                        display="flex"
+                        justifyContent="center"
+                        onChange={(index) => setSelectedTab(index)}
+                    >
+                        <TabList
+                            borderColor="#1E8C87"
+                            borderBottom="none"
+                            display="flex"
+                            justifyContent="center"
+                            width="100%"
+                        >
                             <Tab 
                                 justifyContent="center" 
                                 borderRadius="10px" 
