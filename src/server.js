@@ -10,6 +10,7 @@ const sendSignup = require('./routes/sendSignup');
 const analyze = require('./routes/analyze');
 const chesscom = require('./routes/sendChessCom');
 const lichess = require('./routes/sendLichess');
+const deleteAccount = require('./routes/deleteAccount');
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.use("/puzzles", verifyToken, puzzleRouter);
 app.use("/play", analyze);
 app.use("/account/chesscom", verifyToken, chesscom);
 app.use("/account/lichess", verifyToken, lichess);
+app.use("/account", verifyToken, deleteAccount);
 
 
 app.get('*', (req, res) => {
