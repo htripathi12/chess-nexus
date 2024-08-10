@@ -123,11 +123,11 @@ function Puzzles() {
 
     const revealSolution = () => {
         setSolutionRevealed(true);
-        moves.shift();
+        let tempArr = moves.slice(1);
 
         let chessTwo = new Chess(fen);
         try {
-            moves.forEach(move => { 
+            tempArr.forEach(move => {
                 chessTwo.move(move);
             });
         } catch (e) {
@@ -140,8 +140,6 @@ function Puzzles() {
             handleEloRating(true);
             eloLost.current = true;
         }
-        
-        setPuzzleLoaded(false);
     };
 
     const handleEloRating = async (isIncorrect) => {
@@ -216,17 +214,14 @@ function Puzzles() {
         setIncorrectMove(false);
         setShowRatingChange(false);
         setPuzzleLoaded(true);
-
+        setSolutionRevealed(false);
+    
         const firstMove = moves[0];
         if (firstMove) {
             setTimeout(() => {
                 chess.current.move(firstMove);
                 setFen(chess.current.fen());
             }, 1000);
-        }
-
-        if (solutionRevealed) {
-            setPuzzleLoaded(false);
         }
     };
 
@@ -360,16 +355,21 @@ function Puzzles() {
 
                     <Button
                         onClick={revealSolution}
-                        border="1px"
-                        marginTop="20px"
-                        marginLeft="20px"
-                        width="300px"
                         isDisabled={solutionRevealed || !puzzleLoaded}
-                        fontSize= '18px'
-                        color= '#008080'
-                        fontWeight= 'bold'
-                        textShadow= '1px 1px 2px rgba(0, 0, 0, 0.1)'
-                        textAlign= 'center'
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            width: '300px',
+                            marginLeft: '20px',
+                            marginTop: '20px',
+                            color: '#008080',
+                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                            borderRadius: '10px',
+                            border: '2px solid #008080',
+                            boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+                            padding: '10px',
+                        }}
                     >
                         Reveal Solution
                     </Button>
