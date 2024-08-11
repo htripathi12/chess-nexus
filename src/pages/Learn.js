@@ -1,12 +1,13 @@
 import React from 'react';
 import StudyBlock from '../components/StudyBlock.js';
 import BackButton from '../components/BackButton.js';
+import { Box, Text, Center } from '@chakra-ui/react';
 
 function Learn() {
     return (
         <div>
             <BackButton />
-            <div style={{display: 'flex', flexDirection: 'row', marginTop: '30px', justifyContent: 'space-evenly'}}>            
+            {/* <div style={{display: 'flex', flexDirection: 'row', marginTop: '30px', justifyContent: 'space-evenly'}}>            
                 <StudyBlock to="/caro-kann" imageUrl="/assets/Caro-Kann.png" title="Caro-Kann Defense">
                     Dive into the intriguing world of the Caro-Kann Defense, where Black meets 1. e4 with the confident
                     stride of 1...c6. This defense boasts a robust structure that allows for swift piece development, all
@@ -27,7 +28,26 @@ function Learn() {
                     possibilities. Despite conceding the center early on, the Sicilian Defense rewards boldness and 
                     resourcefulness, leading to thrilling battles for the center.
                 </StudyBlock>
-            </div>
+            </div> */}
+            <Center height="80vh">
+                <Box 
+                    p={100} 
+                    bg="teal.50"
+                    border="1px solid"
+                    borderColor="teal.700"
+                    borderRadius="xl" 
+                    boxShadow="lg" 
+                    textAlign="center"
+                >
+                    <Text fontSize="2xl" fontWeight="bold" color="teal.600">
+                        This portion of the website is still under development.
+                    </Text>
+                    <Text fontSize="lg" color="teal.500" mt={4}>
+                        Check back soon for exciting new features!
+                    </Text>
+                </Box>
+            </Center>
+
         </div>
     );
 }
