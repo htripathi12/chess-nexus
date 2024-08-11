@@ -1,5 +1,5 @@
 import React from 'react';
-import StudyBlock from '../components/StudyBlock.js';
+// import StudyBlock from '../components/StudyBlock.js';
 import BackButton from '../components/BackButton.js';
 import { Box, Text, Center } from '@chakra-ui/react';
 

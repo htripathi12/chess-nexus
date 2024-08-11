@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box, Center, Container, Flex, Button, ChakraProvider, 
+  Box, Center, Container, Flex, Button, ChakraProvider, Heading, Stack
 } from '@chakra-ui/react';
 import { Link as RouterLink, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RoutesAndNavbar from './components/RoutesAndNavbar.js';
@@ -16,7 +16,6 @@ import About from './pages/About.js'
 import Contact from './pages/Contact.js';
 import Account from './pages/Account.js';
 
-
 function App() {
   return (
     <AuthProvider>
@@ -28,16 +27,24 @@ function App() {
               <Routes>
                 <Route path="/" element={
                   <Center>
-                    <Flex direction="column">
-                      <Button as={RouterLink} to="/play" mb="2">
-                        Play
-                      </Button>
-                      <Button as={RouterLink} to="/puzzles" mb="2">
-                        Puzzles
-                      </Button>
-                      <Button as={RouterLink} to="/learn">
-                        Learn
-                      </Button>
+                    <Flex direction="column" align="center" mt="10">
+                      <Stack spacing={6} textAlign="center" align="center" maxW="lg">
+                        <Heading as="h1" size="2xl" color="white">
+                          Welcome to Chess Nexus
+                        </Heading>
+                      </Stack>
+
+                      <Stack spacing={4} direction="row" align="center">
+                        <Button as={RouterLink} to="/play" size="lg" colorScheme="teal">
+                          Play
+                        </Button>
+                        <Button as={RouterLink} to="/puzzles" size="lg" colorScheme="teal">
+                          Puzzles
+                        </Button>
+                        <Button as={RouterLink} to="/learn" size="lg" colorScheme="teal">
+                          Learn
+                        </Button>
+                      </Stack>
                     </Flex>
                   </Center>
                 }/>
@@ -48,7 +55,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="account" element={<Account />} />
+                <Route path="/account" element={<Account />} />
               </Routes>
             </Container>
           </Box>
