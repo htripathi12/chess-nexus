@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { Chessboard } from 'react-chessboard';
 
 // Function to determine the color of a square
@@ -13,6 +13,18 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
 
+
+    // Function to highlight the king in check
+    const highlightKingInCheck = useCallback((styles = {}) => {
+        const kingPosition = chessInstance.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chessInstance.turn());
+        if (kingPosition) {
+            styles[kingPosition.square] = {
+                backgroundImage: 'radial-gradient(circle at center, rgba(255, 0, 0, 1) 25%, rgba(255, 0, 0, 0) 80%)'
+            };
+        }
+        setSquareStyles(styles);
+    }, [chessInstance]);
+
     useEffect(() => {
         if (fen && fen !== chessInstance.fen()) {
             chessInstance.load(fen);
@@ -24,7 +36,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
                 highlightKingInCheck();
             }
         }
-    }, [fen, chessInstance]);
+    }, [fen, chessInstance, highlightKingInCheck]);
 
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
@@ -136,17 +148,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         }
 
         setSquareStyles(newSquareStyles);
-    };
-
-    // Function to highlight the king in check
-    const highlightKingInCheck = (styles = {}) => {
-        const kingPosition = chessInstance.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chessInstance.turn());
-        if (kingPosition) {
-            styles[kingPosition.square] = {
-                backgroundImage: 'radial-gradient(circle at center, rgba(255, 0, 0, 1) 25%, rgba(255, 0, 0, 0) 80%)'
-            };
-        }
-        setSquareStyles(styles);
     };
 
     // Function to handle game over conditions
