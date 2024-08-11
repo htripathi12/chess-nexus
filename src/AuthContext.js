@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = (token, lichessUser, chesscomUser) => {
         const expirationDate = new Date();
-        expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
+        expirationDate.setTime(expirationDate.getTime() + 6 * 60 * 60 * 1000); // 6 hours from now
         
         document.cookie = `token=${token}; path=/; expires=${expirationDate.toUTCString()}`;
         document.cookie = `lichessUsername=${lichessUser || ''}; path=/; expires=${expirationDate.toUTCString()}`;
