@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
@@ -37,9 +37,22 @@ function Puzzles() {
     const toast = useToast();
     const MotionBox = motion(Box);
 
+    const getPuzzleRating = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/puzzles/rating', {
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+            userRating.current = response.data.rating;
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    }, [auth]);
+
     useEffect(() => {
         getPuzzleRating();
-    }, []);
+    }, [getPuzzleRating]);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -58,21 +71,6 @@ function Puzzles() {
             variant: "solid",
         });
     };
-
-    const getPuzzleRating = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/puzzles/rating',
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth.getToken()}`,
-                    }
-                }
-            );
-            userRating.current = response.data.rating;
-        } catch (error) {
-            console.error('There was an error!', error);
-        }
-    }
 
     const getNextPuzzle = async () => {
         if (moveInProgress) return;

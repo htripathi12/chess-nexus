@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
-import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList, Image } from '@chakra-ui/react';
+import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
 
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -42,6 +42,38 @@ function Play() {
 
     const auth = useAuth();
 
+    const getChessComPGNs = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/account/chesscom', {
+                params: {
+                    chesscomUsername: auth.getChesscomUsername(),
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+            return response.data.pgnArray;
+        } catch (error) {
+            console.error(error);
+        }
+    }, [auth]);
+    
+    const getLichessGames = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/account/lichess', {
+                params: {
+                    lichessUsername: auth.getLichessUsername(),
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.getToken()}`,
+                }
+            });
+            return response.data.pgnArray;
+        } catch (error) {
+            console.error(error);
+        }
+    }, [auth]);
+
     // Fetch PGNs on component mount
     useEffect(() => { 
         const fetchPGNs = async () => {
@@ -80,7 +112,30 @@ function Play() {
         };
     
         fetchPGNs();
-    }, []);
+    }, [getChessComPGNs, getLichessGames]);
+
+
+    const convertSAN = React.useCallback((data) => {
+        let index = data.indexOf(' pv ');
+        let line = data.substring(index + 4).split(' ');
+        let chessTwo = new Chess(fen);
+        try {
+            line.forEach(move => { 
+                chessTwo.move(move);
+            });
+        } catch (e) {
+            console.error('Error loading PGN:', e);
+        }
+        setBestLine(chessTwo.history().join(' '));
+    }, [fen, setBestLine]);
+
+    const runStockfish = React.useCallback((position) => {
+        if (stockfishWorkerRef.current) {
+            setLoading(true);
+            stockfishWorkerRef.current.postMessage(`position fen ${position}`);
+            stockfishWorkerRef.current.postMessage(`go depth ${depth}`);
+        }
+    }, [depth, setLoading, stockfishWorkerRef]);
 
     // Initialize and handle Stockfish messages
     useEffect(() => {
@@ -105,13 +160,13 @@ function Play() {
                 stockfishWorkerRef.current.terminate();
             }
         };
-    }, [fen]);
+    }, [fen, convertSAN, runStockfish]);
 
     // Run Stockfish on fen or depth change
     useEffect(() => {
         setBestMove([[]]);
         runStockfish(fen);
-    }, [fen, depth]);
+    }, [fen, depth, runStockfish]);
 
     // Prevent page scroll
     useEffect(() => {
@@ -161,40 +216,6 @@ function Play() {
         return whiteUser;
     };
 
-    // Get PGNs from Chess.com
-    const getChessComPGNs = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/account/chesscom', {
-                params: {
-                    chesscomUsername: auth.getChesscomUsername(),
-                },
-                headers: {
-                    Authorization: `Bearer ${auth.getToken()}`,
-                }
-            });
-            return response.data.pgnArray;
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    // Get Lichess games
-    const getLichessGames = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/account/lichess', {
-                params: {
-                    lichessUsername: auth.getLichessUsername(),
-                },
-                headers: {
-                    Authorization: `Bearer ${auth.getToken()}`,
-                }
-            });
-            return response.data.pgnArray;
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     // Handle best move from Stockfish
     const handleBestMove = (data) => {
         const bestMoveFull = data.split(' ')[1];
@@ -202,20 +223,6 @@ function Play() {
         setBestMove(bestMoveSquares);
         setLoading(false);
     };
-
-    const convertSAN = (data) => {
-        let index = data.indexOf(' pv ');
-        let line = data.substring(index + 4).split(' ');
-        let chessTwo = new Chess(fen);
-        try {
-            line.forEach(move => { 
-                chessTwo.move(move);
-            });
-        } catch (e) {
-            console.error('Error loading PGN:', e);
-        }
-        setBestLine(chessTwo.history().join(' '));
-    }
 
     // Handle centipawn evaluation from Stockfish
     const handleCentipawnEvaluation = (data) => {
@@ -230,15 +237,6 @@ function Play() {
         const mateInMoves = data.split(' ')[9];
         setEvaluation(mateInMoves);
         setIsMate(true);
-    };
-
-    // Run Stockfish analysis
-    const runStockfish = (position) => {
-        if (stockfishWorkerRef.current) {
-            setLoading(true);
-            stockfishWorkerRef.current.postMessage(`position fen ${position}`);
-            stockfishWorkerRef.current.postMessage(`go depth ${depth}`);
-        }
     };
 
     // Handle FEN change
@@ -290,7 +288,6 @@ function Play() {
             setHistory(history);
         }
     };
-
 
     // Handle PGN submission
     const handleSubmit = async () => {
