@@ -1,5 +1,5 @@
 const express = require('express');
-import serverless from "serverless-http";
+const serverless = require('serverless-http');
 const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql');
