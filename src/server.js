@@ -1,4 +1,5 @@
 const express = require('express');
+import serverless from "serverless-http";
 const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql');
@@ -95,3 +96,6 @@ server.on('error', (err) => {
         console.error('Server error:', err);
     }
 });
+
+
+module.exports.handler = serverless(app);
