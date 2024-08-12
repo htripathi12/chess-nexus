@@ -319,7 +319,7 @@ function Puzzles() {
                             bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
                             _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-right"
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right"
                                 width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
                                 strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
