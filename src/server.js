@@ -53,11 +53,11 @@ const verifyToken = (req, res, next) => {
 };
 
 const db = mysql.createConnection({
-    user: 'root',
+    user: 'avnadmin',
     host: 'localhost',
-    password: 'yashT2002!!',
+    password: process.env.DB_PASSWORD,
     database: 'ChessDB',
-    port: '3306'
+    port: '26419'
 });
 
 // Middleware to attach db connection to req object
