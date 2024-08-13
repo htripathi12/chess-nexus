@@ -83,7 +83,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, "0.0.0.0",  () => {
     console.log(`Server listening on port ${PORT}`);
 });
 
