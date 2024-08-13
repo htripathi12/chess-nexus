@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
@@ -21,7 +22,6 @@ console.log('PORT:', PORT);
 let puzzlesLoaded = false;
 let loadPuzzlesPromise = loadPuzzles().then(() => {
     puzzlesLoaded = true;
-    console.log('Puzzles loaded successfully.');
 }).catch(err => {
     console.error('Failed to load puzzles:', err);
 });
@@ -79,7 +79,6 @@ app.use("/account/chesscom", verifyToken, chesscom);
 app.use("/account/lichess", verifyToken, lichess);
 app.use("/account", verifyToken, deleteAccount);
 
-
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
@@ -96,6 +95,5 @@ server.on('error', (err) => {
         console.error('Server error:', err);
     }
 });
-
 
 module.exports.handler = serverless(app);
