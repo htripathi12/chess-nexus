@@ -54,7 +54,7 @@ const verifyToken = (req, res, next) => {
 
 const db = mysql.createConnection({
     user: 'avnadmin',
-    host: 'localhost',
+    host: 'chess-nexus-chess-nexus.l.aivencloud.com',
     password: process.env.DB_PASSWORD,
     database: 'ChessDB',
     port: '26419'
