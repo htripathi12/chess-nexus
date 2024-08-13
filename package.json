@@ -22,6 +22,8 @@
     "railway": "^2.0.17",
     "react": "^18.2.0",
     "react-chessboard": "^4.6.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.21.3",
