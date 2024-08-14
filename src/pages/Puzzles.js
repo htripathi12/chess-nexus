@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
-import { Box, Button, Text, Spinner, useToast } from '@chakra-ui/react';
+import { Box, Button, Text, Tooltip, Spinner, useToast } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
@@ -52,8 +52,10 @@ function Puzzles() {
     }, [auth]);
 
     useEffect(() => {
-        getPuzzleRating();
-    }, [getPuzzleRating]);
+        if (auth.isLoggedIn) {
+            getPuzzleRating();
+        }
+    }, [getPuzzleRating, auth.isLoggedIn]);
 
     useEffect(() => {
         setLoggedIn(auth.isLoggedIn);
@@ -318,33 +320,38 @@ function Puzzles() {
                         marginTop: '3',
                         padding: '10px'
                     }}>
-                        <Button
-                            onClick={redoPuzzle}
-                            bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
-                            _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
-                                width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
-                                strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
-                                <path d="M20 4v5h-5" />
-                            </svg>
-                        </Button>
-                        <Button
-                            onClick={getNextPuzzle}
-                            bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
-                            _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
-                            isDisabled={!loggedIn}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right"
-                                width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
-                                strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 
-                                1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z" />
-                            </svg>
-                        </Button>
+                        <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
+                            <Button
+                                onClick={redoPuzzle}
+                                bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
+                                _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                                isDisabled={!loggedIn}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
+                                    width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
+                                    strokeLinecap="round" strokeLinejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
+                                    <path d="M20 4v5h-5" />
+                                </svg>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
+                            <Button
+                                onClick={getNextPuzzle}
+                                bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
+                                _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                                isDisabled={!loggedIn}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right"
+                                    width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
+                                    strokeLinecap="round" strokeLinejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 
+                                    1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z" />
+                                </svg>
+                            </Button>
+                        </Tooltip>
                     </div>
                 </motion.div>
 
@@ -441,26 +448,28 @@ function Puzzles() {
                         }}>{rating}</Text>
                     </div>
 
-                    <Button
-                        onClick={revealSolution}
-                        isDisabled={solutionRevealed || !puzzleLoaded}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            width: '300px',
-                            marginLeft: '20px',
-                            marginTop: '20px',
-                            color: '#008080',
-                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
-                            borderRadius: '10px',
-                            border: '2px solid #008080',
-                            boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
-                            padding: '10px',
-                        }}
-                    >
-                        Reveal Solution
-                    </Button>
+                    <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
+                        <Button
+                            onClick={revealSolution}
+                            isDisabled={solutionRevealed || !puzzleLoaded || !loggedIn}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                width: '300px',
+                                marginLeft: '20px',
+                                marginTop: '20px',
+                                color: '#008080',
+                                background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                                borderRadius: '10px',
+                                border: '2px solid #008080',
+                                boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+                                padding: '10px',
+                            }}
+                        >
+                            Reveal Solution
+                        </Button>
+                    </Tooltip>
 
                     {solutionRevealed && (
                         <MotionBox
