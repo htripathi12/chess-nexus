@@ -107,12 +107,14 @@ function Play() {
                 setLichessPGN(combinedLichesspgn);
                 setGamesLoaded(true);
             } catch (error) {
-                console.error('Error fetching PGNs:', error);
+                // Suppress error
             }
         };
     
-        fetchPGNs();
-    }, [getChessComPGNs, getLichessGames]);
+        if (auth.isLoggedIn) {
+            fetchPGNs();
+        }
+    }, [getChessComPGNs, getLichessGames, auth]);
 
 
     const convertSAN = React.useCallback((data) => {
@@ -468,6 +470,7 @@ function Play() {
                     <Select
                         placeholder="Select Depth"
                         value={depth}
+                        id="depth"
                         onChange={(e) => setDepth(Number(e.target.value))}
                         width="300px"
                         margin="125px 0 0 0"
@@ -485,6 +488,7 @@ function Play() {
                     </Select>
                     <Input
                         value={fen}
+                        id="fen"
                         onChange={handleFenChange}
                         width="300px"
                         height="50px"
@@ -509,6 +513,7 @@ function Play() {
                     />
                     <Textarea
                         ref={pgnRef}
+                        id="pgn"
                         width="300px"
                         height="300px"
                         fontSize="16px"
@@ -609,7 +614,7 @@ function Play() {
                             padding: '0 5px',
                         }}
                     >
-                        {!gamesLoaded ? (
+                        {auth.isLoggedIn && !gamesLoaded ? (
                             <div style={{ 
                                 display: 'flex', 
                                 alignItems: 'center',
