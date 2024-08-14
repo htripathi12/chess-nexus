@@ -22,6 +22,7 @@ function Puzzles() {
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
     const [solutionRevealed, setSolutionRevealed] = useState(false);
     const [showRatingChange, setShowRatingChange] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const [rating, setRating] = useState(0);
     const [ratingChange, setRatingChange] = useState(0);
@@ -55,6 +56,10 @@ function Puzzles() {
     }, [getPuzzleRating]);
 
     useEffect(() => {
+        setLoggedIn(auth.isLoggedIn);
+    }, [auth]);
+
+    useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
             document.body.style.overflow = 'auto';
@@ -74,6 +79,18 @@ function Puzzles() {
 
     const getNextPuzzle = async () => {
         if (moveInProgress) return;
+
+        if (!auth.isLoggedIn) {
+            toast({
+                title: "Login Required",
+                description: "Please log in to access puzzles.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+                position: "top",
+            });
+            return;
+        }
 
         try {
             setSolutionRevealed(false);
@@ -318,6 +335,7 @@ function Puzzles() {
                             onClick={getNextPuzzle}
                             bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
                             _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                            isDisabled={!loggedIn}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right"
                                 width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#008080" fill="#008080"
