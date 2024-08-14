@@ -39,7 +39,7 @@ router.get('/rating', (req, res) => {
         }
 
         if (result.length === 0) {
-            return res.send({ rating: 0 });
+            return res.status(404).send({ error: 'No account found for the given user ID' });
         }
 
         res.send({ rating: result[0].puzzlerating });
