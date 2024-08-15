@@ -52,9 +52,9 @@ export default function LandingPage() {
           
           />
       <Stack spacing={4} direction="column" align="center" pl="150px">
-        <GradientButton to="/play">Play</GradientButton>
-        <GradientButton to="/puzzles">Puzzles</GradientButton>
-        <GradientButton to="/learn">Learn</GradientButton>
+        <GradientButton to="/play">Play ♟️</GradientButton>
+        <GradientButton to="/puzzles">Puzzles 🧩</GradientButton>
+        <GradientButton to="/learn">Learn 📚</GradientButton>
       </Stack>
     </Flex>
   );
