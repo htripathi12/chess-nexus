@@ -33,13 +33,11 @@
     "ws": "^8.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node src/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node src/server.js",
-    "start:all": "npm-run-all --parallel start server",
-    "build:all": "npm-run-all build server"
+    "start:all": "npm run build && npm run start"
   },
   "eslintConfig": {
     "extends": [

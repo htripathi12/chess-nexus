@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const serverless = require('serverless-http');
 const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql');
@@ -66,7 +65,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../build')));
 app.use(express.json());
 app.use(cors());
 app.use(waitForPuzzlesMiddleware);
@@ -80,7 +79,7 @@ app.use("/account/lichess", verifyToken, lichess);
 app.use("/account", verifyToken, deleteAccount);
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
 const server = app.listen(PORT, "0.0.0.0",  () => {
@@ -95,5 +94,3 @@ server.on('error', (err) => {
         console.error('Server error:', err);
     }
 });
-
-module.exports.handler = serverless(app);
