@@ -7,8 +7,8 @@ import { Box, Container, VStack, Button, FormControl, FormLabel,
 import BackButton from '../components/BackButton';
 import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
-import dotenv from 'dotenv';
-dotenv.config();
+
+
 
 const MotionBox = motion(Box);
 
@@ -22,7 +22,7 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        Axios.post(process.env.API_URL + "/login", {
+        Axios.post(process.env.REACT_APP_API_URL + "/login", {
             email: email,
             password: password,
         }).then((response) => {

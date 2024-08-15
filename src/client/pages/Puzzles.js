@@ -6,8 +6,8 @@ import { Box, Button, Text, Tooltip, Spinner, useToast } from '@chakra-ui/react'
 import { Chess } from 'chess.js';
 import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
-import dotenv from 'dotenv';
-dotenv.config();
+
+
 
 function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -42,7 +42,7 @@ function Puzzles() {
 
     const getPuzzleRating = useCallback(async () => {
         try {
-            const response = await axios.get(process.env.API_URL + '/puzzles/rating', {
+            const response = await axios.get(process.env.REACT_APP_API_URL + '/puzzles/rating', {
                 headers: {
                     Authorization: `Bearer ${auth.getToken()}`,
                 }
@@ -109,7 +109,7 @@ function Puzzles() {
             }
             setFirstPuzzle(false);
             setIncorrectMove(false);
-            const response = await axios.get(process.env.API_URL + '/puzzles',
+            const response = await axios.get(process.env.REACT_APP_API_URL + '/puzzles',
                 {
                     headers: {
                         Authorization: `Bearer ${auth.getToken()}`,
@@ -186,7 +186,7 @@ function Puzzles() {
         const newRating = Math.round(previousRating + K * (actualScore - expectedScore));
 
         try {
-            await axios.post(process.env.API_URL + '/puzzles/updateRating',
+            await axios.post(process.env.REACT_APP_API_URL + '/puzzles/updateRating',
                 { rating: newRating },
                 {
                     headers: {

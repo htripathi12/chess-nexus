@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react';
 import BackButton from '../components/BackButton';
 import { motion } from 'framer-motion';
-import dotenv from 'dotenv';
-dotenv.config();
+
+
 
 const MotionBox = motion(Box);
 
@@ -21,7 +21,7 @@ function Signup() {
 
     const handleSignup = (e) => {
         e.preventDefault();
-        Axios.post(process.env.API_URL + '/signup', {
+        Axios.post(process.env.REACT_APP_API_URL + '/signup', {
             email: email,
             password: password,
         }).then((response) => {

@@ -19,8 +19,8 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import dotenv from 'dotenv';
-dotenv.config();
+
+
 
 import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
@@ -37,7 +37,7 @@ function Account() {
   const handleChesscomSubmit = (e) => {
     e.preventDefault();
     if (chesscomUsername.trim()) {
-      Axios.post(process.env.API_URL + '/account/chesscom',
+      Axios.post(process.env.REACT_APP_API_URL + '/account/chesscom',
         { chesscomUsername },
         {
           headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -65,7 +65,7 @@ function Account() {
   const handleLichessSubmit = (e) => {
     e.preventDefault();
     if (lichessUsername.trim()) {
-      Axios.post(process.env.API_URL + '/account/lichess',
+      Axios.post(process.env.REACT_APP_API_URL + '/account/lichess',
         { lichessUsername },
         {
           headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -92,7 +92,7 @@ function Account() {
 
   const handleDeleteAccount = () => {
     setShowSpinner(true);
-    Axios.delete(process.env.API_URL + "/account", {
+    Axios.delete(process.env.REACT_APP_API_URL + "/account", {
       headers: {
         'Authorization': `Bearer ${getToken()}`
       }
