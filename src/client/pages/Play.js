@@ -9,6 +9,8 @@ import BackButton from '../components/BackButton';
 
 import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
+import dotenv from 'dotenv';
+dotenv.config();
 
 function Play() {
     // State variables
@@ -44,7 +46,7 @@ function Play() {
 
     const getChessComPGNs = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:8080/account/chesscom', {
+            const response = await axios.get(process.env.API_URL + '/account/chesscom', {
                 params: {
                     chesscomUsername: auth.getChesscomUsername(),
                 },
@@ -60,7 +62,7 @@ function Play() {
     
     const getLichessGames = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:8080/account/lichess', {
+            const response = await axios.get(process.env.API_URL + '/account/lichess', {
                 params: {
                     lichessUsername: auth.getLichessUsername(),
                 },
@@ -295,7 +297,7 @@ function Play() {
     const handleSubmit = async () => {
         try {
             let pgn = pgnRef.current.value;
-            const response = await axios.post('http://localhost:8080/play', { pgn });
+            const response = await axios.post(process.env.API_URL + '/play', { pgn });
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
                 setPgnLoaded(true);

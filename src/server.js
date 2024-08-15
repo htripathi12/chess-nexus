@@ -52,11 +52,11 @@ const verifyToken = (req, res, next) => {
 };
 
 const db = mysql.createConnection({
-    user: 'avnadmin',
-    host: 'chess-nexus-chess-nexus.l.aivencloud.com',
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,
-    database: 'ChessDB',
-    port: '26419'
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
 });
 
 // Middleware to attach db connection to req object

@@ -7,6 +7,8 @@ import { Box, Container, VStack, Button, FormControl, FormLabel,
 import BackButton from '../components/BackButton';
 import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const MotionBox = motion(Box);
 
@@ -20,7 +22,7 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        Axios.post('https://chess-nexus-production.up.railway.app/login', {
+        Axios.post(process.env.API_URL + "/login", {
             email: email,
             password: password,
         }).then((response) => {
