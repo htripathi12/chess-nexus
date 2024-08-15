@@ -7,16 +7,21 @@ let puzzles = [];
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        fs.createReadStream('src/server/lichess_db_puzzle.csv')
+        const filePath = 'src/server/lichess_db_puzzle.csv';
+        console.log(`Attempting to read file at: ${filePath}`);
+
+        fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (data) => {
                 puzzles.push(data);
+                console.log(`Loaded puzzle: ${JSON.stringify(data)}`);
             })
             .on('end', () => {
                 console.log(`Loaded ${puzzles.length} puzzles`);
                 resolve();
             })
             .on('error', (err) => {
+                console.error(`Error reading file: ${err.message}`);
                 reject(err);
             });
     });

@@ -55,6 +55,7 @@ function Puzzles() {
 
     useEffect(() => {
         if (auth.isLoggedIn) {
+            console.log('Getting puzzle rating');
             getPuzzleRating();
         }
     }, [getPuzzleRating, auth.isLoggedIn]);
@@ -140,6 +141,7 @@ function Puzzles() {
                 setMoveInProgress(false);
             }, 1000);
         } catch (error) {
+            console.log(auth.getToken());
             console.error('There was an error!', error);
             setMoveInProgress(false);
             setLoading(false);
