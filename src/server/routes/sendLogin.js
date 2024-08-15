@@ -45,7 +45,8 @@ router.post("/", (req, res) => {
             );
 
             console.log(user.lichess, user.chesscom);
-            res.json({ message: 'Login successful', token, lichessUsername: user.lichess, chesscomUsername: user.chesscom });        });
+            res.json({ message: 'Login successful', token, lichessUsername: user.lichess, chesscomUsername: user.chesscom });
+        });
     });
 });
 
