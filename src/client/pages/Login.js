@@ -20,7 +20,7 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:8080/login', {
+        Axios.post('https://chess-nexus-production.up.railway.app/login', {
             email: email,
             password: password,
         }).then((response) => {
