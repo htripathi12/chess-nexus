@@ -1,19 +1,19 @@
 import React from 'react';
 import { Box, Container, ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RoutesAndNavbar from './components/RoutesAndNavbar.js';
-import { AuthProvider } from './AuthContext.js';
+import RoutesAndNavbar from './client/components/RoutesAndNavbar';
+import { AuthProvider } from './client/AuthContext';
 
 // Import your existing components
-import Play from './pages/Play.js';
-import Puzzles from './pages/Puzzles';
-import Learn from './pages/Learn.js';
-import Login from './pages/Login.js';
-import Signup from './pages/Signup.js';
-import About from './pages/About.js';
-import Contact from './pages/Contact.js';
-import Account from './pages/Account.js';
-import LandingPage from './pages/LandingPage.js';
+import Play from './client/pages/Play';
+import Puzzles from './client/pages/Puzzles';
+import Learn from './client/pages/Learn';
+import Login from './client/pages/Login';
+import Signup from './client/pages/Signup';
+import About from './client/pages/About';
+import Contact from './client/pages/Contact';
+import Account from './client/pages/Account';
+import LandingPage from './client/pages/LandingPage';
 
 function App() {
   return (
