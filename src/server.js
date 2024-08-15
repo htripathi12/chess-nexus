@@ -5,13 +5,13 @@ const path = require('path');
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 
-const { router: puzzleRouter, loadPuzzles } = require('./routes/randomPuzzle');
-const sendLogin = require('./routes/sendLogin');
-const sendSignup = require('./routes/sendSignup');
-const analyze = require('./routes/analyze');
-const chesscom = require('./routes/sendChessCom');
-const lichess = require('./routes/sendLichess');
-const deleteAccount = require('./routes/deleteAccount');
+const { router: puzzleRouter, loadPuzzles } = require('./server/routes/randomPuzzle');
+const sendLogin = require('./server/routes/sendLogin');
+const sendSignup = require('./server/routes/sendSignup');
+const analyze = require('./server/routes/analyze');
+const chesscom = require('./server/routes/sendChessCom');
+const lichess = require('./server/routes/sendLichess');
+const deleteAccount = require('./server/routes/deleteAccount');
 
 const app = express();
 
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, '/build')));
+app.use(express.static(path.join(__dirname, '../build')));
 app.use(express.json());
 app.use(cors());
 app.use(waitForPuzzlesMiddleware);
@@ -79,7 +79,7 @@ app.use("/account/lichess", verifyToken, lichess);
 app.use("/account", verifyToken, deleteAccount);
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
 const server = app.listen(PORT, "0.0.0.0",  () => {
