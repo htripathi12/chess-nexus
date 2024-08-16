@@ -7,7 +7,7 @@ let puzzles = [];
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = '/data/lichess_db_puzzle.csv';
+        const filePath = '/var/lib/containers/railwayapp/bind-mounts/38c42442-8e53-407f-9ffa-7f81d023dab5/vol_3jbkfs21tjrvmz9s/lichess_db_puzzle.csv';
         console.log(`Attempting to read file at: ${filePath}`);
 
         fs.createReadStream(filePath)
@@ -23,6 +23,11 @@ const loadPuzzles = async () => {
             .on('error', (err) => {
                 console.error(`Error reading file: ${err.message}`);
                 reject(err);
+            });
+        
+            console.log("Contents of /data:");
+            fs.readdirSync('/data').forEach(file => {
+              console.log(file);
             });
     });
 };
