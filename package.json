@@ -38,8 +38,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node src/server/server.js",
-    "start:all": "npm-run-all --parallel start server",
-    "postinstall": "git lfs install && git lfs pull"
+    "start:all": "npm-run-all --parallel start server"
   },
   "eslintConfig": {
     "extends": [
