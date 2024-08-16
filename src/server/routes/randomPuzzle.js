@@ -27,7 +27,7 @@ const loadPuzzles = async () => {
         
                 
             console.log("Contents of volume root:");
-                fs.readdirSync('/var/lib/containers/railwayapp/bind-mounts/7ab0b5f3-3419-493a-8371-40368766ccb7/vol_tisy3j64ye8f8gnm/lost+found').forEach(file => {
+                fs.readdirSync('/var/lib/containers/railwayapp/bind-mounts').forEach(file => {
                 console.log(file);
             });
     });
