@@ -7,7 +7,7 @@ let puzzles = [];
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = '/var/lib/containers/railwayapp/bind-mounts/ade50776-eba9-440a-9964-899ac540fbff/vol_tisy3j64ye8f8gnm/lichess_db_puzzle.csv';
+        const filePath = '/var/lib/containers/railwayapp/bind-mounts/ade50776-eba9-440a-9964-899ac540fbff/vol_tisy3j64ye8f8gnm';
         console.log(`Attempting to read file at: ${filePath}`);
 
         fs.createReadStream(filePath)
