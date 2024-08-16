@@ -27,7 +27,7 @@ const loadPuzzles = async () => {
         
                 
             console.log("Contents of volume root:");
-                fs.readdirSync('/data/appdata').forEach(file => {
+                fs.readdirSync('/data/appdata/filebrowser').forEach(file => {
                 console.log(file);
             });
     });
