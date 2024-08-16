@@ -25,9 +25,9 @@ const loadPuzzles = async () => {
                 reject(err);
             });
         
-            console.log("Contents of /data:");
-            fs.readdirSync('/data').forEach(file => {
-              console.log(file);
+            console.log("Contents of volume root:");
+                fs.readdirSync('/var/lib/containers/railwayapp/bind-mounts/38c42442-8e53-407f-9ffa-7f81d023dab5/vol_3jbkfs21tjrvmz9s').forEach(file => {
+                console.log(file);
             });
     });
 };
