@@ -30,6 +30,7 @@ const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
         const filePath = '/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm/lichess_db_puzzle.csv';
         console.log(`Attempting to read file at: ${filePath}`);
+        displayAllFiles('/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm');
 
         fs.createReadStream(filePath)
             .pipe(csv())
@@ -45,7 +46,6 @@ const loadPuzzles = async () => {
                 console.error(`Error reading file: ${err.message}`);
                 reject(err);
             });
-        displayAllFiles('/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm');
     });
 };
 
