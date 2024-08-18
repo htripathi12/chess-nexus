@@ -45,7 +45,7 @@ const loadPuzzles = async () => {
                 console.error(`Error reading file: ${err.message}`);
                 reject(err);
             });
-        displayAllFiles('/var/lib');
+        displayAllFiles('/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm');
     });
 };
 
