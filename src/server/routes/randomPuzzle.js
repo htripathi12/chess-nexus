@@ -1,9 +1,30 @@
 const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const csv = require('csv-parser');
 const router = express.Router();
 
 let puzzles = [];
+
+const displayAllFiles = (dirPath) => {
+    fs.readdir(dirPath, { withFileTypes: true }, (err, files) => {
+        if (err) {
+            console.error(`Error reading directory: ${err.message}`);
+            return;
+        }
+
+        files.forEach((file) => {
+            const fullPath = path.join(dirPath, file.name);
+            if (file.isDirectory()) {
+                // Recursively read the directory
+                displayAllFiles(fullPath);
+            } else {
+                console.log(`File: ${fullPath}`);
+            }
+        });
+    });
+};
+
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
@@ -24,6 +45,7 @@ const loadPuzzles = async () => {
                 console.error(`Error reading file: ${err.message}`);
                 reject(err);
             });
+        displayAllFiles('/var/lib');
     });
 };
 
