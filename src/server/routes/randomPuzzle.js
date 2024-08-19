@@ -8,13 +8,12 @@ let puzzles = [];
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = 'src/server/lichess_db_puzzles.csv';
+        const filePath = 'src/server/lichess_db_puzzle.csv';
 
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (data) => {
                 puzzles.push(data);
-                console.log(`Loaded puzzle: ${JSON.stringify(data)}`);
             })
             .on('end', () => {
                 console.log(`Loaded ${puzzles.length} puzzles`);
