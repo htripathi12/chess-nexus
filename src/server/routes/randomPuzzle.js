@@ -6,9 +6,37 @@ const router = express.Router();
 
 let puzzles = [];
 
+// Function to list all files in the directory
+const listFiles = (directory) => {
+    fs.readdir(directory, (err, files) => {
+        if (err) {
+            return console.error(`Unable to scan directory: ${err}`);
+        }
+
+        // Listing all files
+        files.forEach((file) => {
+            const filePath = path.join(directory, file);
+            fs.stat(filePath, (err, stats) => {
+                if (err) {
+                    console.error(`Error fetching stats for file: ${file}`);
+                } else {
+                    if (stats.isFile()) {
+                        console.log(`File: ${file}`);
+                    } else if (stats.isDirectory()) {
+                        console.log(`Directory: ${file}`);
+                        // Recursively list files in subdirectory
+                        listFiles(filePath);
+                    }
+                }
+            });
+        });
+    });
+};
+
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
         const filePath = '/srv/filebrowser/lichess_db_puzzle.csv';
+        listFiles('/srv');
 
         fs.createReadStream(filePath)
             .pipe(csv())
