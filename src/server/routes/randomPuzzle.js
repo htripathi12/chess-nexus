@@ -35,8 +35,8 @@ const listFiles = (directory) => {
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = 'app/data/lichess_db_puzzle.csv';
-        listFiles('/app/data');
+        const filePath = '/app/data/lichess_db_puzzle.csv';
+        listFiles('/var/lib/containers/railwayapp/bind-mounts/253f80b5-9f7f-408e-b2e6-cd05359ede22/vol_99gp4iiian96zihf');
 
         fs.createReadStream(filePath)
             .pipe(csv())
