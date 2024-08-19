@@ -6,31 +6,9 @@ const router = express.Router();
 
 let puzzles = [];
 
-const displayAllFiles = (dirPath) => {
-    fs.readdir(dirPath, { withFileTypes: true }, (err, files) => {
-        if (err) {
-            console.error(`Error reading directory: ${err.message}`);
-            return;
-        }
-
-        files.forEach((file) => {
-            const fullPath = path.join(dirPath, file.name);
-            if (file.isDirectory()) {
-                // Recursively read the directory
-                displayAllFiles(fullPath);
-            } else {
-                console.log(`File: ${fullPath}`);
-            }
-        });
-    });
-};
-
-
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = '/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm/lichess_db_puzzle.csv';
-        console.log(`Attempting to read file at: ${filePath}`);
-        displayAllFiles('/var/lib/containers/railwayapp/bind-mounts/275ec1c2-c78d-4ed3-b84e-e706de96e6b6/vol_tisy3j64ye8f8gnm');
+        const dirPath = 'src/server/lichess_db_puzzles.csv';
 
         fs.createReadStream(filePath)
             .pipe(csv())
