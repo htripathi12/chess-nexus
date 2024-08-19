@@ -8,7 +8,7 @@ let puzzles = [];
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const dirPath = 'src/server/lichess_db_puzzles.csv';
+        const filePath = 'src/server/lichess_db_puzzles.csv';
 
         fs.createReadStream(filePath)
             .pipe(csv())
