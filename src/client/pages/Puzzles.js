@@ -85,18 +85,6 @@ function Puzzles() {
     const getNextPuzzle = async () => {
         if (moveInProgress) return;
 
-        if (!auth.isLoggedIn) {
-            toast({
-                title: "Login Required",
-                description: "Please log in to access puzzles.",
-                status: "warning",
-                duration: 3000,
-                isClosable: true,
-                position: "top",
-            });
-            return;
-        }
-
         try {
             setSolutionRevealed(false);
             setPuzzleSolution([]);
@@ -141,7 +129,6 @@ function Puzzles() {
                 setMoveInProgress(false);
             }, 1000);
         } catch (error) {
-            console.log(auth.getToken());
             console.error('There was an error!', error);
             setMoveInProgress(false);
             setLoading(false);

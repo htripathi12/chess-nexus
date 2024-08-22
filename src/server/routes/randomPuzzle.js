@@ -1,28 +1,46 @@
 const fs = require('fs');
-const path = require('path');
 const express = require('express');
-const csv = require('csv-parser');
 const router = express.Router();
+const mysql = require('mysql2');
+const url = require('url');
 
 let puzzles = [];
 
+// Parse the MYSQL_PUBLIC_URL environment variable
+const dbUrl = process.env.MYSQL_PUBLIC_URL;
+const parsedUrl = new url.URL(dbUrl);
+
+const db = mysql.createConnection({
+    user: parsedUrl.username,
+    host: parsedUrl.hostname,
+    password: parsedUrl.password,
+    database: parsedUrl.pathname.substring(1),
+    port: parsedUrl.port,
+});
+
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+    }
+    console.log('Connected to the database');
+});
+
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const filePath = 'src/server/lichess_db_puzzle.csv';
+        const query = 'SELECT * FROM lichess_db_puzzle';
 
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (data) => {
-                puzzles.push(data);
-            })
-            .on('end', () => {
-                console.log(`Loaded ${puzzles.length} puzzles`);
-                resolve();
-            })
-            .on('error', (err) => {
-                console.error(`Error reading file: ${err.message}`);
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error('Error executing query:', err);
                 reject(err);
-            });
+                return;
+            }
+
+            puzzles = results;
+            console.log(`Loaded ${puzzles.length} puzzles`);
+            resolve();
+        });
     });
 };
 
