@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Flex, Stack, Box, Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-
+import axios from 'axios';
 import CustomBoard from '../components/CustomBoard';
 
 const GradientButton = ({ to, children }) => (
@@ -38,11 +38,26 @@ const GradientButton = ({ to, children }) => (
 );
 
 export default function LandingPage() {
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
+  }, []);
+  
+    // Fetch daily puzzle on component mount
+    useEffect(() => {
+      const fetchPuzzle = async () => {
+        try {
+          const response = await axios.get(process.env.PUBLIC_URL + '/puzzle');
+          const puzzle = response.data.puzzle;
+          console.log(puzzle);
+        } catch (error) {
+          console.error(error);
+        }
+    };
+    fetchPuzzle();
   }, []);
 
   return (
