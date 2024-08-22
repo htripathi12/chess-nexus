@@ -5,13 +5,13 @@ const path = require('path');
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 
-const { router: puzzleRouter, loadPuzzles } = require('./server/routes/randomPuzzle');
-const sendLogin = require('./server/routes/sendLogin');
-const sendSignup = require('./server/routes/sendSignup');
-const analyze = require('./server/routes/analyze');
-const chesscom = require('./server/routes/sendChessCom');
-const lichess = require('./server/routes/sendLichess');
-const deleteAccount = require('./server/routes/deleteAccount');
+const { router: puzzleRouter, loadPuzzles } = require('./server/randomPuzzle');
+const sendLogin = require('./server/sendLogin');
+const sendSignup = require('./server/sendSignup');
+const analyze = require('./server/analyze');
+const chesscom = require('./server/sendChessCom');
+const lichess = require('./server/sendLichess');
+const deleteAccount = require('./server/deleteAccount');
 
 const app = express();
 
