@@ -314,8 +314,7 @@ function Puzzles() {
                         <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
                             <Button
                                 onClick={redoPuzzle}
-                                bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
-                                _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                                bg='white'
                                 isDisabled={!loggedIn}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
@@ -330,8 +329,7 @@ function Puzzles() {
                         <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
                             <Button
                                 onClick={getNextPuzzle}
-                                bg='linear-gradient(145deg, #e0f7fa, #b2ebf2)'
-                                _hover={{ bg: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' }}
+                                bg='white'
                                 isDisabled={!loggedIn}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-big-right"
@@ -364,7 +362,7 @@ function Puzzles() {
                             alignItems: 'center',
                             width: '300px',
                             marginLeft: '20px',
-                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                            background: 'white',
                             borderRadius: '10px',
                             border: '2px solid #008080',
                             boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
@@ -416,7 +414,7 @@ function Puzzles() {
                             alignItems: 'center',
                             width: '300px',
                             marginLeft: '20px',
-                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                            background: 'white',
                             borderRadius: '10px',
                             border: '2px solid #008080',
                             boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
@@ -451,7 +449,7 @@ function Puzzles() {
                                 marginLeft: '20px',
                                 marginTop: '20px',
                                 color: '#008080',
-                                background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)',
+                                background: 'white',
                                 borderRadius: '10px',
                                 border: '2px solid #008080',
                                 boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',

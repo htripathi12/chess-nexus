@@ -380,7 +380,10 @@ function Play() {
                         marginTop: '10px'
                     }}>
                         <Button onClick={handleUndo}>
-                            Previous Move
+                            <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px"
+                                fill="#008080">
+                                <path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z" />
+                            </svg>
                         </Button>
                         {pgnLoaded && (
                             <Button onClick={() => {handleRedo()}}>
@@ -389,7 +392,7 @@ function Play() {
                         )}
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical"
-                                width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#000000" fill="none"
+                                width="32" height="32" viewBox="0 0 24 24" strokeWidth="1.8" stroke="#008080" fill="none"
                                 strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M3 8l4 -4l4 4" />
@@ -450,7 +453,7 @@ function Play() {
                                     width: '100%', 
                                     textAlign: 'center',
                                     marginBottom: '10px',
-                                    color: '#2C7A7B' 
+                                    color: 'black' 
                                 }}
                             >
                                 Best Line
@@ -536,7 +539,18 @@ function Play() {
                             },
                         }}
                     />
-                    <Button onClick={handleSubmit} style={{ marginTop: '10px', width: '300px' }}>Submit</Button>
+                    <Button onClick={handleSubmit} style={{ marginTop: '10px', width: '75px' }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                            fill="#008080">
+                            <path d="M170-228q-38-45-61-99T80-440h82q6 43 22 82.5t42 73.5l-56 
+                            56ZM80-520q8-59 30-113t60-99l56 56q-26 34-42 73.5T162-520H80ZM438-82q-59-6-112.5-28.5T226-170l56-58q35
+                            26 74 43t82 23v80ZM284-732l-58-58q47-37 101-59.5T440-878v80q-43 6-82.5 23T284-732ZM518-82v-80q44-6
+                            83.5-22.5T676-228l58 58q-47 38-101.5 60T518-82Zm160-650q-35-26-75-43t-83-23v-80q59 6 113.5
+                            28.5T734-790l-56 58Zm112 504-56-56q26-34 42-73.5t22-82.5h82q-8 59-30 113t-60
+                            99Zm8-292q-6-43-22-82.5T734-676l56-56q38 45 61 99t29 113h-82ZM441-280v-247L337-423l-56-57
+                            200-200 200 200-57 56-103-103v247h-80Z" />
+                        </svg>
+                    </Button>
                 </motion.div>
                 <motion.div 
                     initial={{ opacity: 0, x: 20 }}
