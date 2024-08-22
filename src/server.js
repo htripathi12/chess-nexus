@@ -12,6 +12,7 @@ const analyze = require('./server/analyze');
 const chesscom = require('./server/sendChessCom');
 const lichess = require('./server/sendLichess');
 const deleteAccount = require('./server/deleteAccount');
+const dailyPuzzle = require('./server/dailyPuzzle');
 
 const app = express();
 
@@ -77,6 +78,7 @@ app.use("/play", analyze);
 app.use("/account/chesscom", verifyToken, chesscom);
 app.use("/account/lichess", verifyToken, lichess);
 app.use("/account", verifyToken, deleteAccount);
+app.use("/puzzle", dailyPuzzle);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));

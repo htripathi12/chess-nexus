@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
-import { Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
+import { Box, Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
 
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -375,21 +375,27 @@ function Play() {
                     />
                     <div style={{
                         display: 'flex',
-                        justifyContent: 'space-between',
                         width: '100%',
-                        marginTop: '10px'
+                        marginTop: '10px',
+                        justifyContent: 'space-between',
                     }}>
-                        <Button onClick={handleUndo}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px"
-                                fill="#008080">
-                                <path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z" />
-                            </svg>
-                        </Button>
-                        {pgnLoaded && (
-                            <Button onClick={() => {handleRedo()}}>
-                                Next Move
+                        <Box>
+                            <Button onClick={handleUndo} mr={2}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px"
+                                    fill="#008080">
+                                    <path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z" />
+                                </svg>
                             </Button>
-                        )}
+                            {pgnLoaded && (
+                                <Button onClick={() => {handleRedo()}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                                        fill="#008080">
+                                        <path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 
+                                        90 136-90-136-90v180Z" />
+                                    </svg>
+                                </Button>
+                            )}
+                        </Box>
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical"
                                 width="32" height="32" viewBox="0 0 24 24" strokeWidth="1.8" stroke="#008080" fill="none"
