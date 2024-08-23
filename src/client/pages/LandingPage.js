@@ -39,9 +39,7 @@ const GradientButton = ({ to, children }) => (
 );
 
 export default function LandingPage() {
-  const [fen, setFen] = useState(
-    localStorage.getItem('lastPuzzleFEN') || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-  );
+  const [fen, setFen] = useState(null);
   const chess = useRef(new Chess());
 
   useEffect(() => {
@@ -54,26 +52,32 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchPuzzle = async () => {
       try {
-        if (!localStorage.getItem('lastPuzzleFEN')) {
-          const response = await axios.get('http://localhost:8080/puzzle');
-          console.log(response.data.puzzle.body.fen);
-          chess.current.load(response.data.puzzle.body.fen);
-          const currentFEN = chess.current.fen();
-          setFen(currentFEN);
-          localStorage.setItem('lastPuzzleFEN', currentFEN);
-        } else {
-          chess.current.load(fen);
-        }
+        const response = await axios.get('http://localhost:8080/puzzle');
+        console.log(response.data.puzzle.body.fen);
+        chess.current.load(response.data.puzzle.body.fen);
+        const currentFEN = chess.current.fen();
+        setFen(currentFEN);
+        localStorage.setItem('lastPuzzleFEN', currentFEN);
+        localStorage.setItem('lastPuzzleFetchDate', new Date().toISOString());
       } catch (error) {
         console.error(error);
       }
     };
+
     fetchPuzzle();
-  }, [fen]);
+
+    const intervalId = setInterval(fetchPuzzle, 86400000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <Flex align="center" mt="10" width="100%" justifyContent="center">
-      {fen && <CustomBoard fen={fen} chessInstance={chess.current} />}
+      {fen ? (
+        <CustomBoard key={fen} fen={fen} chessInstance={chess.current} setFen={setFen} />
+      ) : (
+        <Text>Loading puzzle...</Text>
+      )}
       <Stack spacing={4} direction="column" align="center" pl="150px">
         <GradientButton to="/play">Play ♟️</GradientButton>
         <GradientButton to="/puzzles">Puzzles 🧩</GradientButton>
