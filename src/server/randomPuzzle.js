@@ -1,4 +1,3 @@
-const fs = require('fs');
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
@@ -27,6 +26,7 @@ db.connect((err) => {
     console.log('Connected to the database');
 });
 
+// Loads 3000 puzzles from the database
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM lichess_db_puzzle where Rating BETWEEN ? AND ? LIMIT 3000', [puzzlerating - 200, puzzlerating + 200], (err, results) => {
@@ -51,6 +51,7 @@ router.use(async (req, res, next) => {
     next();
 });
 
+// Route to get the user's puzzle rating
 router.get('/rating', (req, res) => {
     const userId = req.userId;
     req.db.query('SELECT puzzlerating FROM users WHERE id = ?', [userId], (err, result) => {
@@ -67,6 +68,7 @@ router.get('/rating', (req, res) => {
     });
 });
 
+// Route to get a random puzzle within the user's rating range
 router.get('/', (req, res) => {
     const userRating = parseInt(req.query.userRating, 10);
     const lowerBound = userRating - 200;
@@ -91,6 +93,7 @@ router.get('/', (req, res) => {
     }
 });
 
+// Route to update the user's puzzle rating
 router.post('/updateRating', (req, res) => {
     const userId = req.userId;
     const { rating } = req.body;
