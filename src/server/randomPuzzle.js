@@ -5,6 +5,7 @@ const mysql = require('mysql2');
 const url = require('url');
 
 let puzzles = [];
+let puzzlerating = 1800;
 
 // Parse the MYSQL_PUBLIC_URL environment variable
 const dbUrl = process.env.MYSQL_PUBLIC_URL;
@@ -28,9 +29,7 @@ db.connect((err) => {
 
 const loadPuzzles = async () => {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM lichess_db_puzzle';
-
-        db.query(query, (err, results) => {
+        db.query('SELECT * FROM lichess_db_puzzle where Rating BETWEEN ? AND ? LIMIT 3000', [puzzlerating - 200, puzzlerating + 200], (err, results) => {
             if (err) {
                 console.error('Error executing query:', err);
                 reject(err);
