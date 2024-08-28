@@ -52,7 +52,7 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchPuzzle = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/puzzle');
+        const response = await axios.get(process.env.PUBLIC_URL + '/puzzle');
         console.log(response.data.puzzle.body.fen);
         chess.current.load(response.data.puzzle.body.fen);
         const currentFEN = chess.current.fen();
