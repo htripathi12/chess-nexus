@@ -34,7 +34,7 @@ function Play() {
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
-    const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+    const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
 
     // Refs
     const customBoardRef = useRef(null);
