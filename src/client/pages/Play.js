@@ -34,6 +34,7 @@ function Play() {
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
+    const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
 
     // Refs
     const customBoardRef = useRef(null);
@@ -277,6 +278,7 @@ function Play() {
         }
     };
 
+    // TODO: FIX REDO
     const handleRedo = () => {
         if (usingSideline) {
             moveIndex.current += 1;
@@ -583,7 +585,11 @@ function Play() {
                         height="10%"
                         display="flex"
                         justifyContent="center"
-                        onChange={(index) => setSelectedTab(index)}
+                        onChange={(index) => {
+                            setSelectedTab(index);
+                            setSelectedButtonIndex(null);
+                        }
+                        }
                     >
                         <TabList
                             borderColor="#1E8C87"
@@ -647,64 +653,77 @@ function Play() {
                                 <Spinner boxSize="4rem" color="teal.500" />
                             </div>
                         ) : (
-                            <>
+                            <div style={{ paddingTop: '10px' }}>
                                 {(selectedTab === 0) && ccPGN.map((pgn, index) => (
-                                    <Button 
-                                        key={index} 
-                                        width="100%" 
-                                        p={9} 
-                                        mb={2} 
-                                        borderRadius="10px"
-                                        backgroundColor="#1E8C87"
-                                        color="white"
-                                        fontSize={14}
-                                        _hover={{
-                                            backgroundColor: "#17706B",
-                                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                        }}
-                                        onClick={() => { handleGameListClick(pgn) }}
-                                        style={{
-                                            overflow: 'hidden',
-                                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                            border: "1px solid #17706B",
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                            <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
-                                            <span style={{ padding: '3px 0' }}>vs</span>
-                                            <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
-                                        </div>
-                                    </Button>
-                                ))}
-                                {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
-                                    <Button 
-                                        key={index} 
-                                        width="100%" 
-                                        mb={2} 
-                                        p={9}
-                                        borderRadius="10px"
-                                        backgroundColor="#1E8C87"
-                                        color="white"
-                                        fontSize={14}
-                                        _hover={{
-                                            backgroundColor: "#17706B",
-                                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                        }}
-                                        onClick={() => { handleGameListClick(pgn) }}
-                                        style={{
-                                            overflow: 'hidden',
-                                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                            border: "1px solid #17706B",
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                            <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
-                                            <span style={{ padding: '3px 0' }}>vs</span>
-                                            <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
-                                        </div>
-                                    </Button>
-                                ))}
-                            </>
+                                <Button 
+                                    key={index} 
+                                    width="100%" 
+                                    p={9} 
+                                    mb={2} 
+                                    borderRadius="10px"
+                                    backgroundColor="#1E8C87"
+                                    color="white"
+                                    fontSize={14}
+                                    _hover={{
+                                        backgroundColor: "#17706B",
+                                    }}
+                                    onClick={() => {
+                                        handleGameListClick(pgn);
+                                        setSelectedButtonIndex(index);
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                        border: "1px solid #17706B",
+                                        ...(selectedButtonIndex === index && {
+                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
+                                            borderRadius: "10px",
+                                        }),
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
+                                        <span style={{ padding: '3px 0' }}>vs</span>
+                                        <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
+                                    </div>
+                                </Button>
+                            ))}
+                            {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
+                                <Button 
+                                    key={index} 
+                                    width="100%" 
+                                    mb={2} 
+                                    p={9}
+                                    borderRadius="10px"
+                                    backgroundColor="#1E8C87"
+                                    color="white"
+                                    fontSize={14}
+                                    _hover={{
+                                        backgroundColor: "#17706B",
+                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    }}
+                                    onClick={() => {
+                                        handleGameListClick(pgn);
+                                        setSelectedButtonIndex(index);
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                        border: "1px solid #17706B",
+                                        ...(selectedButtonIndex === index && {
+                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
+                                            borderRadius: "10px",
+                                        }),
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
+                                        <span style={{ padding: '3px 0' }}>vs</span>
+                                        <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
+                                    </div>
+                                </Button>
+                            ))}
+                            </div>
                         )}
                     </motion.div>
                 </motion.div>
