@@ -28,7 +28,6 @@ function Play() {
     const [ccPGN, setCCPGN] = useState([]);
     const [lichessPGN, setLichessPGN] = useState([]);
     const [history, setHistory] = useState([]);
-    const [sidelineHistory, setSidelineHistory] = useState([]);
 
     const [depth, setDepth] = useState(19);
     const [evaluation, setEvaluation] = useState(0);
@@ -192,7 +191,8 @@ function Play() {
         const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
         const endIndexBlack = pgn.indexOf('"', startIndexBlack);
         const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
-        
+    
+
         if (whiteUser === auth.getChesscomUsername()) {
             return blackUser;
         }
@@ -258,41 +258,20 @@ function Play() {
 
     // Undo the last move
     const handleUndo = () => {
-        if (usingSideline) {
-            if (sidelineHistory.length > 0) {
-                chessInstance.current.undo();
-                setFen(chessInstance.current.fen());
-                setSidelineHistory(sidelineHistory.slice(0, -1));
-            } else {
-                setUsingSideline(false);
-                setHistory(history);
-                moveIndex.current = history.length - 1;
-            }
+        if (history.length > 0) {
+            chessInstance.current.undo();
+            setFen(chessInstance.current.fen());
+            setHistory(history.slice(0, -1));
+            moveIndex.current = history.length - 2;
         } else {
-            if (history.length > 0) {
-                chessInstance.current.undo();
-                setFen(chessInstance.current.fen());
-                setHistory(history.slice(0, -1));
-            }
+            console.log("No moves to undo");
         }
     };
 
-    // TODO: FIX REDO
     const handleRedo = () => {
-        if (usingSideline) {
-            moveIndex.current += 1;
-            const move = sidelineHistory[moveIndex.current];
-            chessInstance.current.move(move);
-            setFen(chessInstance.current.fen());
-            setSidelineHistory(sidelineHistory);
-        } else {
-            moveIndex.current += 1;
-            const move = history[moveIndex.current];
-            chessInstance.current.move(move);
-            setFen(chessInstance.current.fen());
-            setHistory(history);
-        }
+
     };
+    
 
     // Handle PGN submission
     const handleSubmit = async () => {
@@ -326,7 +305,6 @@ function Play() {
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
             setHistory(chessInstance.current.history({ verbose: true }));
-            setSidelineHistory([]);
             setUsingSideline(false);
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
