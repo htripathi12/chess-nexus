@@ -21,7 +21,7 @@ function Play() {
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
-    const [usingSideline, setUsingSideline] = useState(false);
+    // const [usingSideline, setUsingSideline] = useState(false);
 
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
@@ -305,7 +305,7 @@ function Play() {
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
             setHistory(chessInstance.current.history({ verbose: true }));
-            setUsingSideline(false);
+            // setUsingSideline(false);
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);

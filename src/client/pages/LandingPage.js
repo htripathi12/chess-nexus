@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Flex, Stack, Box, Text } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { Flex, Stack, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import CustomBoard from '../components/CustomBoard';
 import SolidButton from '../components/SolidButton';
