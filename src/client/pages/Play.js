@@ -11,7 +11,6 @@ import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
 
 
-
 function Play() {
     // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
