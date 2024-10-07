@@ -76,9 +76,9 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
             setFen(chessInstance.fen());
 
             // Check for game over conditions
-            if (chessInstance.isGameOver()) {
-                handleGameOver();
-            }
+            // if (chessInstance.isGameOver()) {
+            //     handleGameOver();
+            // }
             return true;
         } catch (error) {
             chessInstance.load(previousFen); // Revert to previous state on error
@@ -150,20 +150,20 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, setWinLoss, onMove, 
         setSquareStyles(newSquareStyles);
     };
 
-    // Function to handle game over conditions
-    const handleGameOver = () => {
-        if (chessInstance.isCheckmate()) {
-            setWinLoss('Checkmate');
-        } else if (chessInstance.isDraw()) {
-            setWinLoss('Draw');
-        } else if (chessInstance.isStalemate()) {
-            setWinLoss('Stalemate');
-        } else if (chessInstance.isThreefoldRepetition()) {
-            setWinLoss('Threefold Repetition');
-        } else if (chessInstance.isInsufficientMaterial()) {
-            setWinLoss('Insufficient Material');
-        }
-    };
+    // // Function to handle game over conditions
+    // const handleGameOver = () => {
+    //     if (chessInstance.isCheckmate()) {
+    //         setWinLoss('Checkmate');
+    //     } else if (chessInstance.isDraw()) {
+    //         setWinLoss('Draw');
+    //     } else if (chessInstance.isStalemate()) {
+    //         setWinLoss('Stalemate');
+    //     } else if (chessInstance.isThreefoldRepetition()) {
+    //         setWinLoss('Threefold Repetition');
+    //     } else if (chessInstance.isInsufficientMaterial()) {
+    //         setWinLoss('Insufficient Material');
+    //     }
+    // };
 
     // Expose undoMove function to parent component
     useImperativeHandle(ref, () => ({
