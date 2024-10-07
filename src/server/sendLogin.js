@@ -41,7 +41,7 @@ router.post("/", (req, res) => {
             const token = jwt.sign(
                 { userId: user.id, email: user.email },
                 process.env.JWT_SECRET,
-                { expiresIn: '3h' }
+                { expiresIn: '6h' }
             );
 
             console.log(user.lichess, user.chesscom);
