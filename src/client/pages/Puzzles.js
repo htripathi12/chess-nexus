@@ -8,7 +8,6 @@ import { useAuth } from '../AuthContext';
 import { motion } from 'framer-motion';
 
 
-
 function Puzzles() {
     const [initialFEN, setInitialFEN] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -49,13 +48,12 @@ function Puzzles() {
             });
             userRating.current = response.data.rating;
         } catch (error) {
-            console.error('There was an error!', error);
+            console.error(error);
         }
     }, [auth]);
 
     useEffect(() => {
         if (auth.isLoggedIn) {
-            console.log('Getting puzzle rating');
             getPuzzleRating();
         }
     }, [getPuzzleRating, auth.isLoggedIn]);
@@ -136,20 +134,19 @@ function Puzzles() {
     };
 
     const revealSolution = () => {
-        setSolutionRevealed(true);
-        let tempArr = moves.slice(1);
-
-        let chessTwo = new Chess(fen);
+        setSolutionRevealed(true);    
+        const chessTwo = new Chess(initialFEN);
         try {
-            tempArr.forEach(move => {
+            moves.forEach(move => {
                 chessTwo.move(move);
             });
         } catch (e) {
             console.error('Error loading PGN:', e);
         }
-        chessTwo.history().shift();
-        setPuzzleSolution(chessTwo.history());
-
+    
+        let tempArr = chessTwo.history().slice(moveIndex);    
+        setPuzzleSolution(tempArr);
+    
         if (!eloLost.current) {
             handleEloRating(true);
             eloLost.current = true;
