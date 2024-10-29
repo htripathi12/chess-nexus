@@ -318,6 +318,11 @@ function Play() {
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
             setHistory(chessInstance.current.history({ verbose: true }));
+            if (selectedTab === 0) {
+                setOrientation(isUserBlack(pgn, "Chess.com") ? 'white' : 'black');
+            } else {
+                setOrientation(isUserBlack(pgn) ? 'white' : 'black');
+            }
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);
@@ -672,8 +677,8 @@ function Play() {
                                 >
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'white' : 'black' }}>{auth.getChesscomUsername()}</span>
-                                            <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
-                                            <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUserCC(pgn)}</span>
+                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUserCC(pgn)}</span>
                                     </div>
                                 </Button>
                             ))}
