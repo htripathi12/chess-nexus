@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import { Box, Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
@@ -21,7 +21,6 @@ function Play() {
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
-    // const [usingSideline, setUsingSideline] = useState(false);
 
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
@@ -190,15 +189,28 @@ function Play() {
         
         const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
         const endIndexBlack = pgn.indexOf('"', startIndexBlack);
-        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
-    
+        const blackPlayer = pgn.substring(startIndexBlack, endIndexBlack);    
 
         if (whiteUser === auth.getChesscomUsername()) {
-            return blackUser;
+            return blackPlayer;
         }
         
         return whiteUser;
     };
+
+    const isUserBlack = useCallback((pgn, platform) => {
+        const blackTag = '[Black "';
+        const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
+        const endIndexBlack = pgn.indexOf('"', startIndexBlack);
+        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
+    
+        if (platform === 'Chess.com') {
+            return blackUser === auth.getChesscomUsername();
+        } else {
+            return blackUser === auth.getLichessUsername();
+        }
+    }, [auth]);
+    
 
     // Get other user from Lichess PGN
     const getOtherUserLichess = (pgn) => {
@@ -268,6 +280,7 @@ function Play() {
         }
     };
 
+    // TODO: Implement redo
     const handleRedo = () => {
 
     };
@@ -305,7 +318,6 @@ function Play() {
             setFen(chessInstance.current.fen());
             setPgnLoaded(true);
             setHistory(chessInstance.current.history({ verbose: true }));
-            // setUsingSideline(false);
             moveIndex.current = chessInstance.current.history().length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);
@@ -314,7 +326,7 @@ function Play() {
 
 
     return (
-        <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', overflow: 'hidden' }}>
             <motion.div 
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -659,9 +671,9 @@ function Play() {
                                     }}
                                 >
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ padding: '3px 0' }}>{auth.getChesscomUsername()}</span>
-                                        <span style={{ padding: '3px 0' }}>vs</span>
-                                        <span style={{ padding: '3px 0' }}>{getOtherUserCC(pgn)}</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'white' : 'black' }}>{auth.getChesscomUsername()}</span>
+                                            <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
+                                            <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUserCC(pgn)}</span>
                                     </div>
                                 </Button>
                             ))}
@@ -694,9 +706,9 @@ function Play() {
                                     }}
                                 >
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ padding: '3px 0' }}>{auth.getLichessUsername()}</span>
-                                        <span style={{ padding: '3px 0' }}>vs</span>
-                                        <span style={{ padding: '3px 0' }}>{getOtherUserLichess(pgn)}</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'white' : 'black' }}>{auth.getLichessUsername()}</span>
+                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'black' : 'white' }}>{getOtherUserLichess(pgn)}</span>
                                     </div>
                                 </Button>
                             ))}
