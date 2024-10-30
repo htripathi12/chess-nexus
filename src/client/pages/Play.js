@@ -17,7 +17,6 @@ function Play() {
     const [orientation, setOrientation] = useState('white');
 
     const [fenError, setFenError] = useState(false);
-    const [pgnLoaded, setPgnLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
@@ -178,8 +177,8 @@ function Play() {
         };
     }, []);
     
-    // Get other user from Chess.com PGN
-    const getOtherUserCC = (pgn) => {
+    // Get opponent of user from PGN
+    const getOtherUser = (pgn, platform) => {
         const whiteTag = '[White "';
         const blackTag = '[Black "';
         
@@ -189,15 +188,22 @@ function Play() {
         
         const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
         const endIndexBlack = pgn.indexOf('"', startIndexBlack);
-        const blackPlayer = pgn.substring(startIndexBlack, endIndexBlack);    
-
-        if (whiteUser === auth.getChesscomUsername()) {
-            return blackPlayer;
+        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);    
+    
+        if (platform === 'Chess.com') {
+            if (whiteUser === auth.getChesscomUsername()) {
+                return blackUser;
+            }
+        } else {
+            if (whiteUser === auth.getLichessUsername()) {
+                return blackUser;
+            }
         }
         
         return whiteUser;
     };
 
+    // Check if user is playing as black
     const isUserBlack = useCallback((pgn, platform) => {
         const blackTag = '[Black "';
         const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
@@ -211,27 +217,6 @@ function Play() {
         }
     }, [auth]);
     
-
-    // Get other user from Lichess PGN
-    const getOtherUserLichess = (pgn) => {
-        const whiteTag = '[White "';
-        const blackTag = '[Black "';
-        
-        const startIndexWhite = pgn.indexOf(whiteTag) + whiteTag.length;
-        const endIndexWhite = pgn.indexOf('"', startIndexWhite);
-        const whiteUser = pgn.substring(startIndexWhite, endIndexWhite);
-        
-        const startIndexBlack = pgn.indexOf(blackTag) + blackTag.length;
-        const endIndexBlack = pgn.indexOf('"', startIndexBlack);
-        const blackUser = pgn.substring(startIndexBlack, endIndexBlack);
-        
-        if (whiteUser === auth.getLichessUsername()) {
-            return blackUser;
-        }
-        
-        return whiteUser;
-    };
-
     // Handle best move from Stockfish
     const handleBestMove = (data) => {
         const bestMoveFull = data.split(' ')[1];
@@ -293,13 +278,10 @@ function Play() {
             const response = await axios.post(process.env.REACT_APP_API_URL + '/play', { pgn });
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
-                setPgnLoaded(true);
                 moveIndex.current = chessInstance.current.history().length - 1;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
                 setHistory(chessInstance.current.history({ verbose: true }));
-            } else {
-                setPgnLoaded(false);
             }
         } catch (error) {
             console.error('There was an error!', error);
@@ -316,7 +298,6 @@ function Play() {
         try {
             chessInstance.current.loadPgn(pgn);
             setFen(chessInstance.current.fen());
-            setPgnLoaded(true);
             setHistory(chessInstance.current.history({ verbose: true }));
             if (selectedTab === 0) {
                 setOrientation(isUserBlack(pgn, "Chess.com") ? 'white' : 'black');
@@ -382,15 +363,13 @@ function Play() {
                                     <path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z" />
                                 </svg>
                             </Button>
-                            {pgnLoaded && (
-                                <Button onClick={() => {handleRedo()}}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
-                                        fill="#008080">
-                                        <path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 
-                                        90 136-90-136-90v180Z" />
-                                    </svg>
-                                </Button>
-                            )}
+                            <Button onClick={() => {handleRedo()}}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                                    fill="#008080">
+                                    <path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 
+                                    90 136-90-136-90v180Z" />
+                                </svg>
+                            </Button>
                         </Box>
                         <Button onClick={handleSwitchOrientation}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-switch-vertical"
@@ -678,7 +657,7 @@ function Play() {
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'white' : 'black' }}>{auth.getChesscomUsername()}</span>
                                         <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUserCC(pgn)}</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUser(pgn, "Chess.com")}</span>
                                     </div>
                                 </Button>
                             ))}
@@ -713,7 +692,7 @@ function Play() {
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'white' : 'black' }}>{auth.getLichessUsername()}</span>
                                         <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'black' : 'white' }}>{getOtherUserLichess(pgn)}</span>
+                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'black' : 'white' }}>{getOtherUser(pgn)}</span>
                                     </div>
                                 </Button>
                             ))}
