@@ -5,7 +5,7 @@ const path = require('path');
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 
-const { router: puzzleRouter, loadPuzzles } = require('./server/randomPuzzle');
+const puzzleRouter = require('./server/randomPuzzle');
 const sendLogin = require('./server/sendLogin');
 const sendSignup = require('./server/sendSignup');
 const analyze = require('./server/analyze');
@@ -18,22 +18,6 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 console.log('PORT:', PORT);
-
-let puzzlesLoaded = false;
-let loadPuzzlesPromise = loadPuzzles().then(() => {
-    puzzlesLoaded = true;
-}).catch(err => {
-    console.error('Failed to load puzzles:', err);
-});
-
-// Middleware to wait for puzzles to load
-const waitForPuzzlesMiddleware = async (req, res, next) => {
-    if (!puzzlesLoaded) {
-        console.log('Waiting for puzzles to load');
-        await loadPuzzlesPromise;
-    }
-    next();
-};
 
 const verifyToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
@@ -69,7 +53,6 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(express.json());
 app.use(cors());
-app.use(waitForPuzzlesMiddleware);
 
 app.use("/login", sendLogin);
 app.use("/signup", sendSignup);

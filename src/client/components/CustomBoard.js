@@ -13,30 +13,13 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
 
-
-    // Function to highlight the king in check
-    const highlightKingInCheck = useCallback((styles = {}) => {
-        const kingPosition = chessInstance.board().flat().find(piece => piece && piece.type === 'k' && piece.color === chessInstance.turn());
-        if (kingPosition) {
-            styles[kingPosition.square] = {
-                backgroundImage: 'radial-gradient(circle at center, rgba(255, 0, 0, 1) 25%, rgba(255, 0, 0, 0) 80%)'
-            };
-        }
-        setSquareStyles(styles);
-    }, [chessInstance]);
-
     useEffect(() => {
         if (fen && fen !== chessInstance.fen()) {
             chessInstance.load(fen);
             setSquareStyles({});
             setSelectedSquare(null);
-
-            // Check if the king is in check after loading the new position
-            if (chessInstance.isCheck()) {
-                highlightKingInCheck();
-            }
         }
-    }, [fen, chessInstance, highlightKingInCheck]);
+    }, [fen, chessInstance]);
 
     // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
@@ -67,11 +50,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
                 [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
                 [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
             });
-
-            // Highlight the king if in check
-            if (chessInstance.isCheck()) {
-                highlightKingInCheck();
-            }
 
             setFen(chessInstance.fen());
 
@@ -107,9 +85,6 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
                 });
                 setSelectedSquare(null);
 
-                if (chessInstance.isCheck()) {
-                    highlightKingInCheck();
-                }
                 return;
             }
         }
@@ -137,15 +112,9 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
                 };
             }
         }
-        
-
-        if (chessInstance.isCheck()) {
-            highlightKingInCheck(newSquareStyles);
-        }
 
         setSquareStyles(newSquareStyles);
     };
-
 
     // Expose undoMove function to parent component
     useImperativeHandle(ref, () => ({

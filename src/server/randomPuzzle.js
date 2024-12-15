@@ -3,9 +3,6 @@ const router = express.Router();
 const mysql = require('mysql2');
 const url = require('url');
 
-let puzzles = [];
-let puzzlerating = 1800;
-
 // Parse the MYSQL_PUBLIC_URL environment variable
 const dbUrl = process.env.MYSQL_PUBLIC_URL;
 const parsedUrl = new url.URL(dbUrl);
@@ -24,31 +21,6 @@ db.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-});
-
-// Loads 3000 puzzles from the database
-const loadPuzzles = async () => {
-    return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM lichess_db_puzzle where Rating BETWEEN ? AND ? LIMIT 3000', [puzzlerating - 200, puzzlerating + 200], (err, results) => {
-            if (err) {
-                console.error('Error executing query:', err);
-                reject(err);
-                return;
-            }
-
-            puzzles = results;
-            console.log(`Loaded ${puzzles.length} puzzles`);
-            resolve();
-        });
-    });
-};
-
-// Middleware to ensure puzzles are loaded before handling requests
-router.use(async (req, res, next) => {
-    if (puzzles.length === 0) {
-        await loadPuzzles().catch(next);
-    }
-    next();
 });
 
 // Route to get the user's puzzle rating
@@ -70,27 +42,43 @@ router.get('/rating', (req, res) => {
 
 // Route to get a random puzzle within the user's rating range
 router.get('/', (req, res) => {
-    const userRating = parseInt(req.query.userRating, 10);
-    const lowerBound = userRating - 200;
-    const upperBound = userRating + 200;
+    // Validate and parse the userRating from query parameter
+    let userRating = parseInt(req.query.userRating, 10);
 
-    const filteredPuzzles = puzzles.filter(puzzle => {
-        const puzzleRating = parseInt(puzzle.Rating, 10);
-        return puzzleRating >= lowerBound && puzzleRating <= upperBound;
+    if (isNaN(userRating)) {
+        console.error('Invalid userRating:', req.query.userRating);
+        return res.status(400).send({ error: 'Invalid user rating provided.' });
+    }
+
+    const lowerBound = Math.max(userRating - 20, 0);
+    const upperBound = userRating + 20;
+
+    // Query a single random puzzle directly from the database
+    const query = `
+        SELECT * FROM lichess_db_puzzle 
+        WHERE Rating BETWEEN ? AND ? 
+        ORDER BY RAND() 
+        LIMIT 1
+    `;
+
+    db.query(query, [lowerBound, upperBound], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).send({ error: 'Internal server error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send({ error: 'No puzzles found within your rating range.' });
+        }
+
+        const { FEN, Moves, GameUrl, Rating } = results[0];
+
+        if (FEN && Moves) {
+            res.send({ fen: FEN, moves: Moves, URL: GameUrl, rating: Rating });
+        } else {
+            res.status(500).send({ error: 'Invalid puzzle format' });
+        }
     });
-
-    if (filteredPuzzles.length === 0) {
-        return res.status(404).send({ error: 'No puzzles found within your rating range.' });
-    }
-
-    const randomIndex = Math.floor(Math.random() * filteredPuzzles.length);
-    const { FEN, Moves, GameUrl, Rating } = filteredPuzzles[randomIndex];
-
-    if (FEN && Moves) {
-        res.send({ fen: FEN, moves: Moves, URL: GameUrl, rating: Rating });
-    } else {
-        res.status(500).send({ error: 'Invalid puzzle format' });
-    }
 });
 
 // Route to update the user's puzzle rating
@@ -108,4 +96,4 @@ router.post('/updateRating', (req, res) => {
     });
 });
 
-module.exports = { router, loadPuzzles };
+module.exports = router;

@@ -390,7 +390,9 @@ function Puzzles() {
                                 textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                                 textAlign: 'center',
                                 marginLeft: (showRatingChange && ratingChange) ? '15px' : '0px',
-                            }}>{userRating.current}</Text>
+                            }}>
+                                {userRating.current}
+                            </Text>
                             {showRatingChange && ratingChange !== 0 && (
                                 <Text style={{
                                     fontSize: '16px',
