@@ -24,7 +24,6 @@ function Puzzles() {
     const [solutionRevealed, setSolutionRevealed] = useState(false);
     const [showRatingChange, setShowRatingChange] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
-    const [hasAnimated, setHasAnimated] = useState(false);
 
     const [puzzleRating, setPuzzleRating] = useState(0);
     const [ratingChange, setPuzzleRatingChange] = useState(0);
@@ -90,7 +89,6 @@ function Puzzles() {
             setPuzzleLoaded(true);
             setShowRatingChange(false);
             setMoveInProgress(true);
-            setHasAnimated(false);
             eloLost.current = false;
             puzzleCompleted.current = false;
             if (firstPuzzle) {
@@ -137,7 +135,7 @@ function Puzzles() {
     };
 
     const revealSolution = () => {
-        setSolutionRevealed(true); 
+        setSolutionRevealed(true);    
         const chessTwo = new Chess(initialFEN);
         try {
             moves.forEach(move => {
@@ -464,10 +462,9 @@ function Puzzles() {
 
                     {solutionRevealed && (
                         <MotionBox
-                            initial={!hasAnimated ? { opacity: 0, y: 20 } : false}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            onAnimationComplete={() => setHasAnimated(true)}
                             marginTop="20px"
                             marginLeft="20px"
                             width="300px"
@@ -475,14 +472,21 @@ function Puzzles() {
                             bg="teal.50"
                             borderRadius="lg"
                             boxShadow="md"
-                            border="2px solid #008080"
-                            color="#008080"
-                            background="linear-gradient(145deg, #e0f7fa, #b2ebf2)"
+                            border='2px solid #008080'
+                            color='#008080'
+                            background= 'linear-gradient(145deg, #e0f7fa, #b2ebf2)'
                         >
-                            <Text fontWeight="bold" marginBottom="10px" fontSize="xl">
+                            <Text 
+                                fontWeight="bold" 
+                                marginBottom="10px" 
+                                fontSize="xl" 
+                            >
                                 Solution:
                             </Text>
-                            <Text fontSize="lg" letterSpacing="wide">
+                            <Text 
+                                fontSize="lg" 
+                                letterSpacing="wide"
+                            >
                                 {puzzleSolution.join(' ')}
                             </Text>
                         </MotionBox>
