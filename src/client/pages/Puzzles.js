@@ -26,8 +26,8 @@ function Puzzles() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [hasAnimated, setHasAnimated] = useState(false);
 
-    const [rating, setRating] = useState(0);
-    const [ratingChange, setRatingChange] = useState(0);
+    const [puzzleRating, setPuzzleRating] = useState(0);
+    const [ratingChange, setPuzzleRatingChange] = useState(0);
     const [moveIndex, setMoveIndex] = useState(1);
 
     const customBoardRef = useRef(null);
@@ -108,9 +108,10 @@ function Puzzles() {
                     }
                 }
             );
+            console.log(response);
             const newFen = response.data.fen;
             const moveList = response.data.moves.split(' ');
-            setRating(response.data.rating);
+            setPuzzleRating(response.data.rating);
             setMoves(moveList);
 
             chess.current.load(newFen);
@@ -159,7 +160,7 @@ function Puzzles() {
         if (puzzleCompleted.current) return;
 
         const previousRating = userRating.current;
-        const diff = Math.abs(previousRating - rating);
+        const diff = Math.abs(previousRating - puzzleRating);
         let K = 32;
 
         if (diff < 100) {
@@ -168,7 +169,7 @@ function Puzzles() {
             K = 40;
         }
 
-        const expectedScore = 1 / (1 + Math.pow(10, (rating - previousRating) / 400));
+        const expectedScore = 1 / (1 + Math.pow(10, (puzzleRating - previousRating) / 400));
         const actualScore = isIncorrect ? 0 : 1;
 
         const newRating = Math.round(previousRating + K * (actualScore - expectedScore));
@@ -183,7 +184,7 @@ function Puzzles() {
                 }
             );
             userRating.current = newRating;
-            setRatingChange(newRating - previousRating);
+            setPuzzleRatingChange(newRating - previousRating);
             setShowRatingChange(true);
         } catch (error) {
             console.error('There was an error updating the rating!', error);
@@ -435,7 +436,7 @@ function Puzzles() {
                             fontWeight: 'bold',
                             textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                             textAlign: 'center',
-                        }}>{rating}</Text>
+                        }}>{puzzleRating}</Text>
                     </div>
 
                     <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>

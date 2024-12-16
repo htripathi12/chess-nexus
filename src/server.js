@@ -26,12 +26,15 @@ const verifyToken = (req, res, next) => {
       const bearerToken = bearer[1];
       jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
+          console.error('JWT verification failed:', err.message);
           return res.status(403).json({ message: 'Invalid or expired token' });
         }
         req.userId = decoded.userId;
+        console.log('Authenticated userId:', req.userId);
         next();
       });
     } else {
+      console.warn('No Authorization header provided');
       res.status(403).json({ message: 'Token not provided' });
     }
 };
@@ -50,10 +53,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, '../build')));
-app.use(express.json());
-app.use(cors());
-
 app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
 app.use("/puzzles", verifyToken, puzzleRouter);
@@ -62,6 +61,10 @@ app.use("/account/chesscom", verifyToken, chesscom);
 app.use("/account/lichess", verifyToken, lichess);
 app.use("/account", verifyToken, deleteAccount);
 app.use("/puzzle", dailyPuzzle);
+
+app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.json());
+app.use(cors());
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));

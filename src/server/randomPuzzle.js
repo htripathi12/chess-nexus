@@ -45,11 +45,6 @@ router.get('/', (req, res) => {
     // Validate and parse the userRating from query parameter
     let userRating = parseInt(req.query.userRating, 10);
 
-    if (isNaN(userRating)) {
-        console.error('Invalid userRating:', req.query.userRating);
-        return res.status(400).send({ error: 'Invalid user rating provided.' });
-    }
-
     const lowerBound = Math.max(userRating - 20, 0);
     const upperBound = userRating + 20;
 
@@ -68,9 +63,8 @@ router.get('/', (req, res) => {
         }
 
         if (results.length === 0) {
-            return res.status(404).send({ error: 'No puzzles found within your rating range.' });
+          return res.status(404).send({ error: 'No puzzles found within your rating range.' });
         }
-
         const { FEN, Moves, GameUrl, Rating } = results[0];
 
         if (FEN && Moves) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Chessboard } from 'react-chessboard';
 
 // Function to determine the color of a square
