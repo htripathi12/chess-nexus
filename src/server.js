@@ -19,6 +19,9 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 console.log('PORT:', PORT);
 
+app.use(express.json());
+app.use(cors());
+
 const verifyToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
     if (typeof bearerHeader !== 'undefined') {
@@ -63,8 +66,6 @@ app.use("/account", verifyToken, deleteAccount);
 app.use("/puzzle", dailyPuzzle);
 
 app.use(express.static(path.join(__dirname, '../build')));
-app.use(express.json());
-app.use(cors());
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
