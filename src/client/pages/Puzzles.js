@@ -19,7 +19,6 @@ function Puzzles() {
     const [incorrectMove, setIncorrectMove] = useState(false);
     const [moveInProgress, setMoveInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [firstPuzzle, setFirstPuzzle] = useState(true);
     const [puzzleLoaded, setPuzzleLoaded] = useState(false);
     const [solutionRevealed, setSolutionRevealed] = useState(false);
     const [showRatingChange, setShowRatingChange] = useState(false);
@@ -93,10 +92,7 @@ function Puzzles() {
             setHasAnimated(false);
             eloLost.current = false;
             puzzleCompleted.current = false;
-            if (firstPuzzle) {
-                setLoading(true);
-            }
-            setFirstPuzzle(false);
+            setLoading(true);
             setIncorrectMove(false);
             const response = await axios.get(process.env.REACT_APP_API_URL + '/puzzles',
                 {
