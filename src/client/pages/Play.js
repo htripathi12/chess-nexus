@@ -140,7 +140,7 @@ function Play() {
 
     // Initialize and handle Stockfish messages
     useEffect(() => {
-        stockfishWorkerRef.current = new Worker("./stockfish.js");
+        stockfishWorkerRef.current = new Worker("./stockfish-16.1.js");
         stockfishWorkerRef.current.postMessage("uci");
 
         stockfishWorkerRef.current.onmessage = (e) => {
