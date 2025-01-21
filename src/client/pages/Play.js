@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import { Box, Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
+import { useMediaQuery } from '@chakra-ui/react';
 
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -20,6 +21,8 @@ function Play() {
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
+    const [isTablet, setIsTablet] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
@@ -40,6 +43,26 @@ function Play() {
     const moveIndex = useRef(0);
 
     const auth = useAuth();
+
+    // check if the screen is a phone, tablet, or laptop
+    const isLessThan1200 = useMediaQuery('(max-width: 1100px)')[0];
+    const isLessThan600 = useMediaQuery('(max-width: 500px)')[0];
+    const handleScreenSize = () => {
+        if (isLessThan600) {
+            setIsMobile(true);
+            setIsTablet(false);
+            return 200;
+        } else if (isLessThan1200) {
+            setIsMobile(false);
+            setIsTablet(true);
+            return 300;
+        } else {
+            setIsMobile(false);
+            setIsTablet(false);
+            return 550;
+        }
+    };
+
 
     const getChessComPGNs = useCallback(async () => {
         try {
@@ -326,7 +349,6 @@ function Play() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100vh',
-                marginLeft: '50px'
             }}>
                 <motion.div 
                     initial={{ y: -100, opacity: 0 }}
@@ -334,7 +356,7 @@ function Play() {
                     transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ paddingRight: "20px", paddingBottom: "30px" }}
                 >
-                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} fen={fen} />
+                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} fen={fen} isTablet={isTablet} isMobile={isMobile} />
                 </motion.div>
                 <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -349,6 +371,7 @@ function Play() {
                         chessInstance={chessInstance.current}
                         orientation={orientation}
                         customArrows={bestMove}
+                        boardWidth={handleScreenSize()}
                     />
                     <div style={{
                         display: 'flex',
@@ -384,7 +407,7 @@ function Play() {
                         </Button>
                     </div>
                 </motion.div>
-                <motion.div 
+                {/* <motion.div 
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.0 }}
@@ -532,7 +555,7 @@ function Play() {
                             200-200 200 200-57 56-103-103v247h-80Z" />
                         </svg>
                     </Button>
-                </motion.div>
+                </motion.div> */}
                 <motion.div 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
