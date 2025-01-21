@@ -47,20 +47,27 @@ function Play() {
     // check if the screen is a phone, tablet, or laptop
     const isLessThan1200 = useMediaQuery('(max-width: 1100px)')[0];
     const isLessThan600 = useMediaQuery('(max-width: 500px)')[0];
+    useEffect(() => {
+      if (isLessThan600) {
+        setIsMobile(true);
+        setIsTablet(false);
+      } else if (isLessThan1200) {
+        setIsMobile(false);
+        setIsTablet(true);
+      } else {
+        setIsMobile(false);
+        setIsTablet(false);
+      }
+    }, [isLessThan600, isLessThan1200]);
+    
     const handleScreenSize = () => {
-        if (isLessThan600) {
-            setIsMobile(true);
-            setIsTablet(false);
-            return 200;
-        } else if (isLessThan1200) {
-            setIsMobile(false);
-            setIsTablet(true);
-            return 300;
-        } else {
-            setIsMobile(false);
-            setIsTablet(false);
-            return 550;
-        }
+      if (isLessThan600) {
+        return 200;
+      } else if (isLessThan1200) {
+        return 300;
+      } else {
+        return 550;
+      }
     };
 
 
@@ -407,7 +414,7 @@ function Play() {
                         </Button>
                     </div>
                 </motion.div>
-                {/* <motion.div 
+                <motion.div 
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.0 }}
@@ -555,7 +562,7 @@ function Play() {
                             200-200 200 200-57 56-103-103v247h-80Z" />
                         </svg>
                     </Button>
-                </motion.div> */}
+                </motion.div>
                 <motion.div 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
