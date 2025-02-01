@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box, Flex, Link, Text, Spacer, Button, Menu, MenuButton, MenuList, MenuItem
 } from '@chakra-ui/react';
@@ -6,7 +6,7 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import your existing components
-import IntroPage from '../pages/IntroPage.js';
+//import IntroPage from '../pages/IntroPage.js';
 
 // Import Contexts
 import { useAuth } from '../AuthContext.js';
@@ -15,15 +15,15 @@ const MotionBox = motion(Box);
 
 function RoutesAndNavbar() {
   const location = useLocation();
-  const [showIntro, setShowIntro] = useState(location.pathname === '/');
+  //const [showIntro, setShowIntro] = useState(location.pathname === '/');
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location.pathname !== '/') {
-      setShowIntro(false);
-    }
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   if (location.pathname !== '/') {
+  //     setShowIntro(false);
+  //   }
+  // }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -32,9 +32,9 @@ function RoutesAndNavbar() {
 
   return (
     <AnimatePresence mode="wait">
-      {showIntro ? (
+      {/* {showIntro ? (
         <IntroPage key="intro" onEnter={() => setShowIntro(false)} />
-      ) : (
+      ) : ( */}
         <MotionBox
           key="content"
           initial={{ opacity: 0 }}
