@@ -2,7 +2,6 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import { Box, Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
-import { useMediaQuery } from '@chakra-ui/react';
 
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -21,8 +20,6 @@ function Play() {
     const [loading, setLoading] = useState(false);
     const [isMate, setIsMate] = useState(false);
     const [gamesLoaded, setGamesLoaded] = useState(false);
-    const [isTablet, setIsTablet] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
 
     const [bestMove, setBestMove] = useState([]);
     const [bestLine, setBestLine] = useState([]);
@@ -44,30 +41,16 @@ function Play() {
 
     const auth = useAuth();
 
-    // check if the screen is a phone, tablet, or laptop
-    const isLessThan1200 = useMediaQuery('(max-width: 1100px)')[0];
-    const isLessThan600 = useMediaQuery('(max-width: 500px)')[0];
-    useEffect(() => {
-      if (isLessThan600) {
-        setIsMobile(true);
-        setIsTablet(false);
-      } else if (isLessThan1200) {
-        setIsMobile(false);
-        setIsTablet(true);
-      } else {
-        setIsMobile(false);
-        setIsTablet(false);
-      }
-    }, [isLessThan600, isLessThan1200]);
     
     const handleScreenSize = () => {
-      if (isLessThan600) {
-        return 200;
-      } else if (isLessThan1200) {
-        return 300;
-      } else {
-        return 550;
-      }
+        const width = window.innerWidth;
+        if (width < 500) {
+            return 200;
+        } else if (width < 1100) {
+            return 300;
+        } else {
+            return 550;
+        }
     };
 
 
@@ -198,14 +181,6 @@ function Play() {
         setBestMove([[]]);
         runStockfish(fen);
     }, [fen, depth, runStockfish]);
-
-    // Prevent page scroll
-    useEffect(() => {
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, []);
     
     // Get opponent of user from PGN
     const getOtherUser = (pgn, platform) => {
@@ -343,16 +318,22 @@ function Play() {
 
     return (
         <div style={{ position: 'relative', overflow: 'hidden' }}>
-            <motion.div 
+            <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.0 }}
-                style={{ position: 'absolute', top: '10px', left: '10px'}}
-            >
+                style={{
+                    position: handleScreenSize() === 200 ? 'relative' : 'absolute',
+                    top: handleScreenSize() === 200 ? '0px' : '10px',
+                    left: handleScreenSize() === 200 ? '0px' : '10px',
+                    zIndex: 1,
+                }}
+                >
                 <BackButton />
             </motion.div>
             <div style={{
                 display: 'flex',
+                flexWrap: 'wrap',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100vh',
@@ -363,7 +344,7 @@ function Play() {
                     transition={{ duration: 0.5, delay: 0.0 }}
                     style={{ paddingRight: "20px", paddingBottom: "30px" }}
                 >
-                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} fen={fen} isTablet={isTablet} isMobile={isMobile} />
+                    <EvaluationBar evaluation={evaluation} orientation={orientation} isMate={isMate} fen={fen} height={handleScreenSize()} />
                 </motion.div>
                 <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -427,14 +408,19 @@ function Play() {
                     }}
                 >
                     {loading && (
-                        <div style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            position: 'absolute', 
-                            top: '30px',
-                        }}>
-                            <Spinner size="xl" color="teal.500" />
-                        </div>
+                      <div 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          position: 'absolute', 
+                          top: '30px',
+                        }}
+                      >
+                        <Spinner 
+                          size={handleScreenSize() === 550 ? 'xl' : 'md'} 
+                          color="teal.500" 
+                        />
+                      </div>
                     )}
                     {!loading && bestLine && (
                         <motion.div 
@@ -446,9 +432,10 @@ function Play() {
                                 flexDirection: 'column', 
                                 alignItems: 'center', 
                                 width: '300px',
-                                maxHeight: '150px',
+                                maxHeight: handleScreenSize() === 200 ? '100px'
+                                            : handleScreenSize() === 300 ? '150px'
+                                            : '200px',
                                 position: 'absolute',
-                                top: '-30px',
                                 marginBottom: '30px',
                                 backgroundColor: 'white',
                                 borderRadius: '10px',
@@ -531,7 +518,13 @@ function Play() {
                         ref={pgnRef}
                         id="pgn"
                         width="300px"
-                        height="300px"
+                        height={
+                            handleScreenSize() === 200
+                            ? '100px'
+                            : handleScreenSize() === 300
+                            ? '150px'
+                            : '300px'
+                        }
                         fontSize="16px"
                         padding="10px"
                         resize="none"

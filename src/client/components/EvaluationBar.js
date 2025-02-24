@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { Chess } from 'chess.js';
 
-const EvaluationBar = ({ evaluation, orientation, isMate, fen, isTablet, isMobile }) => {
+const EvaluationBar = ({ evaluation, orientation, isMate, fen, height }) => {
   const scoreToPercentage = (score) => {
     const cappedScore = Math.max(-10, Math.min(10, score));
     return ((cappedScore + 10) / 20) * 100;
@@ -43,7 +43,7 @@ const EvaluationBar = ({ evaluation, orientation, isMate, fen, isTablet, isMobil
       display="flex"
       flexDirection="column"
       alignItems="center"
-      height="500px"
+      height={height}
       width="50px"
       border="1px solid #008080"
       borderRadius="5px"
