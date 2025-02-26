@@ -52,6 +52,17 @@ function Puzzles() {
         }
     }, [auth]);
 
+    const handleScreenSize = () => {
+        const width = window.innerWidth;
+        if (width < 500) {
+            return 200;
+        } else if (width < 1100) {
+            return 300;
+        } else {
+            return 550;
+        }
+    };
+
     useEffect(() => {
         if (auth.isLoggedIn) {
             getPuzzleRating();
@@ -61,13 +72,6 @@ function Puzzles() {
     useEffect(() => {
         setLoggedIn(auth.isLoggedIn);
     }, [auth]);
-
-    useEffect(() => {
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, []);
 
     const showFeedback = (isCorrect) => {
         toast({
@@ -299,6 +303,7 @@ function Puzzles() {
                         onMove={logMove}
                         chessInstance={chess.current}
                         disableBoard={incorrectMove || !puzzleLoaded}
+                        boardWidth={handleScreenSize()}
                     />
                     <div style={{
                         display: 'flex',

@@ -43,14 +43,7 @@ function Play() {
 
     
     const handleScreenSize = () => {
-        const width = window.innerWidth;
-        if (width < 500) {
-            return 200;
-        } else if (width < 1100) {
-            return 300;
-        } else {
-            return 550;
-        }
+        return window.innerWidth * .3;
     };
 
 
@@ -323,9 +316,9 @@ function Play() {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.0 }}
                 style={{
-                    position: handleScreenSize() === 200 ? 'relative' : 'absolute',
-                    top: handleScreenSize() === 200 ? '0px' : '10px',
-                    left: handleScreenSize() === 200 ? '0px' : '10px',
+                    position: handleScreenSize() <= 200 ? 'relative' : 'absolute',
+                    top: handleScreenSize() <= 200 ? '0px' : '10px',
+                    left: handleScreenSize() <= 200 ? '0px' : '10px',
                     zIndex: 1,
                 }}
                 >
