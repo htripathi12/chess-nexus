@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
+    "dotenv-flow": "^4.1.0",
     "express": "^4.21.1",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.2",
@@ -34,12 +35,14 @@
     "ws": "^8.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "client": "react-scripts start",
+    "server:dev": "NODE_ENV=development nodemon src/server.js",
+    "dev": "npm-run-all --parallel client server:dev",
     "build": "react-scripts build",
+    "server": "NODE_ENV=production node src/server.js",
+    "start": "npm run build && npm run server",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "node src/server.js",
-    "start:all": "npm-run-all --parallel start server"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
