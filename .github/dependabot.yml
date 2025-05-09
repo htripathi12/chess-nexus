@@ -18,8 +18,6 @@ updates:
     ignore:
       - dependency-name: "*"       # ignore ALL …
         update-types: ["version-update:semver-major"]  # … major bumps
-    # ───── Make security updates automatic ─────
-    security-updates: true
     # ───── PR cosmetics ─────
     labels:       ["dependencies", "security"]
     commit-message:
@@ -34,5 +32,4 @@ updates:
     directory: "/"                 # .github/workflows/*
     schedule:
       interval: "weekly"           # once a week is plenty here
-    security-updates: true
     labels: ["github-actions", "security"]
