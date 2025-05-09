@@ -16,7 +16,7 @@
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "dotenv-flow": "^4.1.0",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
