@@ -1,0 +1,38 @@
+# .github/dependabot.yml
+version: 2
+
+updates:
+  ##############################################################
+  # 1️⃣  JavaScript / Node (package.json + package-lock.json)   #
+  ##############################################################
+  - package-ecosystem: "npm"
+    directory: "/"                 # root package.json
+    schedule:
+      interval: "daily"            # run once every day
+      time: "07:00"                # 07:00 local time
+      timezone: "America/Indiana/Indianapolis"
+    open-pull-requests-limit: 10
+    # ───── Prefer smaller, safer bumps ─────
+    allow:
+      - dependency-type: "direct"  # only update top-level deps
+    ignore:
+      - dependency-name: "*"       # ignore ALL …
+        update-types: ["version-update:semver-major"]  # … major bumps
+    # ───── Make security updates automatic ─────
+    security-updates: true
+    # ───── PR cosmetics ─────
+    labels:       ["dependencies", "security"]
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    reviewers:    ["htripathi12"]
+
+  ##############################################################
+  # 2️⃣  GitHub Actions workflow versions                      #
+  ##############################################################
+  - package-ecosystem: "github-actions"
+    directory: "/"                 # .github/workflows/*
+    schedule:
+      interval: "weekly"           # once a week is plenty here
+    security-updates: true
+    labels: ["github-actions", "security"]
