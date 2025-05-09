@@ -5,7 +5,7 @@
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.14.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "axios": "^1.9.0",
@@ -16,7 +16,7 @@
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "dotenv-flow": "^4.1.0",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
