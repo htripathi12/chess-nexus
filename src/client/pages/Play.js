@@ -66,33 +66,55 @@ function Play() {
     const getLichessGames = useCallback(async () => {
         try {
             const response = await axios.get(process.env.REACT_APP_API_URL + '/account/lichess', {
-                params: {
-                    lichessUsername: auth.getLichessUsername(),
-                },
-                headers: {
-                    Authorization: `Bearer ${auth.getToken()}`,
-                }
+            params: {
+                lichessUsername: auth.getLichessUsername(),
+            },
+            headers: {
+                Authorization: `Bearer ${auth.getToken()}`,
+            }
             });
             return response.data.pgnArray;
         } catch (error) {
-            console.error(error);
+            console.error("Lichess games fetch error:", error);
+            return null;
         }
     }, [auth]);
 
     // Fetch PGNs on component mount
-    useEffect(() => { 
+    useEffect(() => {
         const fetchPGNs = async () => {
             try {
                 const chesscompgn = await getChessComPGNs();
                 const lichesspgn = await getLichessGames();
     
                 const chesscompgnArray = chesscompgn ? chesscompgn.split('\n\n') : [];
-                const lichesspgnArray = lichesspgn ? lichesspgn.split('\n\n') : [];
-                
-                if (lichesspgnArray.length > 0) {
-                    lichesspgnArray.pop();
-                }
-    
+                let lichesspgnArray = [];
+                if (lichesspgn) {
+                    try {
+                        // Split by newlines to handle multiple games
+                        const games = lichesspgn.split('\n').filter(game => game.trim());
+                        
+                        lichesspgnArray = games.map(gameStr => {
+                            try {
+                                // Parse JSON for each game
+                                const game = JSON.parse(gameStr);
+                                // Convert to PGN format
+                                return `[Event "Lichess Game"]\n` +
+                                    `[Site "https://lichess.org/${game.id}"]\n` +
+                                    `[Date "${new Date(game.createdAt).toISOString().split('T')[0]}"]\n` +
+                                    `[White "${game.players.white.user.name}"]\n` +
+                                    `[Black "${game.players.black.user.name}"]\n` +
+                                    `[Result "${game.winner === 'white' ? '1-0' : game.winner === 'black' ? '0-1' : '1/2-1/2'}"]\n` +
+                                    `[Variant "${game.variant}"]\n\n${game.moves}`;
+                            } catch (e) {
+                                console.error("Error parsing game:", e);
+                                return null;
+                            }
+                        }).filter(pgn => pgn !== null);
+                    } catch (e) {
+                        console.error("Error processing Lichess data:", e);
+                    }
+                }    
                 const combineInPairs = (array) => {
                     const combinedArray = [];
                     for (let i = 0; i < array.length; i += 2) {
@@ -106,13 +128,11 @@ function Play() {
                 };
     
                 const combinedChesscompgn = chesscompgnArray.length > 0 ? combineInPairs(chesscompgnArray) : [];
-                const combinedLichesspgn = lichesspgnArray.length > 0 ? combineInPairs(lichesspgnArray) : [];
-    
                 setCCPGN(combinedChesscompgn);
-                setLichessPGN(combinedLichesspgn);
+                setLichessPGN(lichesspgnArray);
                 setGamesLoaded(true);
             } catch (error) {
-                // Suppress error
+                console.error("Error fetching games:", error);
             }
         };
     
@@ -120,7 +140,6 @@ function Play() {
             fetchPGNs();
         }
     }, [getChessComPGNs, getLichessGames, auth]);
-
 
     const convertSAN = React.useCallback((data) => {
         let index = data.indexOf(' pv ');
