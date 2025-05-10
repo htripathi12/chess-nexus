@@ -3,9 +3,8 @@ import { Box, Heading, Text, VStack, Image, Link, Flex, Icon, SimpleGrid } from 
 import { motion } from 'framer-motion';
 
 import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
-import { DiReact, DiNodejs, DiPython, DiJavascript1, DiJava, DiHtml5 } from 'react-icons/di';
-import { SiExpress, SiC, SiCplusplus } from "react-icons/si";
-
+import { DiReact, DiNodejs, DiPython, DiJavascript1, DiJava, DiHtml5, DiMysql } from 'react-icons/di';
+import { SiC, SiCplusplus } from "react-icons/si";
 
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
@@ -16,10 +15,10 @@ function Contact() {
         { name: 'Node.js', icon: DiNodejs, color: '#339933' },
         { name: 'Python', icon: DiPython, color: '#3776AB' },
         { name: 'JavaScript', icon: DiJavascript1, color: '#EBC700'},
-        { name: 'Express', icon: SiExpress, color: '#000000' },
+        { name: 'SQL', icon: DiMysql, color: '#4479A1' },
         { name: 'Java', icon: DiJava, color: '#007396' },
-        { name: '', icon: SiC, color: '#A8B9CC' },
-        { name: '', icon: SiCplusplus, color: '#00599C' },
+        { name: 'C', icon: SiC, color: '#A8B9CC' },
+        { name: 'C++', icon: SiCplusplus, color: '#00599C' },
         { name: 'HTML5', icon: DiHtml5, color: '#E34F26'}
     ];
 
@@ -123,8 +122,8 @@ function Contact() {
                         pushed me to grow my programming skillset, eventually leading me to do R&D data science
                         research at Raytheon, providing me with a deeper insight into the field. Through
                         these experiences, I discovered my true passion lies in web development. Right now, I'm
-                        working towards expanding my skills in React, Express, and MongoDB, aiming
-                        to become a full stack MERN software engineer.
+                        working towards expanding my skills in React, SQL, and MongoDB, aiming
+                        to become a full stack software engineer.
                     </Text>
 
                     <SimpleGrid columns={3} spacing={3} alignItems="center" justifyContent="space-evenly">
@@ -192,10 +191,6 @@ function Contact() {
                         >
                             Thank you all for visiting Chess Nexus! If you'd like to view the source code you can do so{' '}
                             <Link href="https://github.com/htripathi12/chess-nexus" isExternal color="blue.500">
-                                here.
-                            </Link>
-                            {' '}If you would like to see the rest of my work, you can visit my website{' '}
-                            <Link href="https://htripathi12.github.io/" isExternal color="blue.500">
                                 here.
                             </Link>
                         </Box>
