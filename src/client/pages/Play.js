@@ -10,6 +10,11 @@ import BackButton from '../components/BackButton';
 import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
 
+// TODO; make it so when a user makes a move such that its not the next move in the pgn array,
+// it'll increment like a counter that shows the distance from the pgn array. if the
+// counter is greater than 0, the redo function will be disabled. this way we can limit the redo
+// to only the moves that are in the pgn array
+
 
 function Play() {
     // State variables
@@ -31,6 +36,11 @@ function Play() {
     const [evaluation, setEvaluation] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
     const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
+    const [pgnDeviation, setPgnDeviation] = useState(0);
+
+    const [redoStack, setRedoStack] = useState([]);
+    const [originalPgnMoves, setOriginalPgnMoves] = useState([]);
+
 
     // Refs
     const customBoardRef = useRef(null);
@@ -273,20 +283,71 @@ function Play() {
     // Undo the last move
     const handleUndo = () => {
         if (history.length > 0) {
+            const lastMove = history[history.length - 1];
+            setRedoStack([...redoStack, lastMove]);
+            
             chessInstance.current.undo();
             setFen(chessInstance.current.fen());
             setHistory(history.slice(0, -1));
             moveIndex.current = history.length - 2;
+            
+            // If we're undoing a deviated move, decrease deviation counter
+            if (pgnDeviation > 0) {
+                setPgnDeviation(pgnDeviation - 1);
+            }
         } else {
             console.log("No moves to undo");
         }
     };
 
-    // TODO: Implement redo
+    // Implement the redo function
     const handleRedo = () => {
-
+        // If we have deviated from the original PGN and have some moves in redoStack
+        if (pgnDeviation === 0 && redoStack.length > 0) {
+            const moveToRedo = redoStack[redoStack.length - 1];
+            
+            try {
+                // Make the move from our redo stack
+                chessInstance.current.move({
+                    from: moveToRedo.from,
+                    to: moveToRedo.to,
+                    promotion: moveToRedo.promotion
+                });
+                
+                // Update state
+                setFen(chessInstance.current.fen());
+                setHistory([...history, moveToRedo]);
+                setRedoStack(redoStack.slice(0, -1));
+                moveIndex.current = history.length;
+            } catch (error) {
+                console.error("Error redoing move:", error);
+                // Clear invalid redo stack
+                setRedoStack([]);
+            }
+        } 
+        // If we're on the original PGN path and there are more moves
+        else if (pgnDeviation === 0 && history.length < originalPgnMoves.length) {
+            const nextPgnMove = originalPgnMoves[history.length];
+            
+            try {
+                // Make the next move from original PGN
+                chessInstance.current.move({
+                    from: nextPgnMove.from,
+                    to: nextPgnMove.to,
+                    promotion: nextPgnMove.promotion
+                });
+                
+                // Update state
+                setFen(chessInstance.current.fen());
+                setHistory([...history, nextPgnMove]);
+                moveIndex.current = history.length;
+            } catch (error) {
+                console.error("Error applying next PGN move:", error);
+            }
+        } else {
+            console.log("Cannot redo - deviated from original game");
+        }
     };
-    
 
     // Handle PGN submission
     const handleSubmit = async () => {
@@ -295,10 +356,17 @@ function Play() {
             const response = await axios.post(process.env.REACT_APP_API_URL + '/play', { pgn });
             if (response.data.status === 'success') {
                 chessInstance.current.loadPgn(pgn);
-                moveIndex.current = chessInstance.current.history().length - 1;
+                
+                // Store the original PGN moves
+                const originalMoves = chessInstance.current.history({ verbose: true });
+                setOriginalPgnMoves(originalMoves);
+                
+                moveIndex.current = originalMoves.length - 1;
                 const newFen = chessInstance.current.fen();
                 setFen(newFen);
-                setHistory(chessInstance.current.history({ verbose: true }));
+                setHistory(originalMoves);
+                setPgnDeviation(0); // Reset deviation counter
+                setRedoStack([]);   // Clear redo stack
             }
         } catch (error) {
             console.error('There was an error!', error);
@@ -314,17 +382,43 @@ function Play() {
     const handleGameListClick = (pgn) => {
         try {
             chessInstance.current.loadPgn(pgn);
+            
+            // Store the original PGN moves
+            const originalMoves = chessInstance.current.history({ verbose: true });
+            setOriginalPgnMoves(originalMoves);
+            
             setFen(chessInstance.current.fen());
-            setHistory(chessInstance.current.history({ verbose: true }));
+            setHistory(originalMoves);
+            setPgnDeviation(0); // Reset deviation counter
+            setRedoStack([]);   // Clear redo stack
+            
             if (selectedTab === 0) {
                 setOrientation(isUserBlack(pgn, "Chess.com") ? 'white' : 'black');
             } else {
                 setOrientation(isUserBlack(pgn) ? 'white' : 'black');
             }
-            moveIndex.current = chessInstance.current.history().length - 1;
+            moveIndex.current = originalMoves.length - 1;
         } catch (error) {
             console.error(`Error loading PGN`, error);
         }
+    };
+
+    const handleUserMove = (move) => {
+        // Check if this move deviates from the original PGN
+        if (history.length < originalPgnMoves.length) {
+            const nextPgnMove = originalPgnMoves[history.length];
+            
+            // If the user's move differs from the next move in the original PGN
+            if (move.from !== nextPgnMove.from || move.to !== nextPgnMove.to || 
+                (move.promotion && move.promotion !== nextPgnMove.promotion)) {
+                setPgnDeviation(prev => prev + 1);
+                setRedoStack([]); // Clear redo stack when deviating
+            }
+        }
+        
+        // Add move to history
+        setHistory([...history, move]);
+        moveIndex.current = history.length;
     };
 
 
@@ -372,6 +466,7 @@ function Play() {
                         orientation={orientation}
                         customArrows={bestMove}
                         boardWidth={handleScreenSize()}
+                        onUserMove={handleUserMove}  // Add this prop
                     />
                     <div style={{
                         display: 'flex',
@@ -561,8 +656,8 @@ function Play() {
                             <path d="M170-228q-38-45-61-99T80-440h82q6 43 22 82.5t42 73.5l-56 
                             56ZM80-520q8-59 30-113t60-99l56 56q-26 34-42 73.5T162-520H80ZM438-82q-59-6-112.5-28.5T226-170l56-58q35
                             26 74 43t82 23v80ZM284-732l-58-58q47-37 101-59.5T440-878v80q-43 6-82.5 23T284-732ZM518-82v-80q44-6
-                            83.5-22.5T676-228l58 58q-47 38-101.5 60T518-82Zm160-650q-35-26-75-43t-83-23v-80q59 6 113.5
-                            28.5T734-790l-56 58Zm112 504-56-56q26-34 42-73.5t22-82.5h82q-8 59-30 113t-60
+                            83.5-22.5T676-228l58 58q-47 38-101.5 60T518-82Zm160-650q-35-26-75-43t-83-23v-80q59 6
+                            113.5 28.5T734-790l-56 58Zm112 504-56-56q26-34 42-73.5t22-82.5h82q-8 59-30 113t-60
                             99Zm8-292q-6-43-22-82.5T734-676l56-56q38 45 61 99t29 113h-82ZM441-280v-247L337-423l-56-57
                             200-200 200 200-57 56-103-103v247h-80Z" />
                         </svg>

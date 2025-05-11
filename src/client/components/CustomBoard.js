@@ -8,7 +8,7 @@ function getSquareColor(square) {
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
-const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstance, disableBoard, customArrows, boardWidth }, ref) => {
+const CustomBoard = forwardRef(({ fen, orientation, setFen, onUserMove, chessInstance, disableBoard, customArrows, boardWidth }, ref) => {
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
@@ -40,9 +40,9 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
                 return false;
             }
 
-            // Log the move
-            if (onMove) {
-                onMove(sourceSquare, targetSquare);
+            // Call the onUserMove callback with the move details
+            if (onUserMove) {
+                onUserMove(move);
             }
 
             // Highlight the move squares
@@ -66,16 +66,23 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
 
         setAnimationDuration(250); // Enable animation for click moves
         if (selectedSquare) {
-            const legalMove = chessInstance
-                .moves({ square: selectedSquare, verbose: true })
-                .some(move => move.to === square);
+            const legalMoves = chessInstance.moves({ 
+                square: selectedSquare, 
+                verbose: true 
+            });
+            
+            const matchingMove = legalMoves.find(move => move.to === square);
 
-            if (legalMove) {
-                chessInstance.move({ from: selectedSquare, to: square, promotion: 'q' });
+            if (matchingMove) {
+                const move = chessInstance.move({ 
+                    from: selectedSquare, 
+                    to: square, 
+                    promotion: 'q' 
+                });
 
-                // Log the move
-                if (onMove) {
-                    onMove(selectedSquare, square);
+                // Call the onUserMove callback with the move details
+                if (onUserMove) {
+                    onUserMove(move);
                 }
 
                 setFen(chessInstance.fen());
@@ -108,7 +115,7 @@ const CustomBoard = forwardRef(({ fen, orientation, setFen, onMove, chessInstanc
                 };
             } else {
                 newSquareStyles[move.to] = {
-                    backgroundImage: 'radial-gradient(circle at center, rgba(222, 184, 135, 0.9) 23%, transparent 21%)' // Increased opacity
+                    backgroundImage: 'radial-gradient(circle at center, rgba(222, 184, 135, 0.9) 23%, transparent 21%)'
                 };
             }
         }
