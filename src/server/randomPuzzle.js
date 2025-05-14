@@ -42,38 +42,44 @@ router.get('/rating', (req, res) => {
 });
 
 // Route to get a random puzzle within the user's rating range
-router.get('/', (req, res) => {
-    // Validate and parse the userRating from query parameter
-    let userRating = parseInt(req.query.userRating, 10);
+router.get('/', async (req, res) => {
+    const userRating = parseInt(req.query.userRating, 10);
+    if (Number.isNaN(userRating)) {
+        return res.status(400).send({ error: 'userRating query param is required and must be a number' });
+    }
 
-    const lowerBound = Math.max(userRating - 20, 0);
-    const upperBound = userRating + 20;
+    const lowerBound = Math.max(userRating - 25, 0);
+    const upperBound = userRating + 25;
 
-    // Query a single random puzzle directly from the database
-    const query = `
-        SELECT * FROM lichess_db_puzzle 
-        WHERE Rating BETWEEN ? AND ? 
-        ORDER BY RAND() 
-        LIMIT 1
-    `;
+    try {
+        const [countRows] = await db.promise().query(
+            `SELECT COUNT(*) AS cnt
+             FROM lichess_db_puzzle
+             WHERE Rating BETWEEN ? AND ?`,
+            [lowerBound, upperBound]
+        );
+        const count = countRows[0].cnt;
 
-    db.query(query, [lowerBound, upperBound], (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            return res.status(500).send({ error: 'Internal server error' });
+        if (count === 0) {
+            return res.status(404).send({ error: 'No puzzles found within your rating range.' });
         }
 
-        if (results.length === 0) {
-          return res.status(404).send({ error: 'No puzzles found within your rating range.' });
-        }
-        const { FEN, Moves, GameUrl, Rating } = results[0];
+        const randomOffset = Math.floor(Math.random() * count);
+        const [rows] = await db.promise().query(
+            `SELECT FEN, Moves, Rating
+             FROM lichess_db_puzzle
+             WHERE Rating BETWEEN ? AND ?
+             LIMIT 1 OFFSET ?`,
+            [lowerBound, upperBound, randomOffset]
+        );
 
-        if (FEN && Moves) {
-            res.send({ fen: FEN, moves: Moves, URL: GameUrl, rating: Rating });
-        } else {
-            res.status(500).send({ error: 'Invalid puzzle format' });
-        }
-    });
+        const { FEN, Moves, Rating } = rows[0];
+        return res.send({ fen: FEN, moves: Moves, rating: Rating });
+
+    } catch (err) {
+        console.error('Error executing query:', err);
+        return res.status(500).send({ error: 'Internal server error' });
+    }
 });
 
 // Route to update the user's puzzle rating

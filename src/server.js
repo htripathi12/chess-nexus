@@ -40,7 +40,7 @@ const verifyToken = (req, res, next) => {
           return res.status(403).json({ message: 'Invalid or expired token' });
         }
         req.userId = decoded.userId;
-        console.log('Authenticated userId:', req.userId);
+        //console.log('Authenticated userId:', req.userId);
         next();
       });
     } else {
