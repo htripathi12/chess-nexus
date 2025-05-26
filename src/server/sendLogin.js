@@ -1,53 +1,55 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt  = require('bcryptjs');
+const jwt     = require('jsonwebtoken');
 require('dotenv').config();
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET is not defined');
+}
 
 const router = express.Router();
 
+router.post('/', async (req, res) => {
+  const { email, password } = req.body;
+  const db = req.db;
 
-router.post("/", (req, res) => {
-    const { email, password, setLichessUsername, setChesscomUsername } = req.body;
-    const db = req.db;
-    console.log(`Received login request with email: ${email}`);
-    if (!process.env.JWT_SECRET) {
-        console.error('FATAL ERROR: JWT_SECRET is not defined.');
-        process.exit(1);
+  console.log(`Received login request with email: ${email}`);
+
+  try {
+    /* 1. Fetch the user row (schema-qualified) */
+    const [rows] = await db.execute(
+      'SELECT id, email, password, lichess, chesscom \
+         FROM users_db.users WHERE email = ? LIMIT 1',
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
-        if (err) {
-            console.error('Error querying database:', err);
-            return res.status(500).json({ error: 'Error querying database' });
-        }
+    const user = rows[0];
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
 
-        if (results.length === 0) {
-            return res.status(401).json({ error: 'Invalid email or password' });
-        }
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '6h' }
+    );
 
-        const user = results[0];
-
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-                console.error('Error comparing passwords:', err);
-                return res.status(500).json({ error: 'Error during authentication' });
-            }
-
-            if (!isMatch) {
-                return res.status(401).json({ error: 'Invalid email or password' });
-            }
-
-            // Generate a JWT token
-            const token = jwt.sign(
-                { userId: user.id, email: user.email },
-                process.env.JWT_SECRET,
-                { expiresIn: '6h' }
-            );
-
-            console.log(user.lichess, user.chesscom);
-            res.json({ message: 'Login successful', token, lichessUsername: user.lichess, chesscomUsername: user.chesscom });
-        });
+    return res.json({
+      message: 'Login successful',
+      token,
+      lichessUsername: user.lichess,
+      chesscomUsername: user.chesscom
     });
+
+  } catch (err) {
+    console.error('Login DB error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

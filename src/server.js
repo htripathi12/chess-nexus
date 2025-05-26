@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
 
 const puzzleRouter = require('./server/randomPuzzle');
@@ -49,17 +49,16 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-const db = mysql.createConnection({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+const pool = mysql.createPool({
+    uri: process.env.MYSQL_PUBLIC_URL,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
 
 // Middleware to attach db connection to req object
 app.use((req, res, next) => {
-    req.db = db;
+    req.db = pool;
     next();
 });
 
