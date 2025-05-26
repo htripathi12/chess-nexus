@@ -54,6 +54,9 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
+    ssl: process.env.DB_SSL === 'false'
+      ? undefined
+      : { rejectUnauthorized: false },
 });
 
 // Middleware to attach db connection to req object
@@ -64,11 +67,11 @@ app.use((req, res, next) => {
 
 app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
-app.use("/puzzles", verifyToken, puzzleRouter);
+app.use("/puzzles", puzzleRouter);
 app.use("/play", analyze);
-app.use("/account/chesscom", verifyToken, chesscom);
-app.use("/account/lichess", verifyToken, lichess);
-app.use("/account", verifyToken, deleteAccount);
+app.use("/account/chesscom", chesscom);
+app.use("/account/lichess", lichess);
+app.use("/account", deleteAccount);
 app.use("/puzzle", dailyPuzzle);
 
 app.use(express.static(path.join(__dirname, '../build')));
