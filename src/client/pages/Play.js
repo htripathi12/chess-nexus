@@ -101,30 +101,16 @@ function Play() {
                 let lichesspgnArray = [];
                 if (lichesspgn) {
                     try {
-                        // Split by newlines to handle multiple games
-                        const games = lichesspgn.split('\n').filter(game => game.trim());
+                        const games = lichesspgn.split('\n\n[').map((game, index) => 
+                            index === 0 ? game : '[' + game
+                        ).filter(game => game.trim());
+                        lichesspgnArray = games.filter(pgn => pgn.includes('[Event'));
                         
-                        lichesspgnArray = games.map(gameStr => {
-                            try {
-                                // Parse JSON for each game
-                                const game = JSON.parse(gameStr);
-                                // Convert to PGN format
-                                return `[Event "Lichess Game"]\n` +
-                                    `[Site "https://lichess.org/${game.id}"]\n` +
-                                    `[Date "${new Date(game.createdAt).toISOString().split('T')[0]}"]\n` +
-                                    `[White "${game.players.white.user.name}"]\n` +
-                                    `[Black "${game.players.black.user.name}"]\n` +
-                                    `[Result "${game.winner === 'white' ? '1-0' : game.winner === 'black' ? '0-1' : '1/2-1/2'}"]\n` +
-                                    `[Variant "${game.variant}"]\n\n${game.moves}`;
-                            } catch (e) {
-                                console.error("Error parsing game:", e);
-                                return null;
-                            }
-                        }).filter(pgn => pgn !== null);
+                        console.log(`Successfully processed ${lichesspgnArray.length} Lichess games`);
                     } catch (e) {
                         console.error("Error processing Lichess data:", e);
                     }
-                }    
+                }
                 const combineInPairs = (array) => {
                     const combinedArray = [];
                     for (let i = 0; i < array.length; i += 2) {
@@ -536,9 +522,9 @@ function Play() {
                             />
                         ) : bestLine && (
                             <motion.div 
-                                initial={{ opacity: 0, y: -20 }}
+                                initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
+                                transition={{ duration: 0.3 }}
                                 style={{ 
                                     display: 'flex', 
                                     flexDirection: 'column', 
