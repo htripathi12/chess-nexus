@@ -67,11 +67,11 @@ app.use((req, res, next) => {
 
 app.use("/login", sendLogin);
 app.use("/signup", sendSignup);
-app.use("/puzzles", puzzleRouter);
+app.use("/puzzles", verifyToken, puzzleRouter);
 app.use("/play", analyze);
-app.use("/account/chesscom", chesscom);
-app.use("/account/lichess", lichess);
-app.use("/account", deleteAccount);
+app.use("/account/chesscom", verifyToken, chesscom);
+app.use("/account/lichess", verifyToken, lichess);
+app.use("/account", verifyToken, deleteAccount);
 app.use("/puzzle", dailyPuzzle);
 
 app.use(express.static(path.join(__dirname, '../build')));
