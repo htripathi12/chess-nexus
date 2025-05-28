@@ -16,7 +16,7 @@ function Contact() {
         { name: 'JavaScript', icon: DiJavascript1, color: '#EBC700'},
         { name: 'SQL', icon: DiMysql, color: '#4479A1' },
         { name: 'Java', icon: DiJava, color: '#007396' },
-        { name: 'C', icon: SiC, color: '#A8B9CC' },
+        { name: '', icon: SiC, color: '#A8B9CC' },
         { name: 'C++', icon: SiCplusplus, color: '#00599C' },
         { name: 'HTML5', icon: DiHtml5, color: '#E34F26'}
     ];
