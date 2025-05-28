@@ -15,7 +15,7 @@ async function updateChessComGames(db, chesscomUsername, userId) {
   }
 
   await db.query(
-    'UPDATE users SET chesscom = ? WHERE id = ?',
+    'UPDATE users_db.users SET chesscom = ? WHERE id = ?',
     [chesscomUsername, userId]
   );
 
@@ -23,7 +23,7 @@ async function updateChessComGames(db, chesscomUsername, userId) {
   if (!archivesResponse.body.archives || archivesResponse.body.archives.length === 0) {
     console.log(`No game archives found for ${chesscomUsername}`);
     await db.query(
-      'UPDATE users SET chesscompgns = ? WHERE id = ?',
+      'UPDATE users_db.users SET chesscompgns = ? WHERE id = ?',
       ['', userId]
     );
     return;
@@ -68,7 +68,7 @@ async function updateChessComGames(db, chesscomUsername, userId) {
   /* Convert all games to PGN format */
   const pgnString = allGames.map(g => g.pgn).join('\n\n');
   await db.query(
-    'UPDATE users SET chesscompgns = ? WHERE id = ?',
+    'UPDATE users_db.users SET chesscompgns = ? WHERE id = ?',
     [pgnString, userId]
   );
   
@@ -87,7 +87,7 @@ router.get('/', async (req, res) => {
     await updateChessComGames(req.db, chesscomUsername, userId);
 
     const [rows] = await req.db.query(
-      'SELECT chesscompgns FROM users WHERE id = ?',
+      'SELECT chesscompgns FROM users_db.users WHERE id = ?',
       [userId]
     );
     

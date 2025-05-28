@@ -59,9 +59,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* ------------------------------------------------------------------
-   POST /account/lichess   { lichessUsername }
---------------------------------------------------------------------*/
 router.post('/', async (req, res) => {
   const { lichessUsername } = req.body;
   const userId = req.userId;
