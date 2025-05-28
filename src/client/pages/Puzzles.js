@@ -192,10 +192,10 @@ function Puzzles() {
         puzzleCompleted.current = true;
     };
 
-    const logMove = (sourceSquare, targetSquare) => {
-        const userMove = sourceSquare + targetSquare;
+    const logMove = (move) => {
+        const userMove = `${move.from}${move.to}`;
         const expectedMove = moves[moveIndex];
-
+        //console.log(`User move: ${userMove}, Expected move: ${expectedMove}`);
         if (userMove === expectedMove) {
             showFeedback(true);
             const nextMove = moves[moveIndex + 1];
@@ -300,7 +300,7 @@ function Puzzles() {
                         fen={fen}
                         orientation={orientation}
                         setFen={setFen}
-                        onMove={logMove}
+                        onUserMove={logMove}
                         chessInstance={chess.current}
                         disableBoard={incorrectMove || !puzzleLoaded}
                         boardWidth={handleScreenSize()}
