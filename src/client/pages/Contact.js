@@ -1,8 +1,7 @@
-import React from 'react';
 import { Box, Heading, Text, VStack, Image, Link, Flex, Icon, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaEnvelope, FaInstagram } from 'react-icons/fa';
 import { DiReact, DiNodejs, DiPython, DiJavascript1, DiJava, DiHtml5, DiMysql } from 'react-icons/di';
 import { SiC, SiCplusplus } from "react-icons/si";
 
@@ -82,6 +81,17 @@ function Contact() {
                               transition="transform 0.2s ease-in-out"
                             />
                           </a>
+                          <a href="https://www.instagram.com/hersh.tripathi/?hl=en" target="_blank" rel="noopener noreferrer">
+                            <Icon
+                              as={FaInstagram}
+                              boxSize={8}
+                              color="teal.500"
+                              mr={3}
+                              cursor="pointer"
+                              _hover={{ color: 'teal.700', transform: 'scale(1.2)' }}
+                              transition="transform 0.2s ease-in-out"
+                            />
+                          </a>
                           <a href="mailto:tripathihersh@gmail.com">
                             <Icon
                               as={FaEnvelope}
@@ -98,9 +108,8 @@ function Contact() {
                 </Flex>
 
                 <Text fontSize="sm" color="gray.700">
-                    I'm a passionate software developer with expertise in building web applications.
-                    Currently, I'm pursuing my undergraduate degree in Computer Science
-                    at Purdue University as a sophomore concentrating in Software Engineering and Systems.
+                    Hi, my name is Hersh! I'm a software developer at Purdue University, currently in my sophomore year studying Computer Science 
+                    with concentrations in Systems and Security.
                 </Text>
 
                 <MotionBox
@@ -116,14 +125,13 @@ function Contact() {
                         Professional Background
                     </Heading>
                     <Text fontSize="sm" color="gray.700" mb={3}>
-                        I began my journey in the tech world through an entrepreneurial venture, running my
-                        own shoe reselling business. It was there that I first dabbled in the development
-                        of raffle bots, sparking my initial interest in computer science. This curiosity
-                        pushed me to grow my programming skillset, eventually leading me to do R&D data science
-                        research at Raytheon, providing me with a deeper insight into the field. Through
-                        these experiences, I discovered my true passion lies in web development. Right now, I'm
-                        working towards expanding my skills in React, SQL, and MongoDB, aiming
-                        to become a full stack software engineer.
+                        My journey into computer science began when I built automation tools for a shoe reselling business I ran in high school. 
+                        As I transitioned into my freshman year at Purdue, I worked with Raytheon's R&D team through the Data Mine program building a deep learning
+                        model to evaluate the maturity of emerging technologies through research abstracts.
+                        Currently, I'm working at Ascension Healthcare as a Machine Learning Intern building a framework to evaluate the accuracy of
+                        patient profile summaries through LLMs using G-Eval (LLM-as-a-Judge). For my future endeavors, I'll be joining Amazon as an SDE intern
+                        this fall with the Step Functions team working on Serverless Architecture on AWS. I've recently been exploring web development and thinking about passion projects
+                        I could work on in my free time, which led to the creation of this site!
                     </Text>
 
                     <SimpleGrid columns={3} spacing={3} alignItems="center" justifyContent="space-evenly">
@@ -152,7 +160,7 @@ function Contact() {
                     bg="white"
                     p={4}
                     borderRadius="lg"
-                    boxShadow="xl"
+                    boxShadow="lg"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
@@ -161,10 +169,12 @@ function Contact() {
                         Personal Interests
                     </Heading>
                     <Text fontSize="sm" color="gray.700">
-                        Outside of work, I love playing basketball, video games, and skateboarding.
-                        I also enjoy the thrill of poker, from the excitement of big hands and memories with friends
-                        to the mathematical strategy behind the game. Coding is obviously a big part of my life,
-                        but my passion for chess is even greater which is why I made Chess Nexus - the perfect combination of the two.
+                        Outside of work, I love playing basketball, Rocket League, poker, and Chess (check out my{' '}
+                        <Link href="https://www.chess.com/member/indiantechagent" isExternal color="blue.500">
+                            Chess.com profile
+                        </Link>). I also listen to a lot of music (mainly rap and hip-hop), I'm a huge sneakerhead, and I
+                        skateboard pretty much everywhere on Purdue's campus. I sometimes frequent the meetings at ML@Purdue
+                        and occasionally attend hack nights, so if you catch me there make sure to say hi!
                     </Text>
                 </MotionBox>
 
@@ -189,7 +199,7 @@ function Contact() {
                             maxWidth={400}
                             textAlign="center"
                         >
-                            Thank you all for visiting Chess Nexus! If you'd like to view the source code you can do so{' '}
+                            Thanks for checking out Chess Nexus! If you want to see how I built it, the source code is available{' '}
                             <Link href="https://github.com/htripathi12/chess-nexus" isExternal color="blue.500">
                                 here.
                             </Link>
