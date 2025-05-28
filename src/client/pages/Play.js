@@ -105,8 +105,6 @@ function Play() {
                             index === 0 ? game : '[' + game
                         ).filter(game => game.trim());
                         lichesspgnArray = games.filter(pgn => pgn.includes('[Event'));
-                        
-                        console.log(`Successfully processed ${lichesspgnArray.length} Lichess games`);
                     } catch (e) {
                         console.error("Error processing Lichess data:", e);
                     }
@@ -330,8 +328,6 @@ function Play() {
             } catch (error) {
                 console.error("Error applying next PGN move:", error);
             }
-        } else {
-            console.log("Cannot redo - deviated from original game");
         }
     };
 
