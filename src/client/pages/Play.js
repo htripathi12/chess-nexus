@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import { Box, Textarea, Button, Text, Select, Input, Spinner, Tab, Tabs, TabList } from '@chakra-ui/react';
+import { Virtuoso } from 'react-virtuoso';
 
 import CustomBoard from '../components/CustomBoard';
 import EvaluationBar from '../components/EvaluationBar';
@@ -9,12 +10,6 @@ import BackButton from '../components/BackButton';
 
 import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
-
-// TODO; make it so when a user makes a move such that its not the next move in the pgn array,
-// it'll increment like a counter that shows the distance from the pgn array. if the
-// counter is greater than 0, the redo function will be disabled. this way we can limit the redo
-// to only the moves that are in the pgn array
-
 
 function Play() {
     // State variables
@@ -448,7 +443,7 @@ function Play() {
                         orientation={orientation}
                         customArrows={bestMove}
                         boardWidth={handleScreenSize()}
-                        onUserMove={handleUserMove}  // Add this prop
+                        onUserMove={handleUserMove}
                     />
                     <div style={{
                         display: 'flex',
@@ -746,76 +741,95 @@ function Play() {
                                 <Spinner boxSize="4rem" color="teal.500" />
                             </div>
                         ) : (
-                            <div style={{ paddingTop: '10px' }}>
-                                {(selectedTab === 0) && ccPGN.map((pgn, index) => (
-                                <Button 
-                                    key={index} 
-                                    width="100%" 
-                                    p={9} 
-                                    mb={2} 
-                                    borderRadius="10px"
-                                    backgroundColor="#1E8C87"
-                                    color="white"
-                                    fontSize={14}
-                                    _hover={{
-                                        backgroundColor: "#17706B",
-                                    }}
-                                    onClick={() => {
-                                        handleGameListClick(pgn);
-                                        setSelectedButtonIndex(index);
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                        border: "1px solid #17706B",
-                                        ...(selectedButtonIndex === index && {
-                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
-                                            borderRadius: "10px",
-                                        }),
-                                    }}
-                                >
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'white' : 'black' }}>{auth.getChesscomUsername()}</span>
-                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUser(pgn, "Chess.com")}</span>
-                                    </div>
-                                </Button>
-                            ))}
-                            {(selectedTab === 1) && lichessPGN.map((pgn, index) => (
-                                <Button 
-                                    key={index} 
-                                    width="100%" 
-                                    mb={2} 
-                                    p={9}
-                                    borderRadius="10px"
-                                    backgroundColor="#1E8C87"
-                                    color="white"
-                                    fontSize={14}
-                                    _hover={{
-                                        backgroundColor: "#17706B",
-                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                    }}
-                                    onClick={() => {
-                                        handleGameListClick(pgn);
-                                        setSelectedButtonIndex(index);
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                        border: "1px solid #17706B",
-                                        ...(selectedButtonIndex === index && {
-                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
-                                            borderRadius: "10px",
-                                        }),
-                                    }}
-                                >
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'white' : 'black' }}>{auth.getLichessUsername()}</span>
-                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
-                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'black' : 'white' }}>{getOtherUser(pgn)}</span>
-                                    </div>
-                                </Button>
-                            ))}
+                            <div style={{ paddingTop: '10px', height: '500px' }}>
+                                {selectedTab === 0 && (
+                                    <Virtuoso
+                                        style={{ height: '500px' }}
+                                        totalCount={ccPGN.length}
+                                        itemContent={(index) => {
+                                            const pgn = ccPGN[index];
+                                            return (
+                                                <Button 
+                                                    key={index} 
+                                                    width="100%" 
+                                                    p={9} 
+                                                    mb={2} 
+                                                    borderRadius="10px"
+                                                    backgroundColor="#1E8C87"
+                                                    color="white"
+                                                    fontSize={14}
+                                                    _hover={{
+                                                        backgroundColor: "#17706B",
+                                                    }}
+                                                    onClick={() => {
+                                                        handleGameListClick(pgn);
+                                                        setSelectedButtonIndex(index);
+                                                    }}
+                                                    style={{
+                                                        overflow: 'hidden',
+                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                                        border: "1px solid #17706B",
+                                                        ...(selectedButtonIndex === index && {
+                                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
+                                                            borderRadius: "10px",
+                                                        }),
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'white' : 'black' }}>{auth.getChesscomUsername()}</span>
+                                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
+                                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn, "Chess.com") ? 'black' : 'white' }}>{getOtherUser(pgn, "Chess.com")}</span>
+                                                    </div>
+                                                </Button>
+                                            );
+                                        }}
+                                    />
+                                )}
+                                
+                                {selectedTab === 1 && (
+                                    <Virtuoso
+                                        style={{ height: '500px' }}
+                                        totalCount={lichessPGN.length}
+                                        itemContent={(index) => {
+                                            const pgn = lichessPGN[index];
+                                            return (
+                                                <Button 
+                                                    key={index} 
+                                                    width="100%" 
+                                                    mb={2} 
+                                                    p={9}
+                                                    borderRadius="10px"
+                                                    backgroundColor="#1E8C87"
+                                                    color="white"
+                                                    fontSize={14}
+                                                    _hover={{
+                                                        backgroundColor: "#17706B",
+                                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                                    }}
+                                                    onClick={() => {
+                                                        handleGameListClick(pgn);
+                                                        setSelectedButtonIndex(index);
+                                                    }}
+                                                    style={{
+                                                        overflow: 'hidden',
+                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                                        border: "1px solid #17706B",
+                                                        ...(selectedButtonIndex === index && {
+                                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
+                                                            borderRadius: "10px",
+                                                        }),
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'white' : 'black' }}>{auth.getLichessUsername()}</span>
+                                                        <span style={{ padding: '3px 0', color: 'rgb(245, 191, 79)' }}>vs</span>
+                                                        <span style={{ padding: '3px 0', color: isUserBlack(pgn) ? 'black' : 'white' }}>{getOtherUser(pgn)}</span>
+                                                    </div>
+                                                </Button>
+                                            );
+                                        }}
+                                    />
+                                )}
                             </div>
                         )}
                     </motion.div>
