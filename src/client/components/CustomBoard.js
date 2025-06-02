@@ -1,136 +1,146 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useCallback } from 'react';
 import { Chessboard } from 'react-chessboard';
 
-// Function to determine the color of a square
 function getSquareColor(square) {
     const letter = square.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
     const number = parseInt(square[1], 10);
     return (letter + number) % 2 === 0 ? 'light' : 'dark';
 }
 
+function mergeStyles(base = {}, extra = {}) {
+  return { ...base, ...extra };
+}
+
+const CHECK_STYLE = { 
+  backgroundImage: 'radial-gradient(circle, rgba(255, 0, 0, 0.84) 30%, rgba(255, 0, 0, 0.4) 65%, transparent 100%)'
+};
+
+function getCheckHighlight(chess) {
+  if (!chess.inCheck()) return {};
+
+  const turn = chess.turn();
+  const board = chess.board();
+
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const piece = board[r][c];
+      if (piece && piece.type === 'k' && piece.color === turn) {
+        const file = String.fromCharCode(97 + c);
+        const rank = 8 - r;
+        return { [`${file}${rank}`]: CHECK_STYLE };
+      }
+    }
+  }
+  return {};
+}
+
+
 const CustomBoard = forwardRef(({ fen, orientation, setFen, onUserMove, chessInstance, disableBoard, customArrows, boardWidth }, ref) => {
     const [squareStyles, setSquareStyles] = useState({});
     const [selectedSquare, setSelectedSquare] = useState(null);
     const [animationDuration, setAnimationDuration] = useState(250);
 
+    const updateStyles = useCallback((base) => {
+      const merged = mergeStyles(base, getCheckHighlight(chessInstance));
+      setSquareStyles(merged);
+    }, [chessInstance]);
+    
     useEffect(() => {
         if (fen && fen !== chessInstance.fen()) {
             chessInstance.load(fen);
-            setSquareStyles({});
             setSelectedSquare(null);
+            setTimeout(() => {
+                updateStyles({});
+            }, 0);
         }
-    }, [fen, chessInstance]);
+    }, [fen, chessInstance, updateStyles]);
+    
+    useEffect(() => {
+      updateStyles({});
+    }, [fen, updateStyles]);
 
-    // Function to handle piece drop
     const onDrop = (sourceSquare, targetSquare) => {
         if (disableBoard) return false;
 
-        const previousFen = chessInstance.fen();
+        const prevFEN = chessInstance.fen();
+        const move = chessInstance.move({
+            from: sourceSquare,
+            to: targetSquare,
+            promotion: 'q',
+        });
 
-        try {
-            let move = chessInstance.move({
-                from: sourceSquare,
-                to: targetSquare,
-                promotion: 'q' // always promote to queen
-            });
-
-            if (move === null) {
-                // Invalid move, revert to previous state
-                chessInstance.load(previousFen);
-                return false;
-            }
-
-            // Call the onUserMove callback with the move details
-            if (onUserMove) {
-                onUserMove(move);
-            }
-
-            // Highlight the move squares
-            setSquareStyles({
-                [sourceSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
-                [targetSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
-            });
-
-            setFen(chessInstance.fen());
-
-            return true;
-        } catch (error) {
-            chessInstance.load(previousFen); // Revert to previous state on error
-            return false;
+        if (!move) {
+        chessInstance.load(prevFEN);
+        return false;
         }
+
+        onUserMove?.(move);
+        setFen(chessInstance.fen());
+
+        const moveHighlight = {
+            [sourceSquare]: { backgroundColor: 'rgba(200,255,255,0.4)' },
+            [targetSquare]: { backgroundColor: 'rgba(200,255,255,0.4)' },
+        };
+        updateStyles(moveHighlight);
+        return true;
     };
 
-    // Function to handle square click
     const onSquareClick = (square) => {
         if (disableBoard) return;
 
         setAnimationDuration(250); // Enable animation for click moves
         if (selectedSquare) {
-            const legalMoves = chessInstance.moves({ 
-                square: selectedSquare, 
-                verbose: true 
+        const legal = chessInstance
+            .moves({ square: selectedSquare, verbose: true })
+            .find((m) => m.to === square);
+
+        if (legal) {
+            const move = chessInstance.move({
+            from: selectedSquare,
+            to: square,
+            promotion: 'q',
             });
-            
-            const matchingMove = legalMoves.find(move => move.to === square);
+            onUserMove?.(move);
+            setFen(chessInstance.fen());
 
-            if (matchingMove) {
-                const move = chessInstance.move({ 
-                    from: selectedSquare, 
-                    to: square, 
-                    promotion: 'q' 
-                });
-
-                // Call the onUserMove callback with the move details
-                if (onUserMove) {
-                    onUserMove(move);
-                }
-
-                setFen(chessInstance.fen());
-                setSquareStyles({
-                    [selectedSquare]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' },
-                    [square]: { backgroundColor: 'rgba(200, 255, 255, 0.4)' }
-                });
-                setSelectedSquare(null);
-
-                return;
-            }
+            const moveHighlight = {
+            [selectedSquare]: { backgroundColor: 'rgba(200,255,255,0.4)' },
+            [square]: { backgroundColor: 'rgba(200,255,255,0.4)' },
+            };
+            setSelectedSquare(null);
+            updateStyles(moveHighlight);
+            return;
+        }
         }
 
         setSelectedSquare(square);
         highlightLegalMoves(square);
     };
 
-    // Function to highlight legal moves
-    const highlightLegalMoves = (square) => {
-        const moves = chessInstance.moves({ square, verbose: true });
-        const newSquareStyles = {};
+    const highlightLegalMoves = (fromSquare) => {
+        const moves = chessInstance.moves({ square: fromSquare, verbose: true });
+        const dots = {};
 
-        for (const move of moves) {
-            const squareColor = getSquareColor(move.to);
-            if (move.flags.includes('c')) {
-                let circleColor = squareColor === 'light' ? 'rgba(0, 128, 128, 0.85)' : 'rgba(32, 178, 170, 0.85)';
-                newSquareStyles[move.to] = {
-                    backgroundColor: 'rgba(222, 184, 135, 1)',
-                    backgroundImage: `radial-gradient(ellipse at center, ${circleColor} 55%, transparent 100%)`
-                };
-            } else {
-                newSquareStyles[move.to] = {
-                    backgroundImage: 'radial-gradient(circle at center, rgba(222, 184, 135, 0.9) 23%, transparent 21%)'
-                };
-            }
+        for (const m of moves) {
+        if (m.flags.includes('c')) {
+            const color =
+            getSquareColor(m.to) === 'light'
+                ? 'rgba(0,128,128,0.85)'
+                : 'rgba(32,178,170,0.85)';
+            dots[m.to] = {
+            backgroundColor: 'rgba(222,184,135,1)',
+            backgroundImage: `radial-gradient(ellipse at center, ${color} 55%, transparent 100%)`,
+            };
+        } else {
+            dots[m.to] = {
+            backgroundImage:
+                'radial-gradient(circle at center, rgba(222,184,135,0.9) 23%, transparent 21%)',
+            };
+        }
         }
 
-        setSquareStyles(newSquareStyles);
+        updateStyles(dots);
     };
-
-    // Expose undoMove function to parent component
-    useImperativeHandle(ref, () => ({
-        undoMove: () => {
-            chessInstance.undo();
-            setFen(chessInstance.fen());
-            setSquareStyles({});
-        }
-    }));
 
     return (
         <div style={{ position: 'relative' }}>
