@@ -748,6 +748,8 @@ function Play() {
                                         totalCount={ccPGN.length}
                                         itemContent={(index) => {
                                             const pgn = ccPGN[index];
+                                            const isSelected = selectedButtonIndex === index;
+                                            
                                             return (
                                                 <Button 
                                                     key={index} 
@@ -767,12 +769,11 @@ function Play() {
                                                     }}
                                                     style={{
                                                         overflow: 'hidden',
-                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                                        border: "1px solid #17706B",
-                                                        ...(selectedButtonIndex === index && {
-                                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
-                                                            borderRadius: "10px",
-                                                        }),
+                                                        border: isSelected 
+                                                            ? "1px solid white" 
+                                                            : "1px solid #17706B",
+                                                        position: "relative",
+                                                        transition: "all 0.2s ease"
                                                     }}
                                                 >
                                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -792,6 +793,8 @@ function Play() {
                                         totalCount={lichessPGN.length}
                                         itemContent={(index) => {
                                             const pgn = lichessPGN[index];
+                                            const isSelected = selectedButtonIndex === index;
+                                            
                                             return (
                                                 <Button 
                                                     key={index} 
@@ -804,7 +807,6 @@ function Play() {
                                                     fontSize={14}
                                                     _hover={{
                                                         backgroundColor: "#17706B",
-                                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                                                     }}
                                                     onClick={() => {
                                                         handleGameListClick(pgn);
@@ -812,12 +814,11 @@ function Play() {
                                                     }}
                                                     style={{
                                                         overflow: 'hidden',
-                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                                        border: "1px solid #17706B",
-                                                        ...(selectedButtonIndex === index && {
-                                                            boxShadow: "0 0 10px 0px rgba(255, 255, 255)",
-                                                            borderRadius: "10px",
-                                                        }),
+                                                        border: isSelected 
+                                                            ? "2px solid white" 
+                                                            : "1px solid #17706B",
+                                                        position: "relative",
+                                                        transition: "all 0.2s ease"
                                                     }}
                                                 >
                                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
