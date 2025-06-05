@@ -239,6 +239,10 @@ function Puzzles() {
         }
     };
 
+    const analyzeGame = () => { 
+        return;
+    }
+    
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>
 
@@ -313,19 +317,41 @@ function Puzzles() {
                         padding: '10px'
                     }}>
                         <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
-                            <Button
-                                onClick={redoPuzzle}
-                                bg='white'
-                                isDisabled={!loggedIn}
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                alignItems="center"
+                                gap={{ base: "0.5", md: "1", lg: "1.5" }}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
-                                    width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
-                                    strokeLinecap="round" strokeLinejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
-                                    <path d="M20 4v5h-5" />
-                                </svg>
-                            </Button>
+                                <Button
+                                    onClick={redoPuzzle}
+                                    bg='white'
+                                    isDisabled={!loggedIn}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-reload"
+                                        width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none"
+                                        strokeLinecap="round" strokeLinejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
+                                        <path d="M20 4v5h-5" />
+                                    </svg>
+                                </Button>
+                                <Button
+                                    onClick={analyzeGame}
+                                    bg='white'
+                                    isDisabled={!loggedIn}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" strokeWidth="1.6" stroke="#008080" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                                        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                                        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+                                        <path d="M8 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                        <path d="M16 16l-2.5 -2.5" />
+                                    </svg>
+                                </Button>
+                            </Box>
                         </Tooltip>
                         <Tooltip label="You have to log in to play puzzles" isDisabled={loggedIn}>
                             <Button

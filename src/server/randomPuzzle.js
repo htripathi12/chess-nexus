@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/rating', async (req, res) => {
   const userId = req.userId;
-  const db     = req.db;
+  const db = req.db;
 
   try {
     const [[row]] = await db.execute(
@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
 
   const lower = Math.max(userRating - 25, 0);
   const upper = userRating + 25;
-  const db    = req.db;
+  const db = req.db;
 
   try {
     /* Count puzzles in range */
