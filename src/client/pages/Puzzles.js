@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CustomBoard from '../components/CustomBoard';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
@@ -38,6 +39,9 @@ function Puzzles() {
     const auth = useAuth();
     const toast = useToast();
     const MotionBox = motion(Box);
+
+    const navigate = useNavigate();
+
 
     const getPuzzleRating = useCallback(async () => {
         try {
@@ -239,9 +243,15 @@ function Puzzles() {
         }
     };
 
-    const analyzeGame = () => { 
-        return;
+    const analyzeGame = () => {
+        navigate(`/play?fen=${encodeURIComponent(fen)}&orientation=${encodeURIComponent(orientation)}`, {
+            state: {
+                fen: fen,
+                orientation: orientation,
+            }
+        });
     }
+
     
     return (
         <div style={{ position: 'relative', height: '100vh', paddingBottom: '50px' }}>

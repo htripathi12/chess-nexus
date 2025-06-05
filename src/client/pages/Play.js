@@ -11,6 +11,8 @@ import BackButton from '../components/BackButton';
 import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
 
+import { useSearchParams } from 'react-router-dom';
+
 function Play() {
     // State variables
     const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -45,7 +47,28 @@ function Play() {
     const moveIndex = useRef(0);
 
     const auth = useAuth();
-
+    
+    const [searchParams] = useSearchParams();
+    useEffect(() => {
+        const urlFen = searchParams.get('fen');
+        const urlOrientation = searchParams.get('orientation');
+        
+        if (urlFen) {
+            try {
+                // Validate the FEN before setting it
+                const testChess = new Chess();
+                testChess.load(urlFen);
+                setFen(urlFen);
+                chessInstance.current.load(urlFen);
+            } catch (error) {
+                console.error('Invalid FEN from URL:', error);
+            }
+        }
+        
+        if (urlOrientation && (urlOrientation === 'white' || urlOrientation === 'black')) {
+            setOrientation(urlOrientation);
+        }
+    }, [searchParams]);
     
     const handleScreenSize = () => {
         return window.innerWidth * .3;
@@ -275,7 +298,7 @@ function Play() {
                 setPgnDeviation(pgnDeviation - 1);
             }
         } else {
-            console.log("No moves to undo");
+            //console.log("No moves to undo");
         }
     };
 
