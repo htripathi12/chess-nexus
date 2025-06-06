@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Flex, Text, Box, Button, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
