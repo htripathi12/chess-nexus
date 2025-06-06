@@ -10,13 +10,6 @@ const MotionButton = motion(Button);
 export default function LandingPage() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-
   const handleGetStarted = () => {
     navigate('/play');
   };
