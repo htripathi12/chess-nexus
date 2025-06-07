@@ -1,18 +1,12 @@
 import { Flex, Text, Box, Button, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const MotionBox = motion(Box);
 const MotionText = motion(Text);
 const MotionButton = motion(Button);
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-
-  const handleGetStarted = () => {
-    navigate('/play');
-  };
-
   return (
     <Box
       minHeight="100vh"
@@ -59,7 +53,7 @@ export default function LandingPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Text as="span" >Chess Nexus</Text>
+            <Text as="span">Chess Nexus</Text>
           </MotionText>
           
           <MotionText
@@ -78,7 +72,8 @@ export default function LandingPage() {
         </MotionBox>
 
         <MotionButton
-          onClick={handleGetStarted}
+          as={Link}
+          to="/play"
           size="lg"
           bg="white"
           color="#008080"
@@ -111,6 +106,8 @@ export default function LandingPage() {
         >
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing="40px" maxWidth="900px" margin="0 auto">
             <MotionBox
+              as={Link}
+              to="/puzzles"
               bg="rgba(255, 255, 255, 0.1)"
               backdropFilter="blur(10px)"
               borderRadius="20px"
@@ -120,7 +117,6 @@ export default function LandingPage() {
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ duration: 0.5 }}
               cursor="pointer"
-              onClick={() => navigate('/puzzles')}
             >
               <Box
                 fontSize="4xl"
@@ -146,6 +142,8 @@ export default function LandingPage() {
             </MotionBox>
 
             <MotionBox
+              as={Link}
+              to="/play"
               bg="rgba(255, 255, 255, 0.1)"
               backdropFilter="blur(10px)"
               borderRadius="20px"
@@ -155,7 +153,6 @@ export default function LandingPage() {
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ duration: 0.5 }}
               cursor="pointer"
-              onClick={() => navigate('/play')}
             >
               <Box
                 fontSize="4xl"
@@ -181,6 +178,8 @@ export default function LandingPage() {
             </MotionBox>
 
             <MotionBox
+              as={Link}
+              to="/learn"
               bg="rgba(255, 255, 255, 0.1)"
               backdropFilter="blur(10px)"
               borderRadius="20px"
@@ -190,7 +189,6 @@ export default function LandingPage() {
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ duration: 0.5 }}
               cursor="pointer"
-              onClick={() => navigate('/learn')}
             >
               <Box
                 fontSize="4xl"
