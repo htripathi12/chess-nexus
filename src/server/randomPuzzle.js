@@ -34,27 +34,18 @@ router.get('/', async (req, res) => {
   const db = req.db;
 
   try {
-    /* Count puzzles in range */
-    const [[{ cnt }]] = await db.execute(
-      `SELECT COUNT(*) AS cnt
+    const [[p]] = await db.execute(
+      `SELECT FEN, Moves, Rating
          FROM railway.lichess_db_puzzle
-        WHERE Rating BETWEEN ? AND ?`,
+        WHERE Rating BETWEEN ? AND ?
+        ORDER BY RAND()
+        LIMIT 1`,
       [lower, upper]
     );
-    console.log(`Found ${cnt} puzzles in range ${lower}-${upper}`);
-    if (cnt === 0) {
+
+    if (!p) {
       return res.status(404).json({ error: 'No puzzles found within your rating range.' });
     }
-
-    const offset = Math.floor(Math.random() * cnt);
-    const [[p]] = await db.execute(
-    `SELECT FEN, Moves, Rating
-        FROM railway.lichess_db_puzzle
-        WHERE Rating BETWEEN ? AND ?
-        LIMIT 1 OFFSET ${offset}`,
-    [lower, upper]
-    );
-
 
     return res.json({ fen: p.FEN, moves: p.Moves, rating: p.Rating });
 
